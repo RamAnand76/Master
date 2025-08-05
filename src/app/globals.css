@@ -43,11 +43,11 @@ body {
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
   .dark {
-    --background: 0 0% 11.8%; /* #1E1E1E */
+    --background: 0 0% 0%; /* #000000 */
     --foreground: 0 0% 98%;
-    --card: 0 0% 14%;
+    --card: 0 0% 8%;
     --card-foreground: 0 0% 98%;
-    --popover: 0 0% 11.8%;
+    --popover: 0 0% 5%;
     --popover-foreground: 0 0% 98%;
     --primary: 180 33% 37%; /* #408080 - Muted Teal */
     --primary-foreground: 0 0% 98%;
@@ -67,11 +67,11 @@ body {
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
-    --sidebar-background: 0 0% 12%;
+    --sidebar-background: 0 0% 5%;
     --sidebar-foreground: 0 0% 98%;
     --sidebar-primary: 180 33% 37%;
     --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 0 0% 18%;
+    --sidebar-accent: 0 0% 12%;
     --sidebar-accent-foreground: 0 0% 98%;
     --sidebar-border: 0 0% 18%;
     --sidebar-ring: 180 100% 50%;
