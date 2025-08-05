@@ -117,7 +117,7 @@ export default function Home() {
         </div>
 
         <div className="mb-12 flex justify-center">
-            <ShinyButton className="h-16 text-xl px-12" onClick={createNewProject} disabled={hasReachedLimit}>
+            <ShinyButton className="h-16 text-xl px-12 border" onClick={createNewProject} disabled={hasReachedLimit}>
                 <Plus className="mr-4 h-6 w-6" /> Create New Resume
             </ShinyButton>
         </div>
