@@ -27,10 +27,11 @@ export const ShineBorder = ({
   borderRadius = 8,
   borderWidth = 1,
   duration = 14,
-  color = "#fff",
+  color = "hsl(var(--primary))",
   className,
   children,
-}: ShineBorderProps) => {
+  ...props
+}: ShineBorderProps & React.HTMLAttributes<HTMLDivElement>) => {
   return (
     <div
       style={
@@ -39,13 +40,17 @@ export const ShineBorder = ({
         } as React.CSSProperties
       }
       className={cn(
-        "relative w-full rounded-[--border-radius] p-px",
-        "bg-white/10",
-        className,
+        "relative w-full rounded-[--border-radius] border border-transparent p-px",
+        "bg-gradient-to-r from-border to-border", // Fallback border
+        className
       )}
+      {...props}
     >
       <div
-        className="animate-shine-border"
+        className={cn(
+          "animate-shine-border",
+          "absolute inset-0 h-full w-full rounded-[--border-radius]"
+        )}
         style={
           {
             "--border-width": `${borderWidth}px`,
@@ -54,10 +59,19 @@ export const ShineBorder = ({
               Array.isArray(color) ? color.join(",") : color
             }`,
             "--duration": `${duration}s`,
+            border: "var(--border-width) solid transparent",
+            background: `linear-gradient(110deg, transparent, ${
+              Array.isArray(color) ? color.join(",") : color
+            }, transparent) border-box`,
+            WebkitMask:
+              "linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)",
+            WebkitMaskComposite: "xor",
+            maskComposite: "exclude",
+            backgroundSize: "200% 100%",
           } as React.CSSProperties
         }
       ></div>
-      <div className="h-full w-full rounded-[--border-radius] bg-background">
+      <div className="h-full w-full rounded-[calc(var(--border-radius)-1px)] bg-background">
         {children}
       </div>
     </div>
