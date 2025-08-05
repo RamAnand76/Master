@@ -126,7 +126,7 @@ export default function ResumeForm() {
                                 type="button"
                                 variant="ghost"
                                 size="icon"
-                                className="absolute top-0 right-0 h-full w-8 text-muted-foreground hover:text-destructive"
+                                className="absolute top-0 right-0 h-full w-8 text-muted-foreground hover:text-red-500"
                                 onClick={() => removeSkill(index)}
                                 aria-label="Remove skill"
                             >

@@ -16,7 +16,7 @@ export default function FieldArrayItem({ index, onRemove, children }: FieldArray
                 type="button"
                 variant="ghost"
                 size="icon"
-                className="absolute top-2 right-2 text-muted-foreground hover:text-destructive"
+                className="absolute top-2 right-2 text-muted-foreground hover:text-red-500"
                 onClick={() => onRemove(index)}
             >
                 <Trash2 className="h-4 w-4" />
