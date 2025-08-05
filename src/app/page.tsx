@@ -3,8 +3,12 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
-import { Plus, Trash2 } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Plus, GitBranch, Sun, FileText, MoreHorizontal, ListTodo, AlertTriangle, Search } from 'lucide-react';
 import type { ResumeData } from '@/lib/types';
 import Link from 'next/link';
 import {
@@ -16,10 +20,35 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { resumeDataSchema } from '@/lib/types';
 
+const AppLogo = () => (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12.75 1.5C12.3358 1.5 12 1.83579 12 2.25V7.54289C12 7.95711 12.3358 8.29289 12.75 8.29289H21.75C22.1642 8.29289 22.5 7.95711 22.5 7.54289V2.25C22.5 1.83579 22.1642 1.5 21.75 1.5H12.75Z" fill="url(#paint0_linear_1_2)"/>
+      <path d="M1.5 12.75C1.5 12.3358 1.83579 12 2.25 12H7.54289C7.95711 12 8.29289 12.3358 8.29289 12.75V21.75C8.29289 22.1642 7.95711 22.5 7.54289 22.5H2.25C1.83579 22.5 1.5 22.1642 1.5 21.75V12.75Z" fill="url(#paint1_linear_1_2)"/>
+      <path d="M1.5 2.25C1.5 1.83579 1.83579 1.5 2.25 1.5H11.25C11.6642 1.5 12 1.83579 12 2.25V11.25C12 11.6642 11.6642 12 11.25 12H2.25C1.83579 12 1.5 11.6642 1.5 11.25V2.25Z" fill="url(#paint2_linear_1_2)"/>
+      <path d="M12.75 9.70711C12.3358 9.70711 12 10.0429 12 10.4571V21.75C12 22.1642 12.3358 22.5 12.75 22.5H21.75C22.1642 22.5 22.5 22.1642 22.5 21.75V10.4571C22.5 10.0429 22.1642 9.70711 21.75 9.70711H12.75Z" fill="url(#paint3_linear_1_2)"/>
+      <defs>
+        <linearGradient id="paint0_linear_1_2" x1="12.75" y1="1.5" x2="22.5" y2="8.29289" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#F59E0B"/>
+          <stop offset="1" stopColor="#EF4444"/>
+        </linearGradient>
+        <linearGradient id="paint1_linear_1_2" x1="1.5" y1="12.75" x2="8.29289" y2="22.5" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#8B5CF6"/>
+          <stop offset="1" stopColor="#EC4899"/>
+        </linearGradient>
+        <linearGradient id="paint2_linear_1_2" x1="1.5" y1="1.5" x2="12" y2="12" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#3B82F6"/>
+          <stop offset="1" stopColor="#10B981"/>
+        </linearGradient>
+        <linearGradient id="paint3_linear_1_2" x1="12" y1="22.5" x2="22.5" y2="9.70711" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#F59E0B"/>
+          <stop offset="1" stopColor="#EF4444"/>
+        </linearGradient>
+      </defs>
+    </svg>
+  );
 
 export default function Home() {
   const [projects, setProjects] = useState<ResumeData[]>([]);
@@ -42,8 +71,8 @@ export default function Home() {
 
   const createNewProject = () => {
     const newProject = resumeDataSchema.parse({
-      id: crypto.randomUUID(),
-      name: `New Resume ${projects.length + 1}`,
+      id: `studio-${Math.random().toString(36).substring(2, 12)}`,
+      name: `New Project ${projects.length + 1}`,
     });
 
     const updatedProjects = [...projects, newProject];
@@ -59,37 +88,82 @@ export default function Home() {
   };
   
   return (
-    <main className="min-h-screen bg-background text-foreground p-4 sm:p-8">
-      <div className="max-w-5xl mx-auto">
-        <header className="flex justify-between items-center mb-12">
-          <h1 className="text-4xl font-bold font-headline text-primary">ResuMaster</h1>
-          <Button onClick={createNewProject} className="bg-primary hover:bg-primary/90 text-primary-foreground">
-            <Plus className="mr-2 h-4 w-4" /> New Project
-          </Button>
-        </header>
+    <div className="min-h-screen bg-background text-foreground">
+      <header className="p-4 flex justify-between items-center border-b border-border">
+          <div className="flex items-center gap-4">
+              <AppLogo />
+          </div>
+          <div className="flex items-center gap-4">
+              <Button variant="ghost" size="icon"><Sun className="h-5 w-5"/></Button>
+              <Avatar>
+                  <AvatarImage src="https://placehold.co/40x40.png" data-ai-hint="user avatar" />
+                  <AvatarFallback>U</AvatarFallback>
+              </Avatar>
+          </div>
+      </header>
 
-        <section>
-          <h2 className="text-2xl font-semibold mb-6">Your Workspaces</h2>
-          {projects.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {projects.map(project => (
-                <Card key={project.id} className="bg-secondary border-border transition-all hover:shadow-lg hover:shadow-primary/10">
-                  <CardHeader>
-                    <CardTitle className="truncate">{project.name}</CardTitle>
-                    <CardDescription>
-                      {project.personalDetails?.name || 'No name yet'}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardFooter className="flex justify-between">
-                    <Button asChild variant="link" className="p-0 h-auto text-accent hover:text-accent/80">
-                      <Link href={`/workspace/${project.id}`}>
-                        Open Workspace
-                      </Link>
-                    </Button>
-                    <AlertDialog>
+      <main className="p-8 max-w-6xl mx-auto">
+        <div className="mb-12">
+            <h1 className="text-5xl font-bold">
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 via-orange-500 to-pink-500">
+                    Hello, User
+                </span>
+            </h1>
+            <p className="text-muted-foreground text-lg mt-2">Welcome back</p>
+        </div>
+
+        <Card className="mb-8 bg-card border-border">
+          <CardHeader className="flex flex-row items-center gap-4">
+            <ListTodo className="w-6 h-6 text-primary"/>
+            <div className="flex-1">
+              <CardTitle>You have reached your workspace limit.</CardTitle>
+              <CardDescription>Upgrade to premium to have more.</CardDescription>
+            </div>
+            <Button>Upgrade</Button>
+          </CardHeader>
+        </Card>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+            <div className="space-y-4">
+                <h2 className="text-lg font-semibold">Prototype an app with AI</h2>
+                <div className="relative">
+                    <Textarea placeholder="An app that helps me plan my day" className="bg-input pr-16"/>
+                    <Button variant="secondary" size="sm" className="absolute top-2 right-2">Tab</Button>
+                </div>
+                 <Button variant="link" size="sm" className="text-muted-foreground">More sample prompts</Button>
+            </div>
+            <div className="space-y-4">
+                <h2 className="text-lg font-semibold">Start coding an app</h2>
+                <div className="flex items-center gap-4">
+                    <Button variant="secondary" className="w-full justify-start" onClick={createNewProject}><Plus className="mr-2"/> New Workspace</Button>
+                    <Button variant="secondary" className="w-full justify-start"><GitBranch className="mr-2"/> Import Repo</Button>
+                </div>
+            </div>
+        </div>
+
+        <Tabs defaultValue="workspaces">
+          <TabsList>
+            <TabsTrigger value="workspaces">My workspaces</TabsTrigger>
+            <TabsTrigger value="shared">Shared with me</TabsTrigger>
+          </TabsList>
+          <TabsContent value="workspaces" className="mt-6">
+            {projects.length > 0 ? (
+              <div className="space-y-2">
+                {projects.map(project => (
+                  <Card key={project.id} className="bg-card border-border p-3 flex items-center gap-4 hover:bg-accent/50 transition-colors">
+                    <FileText className="w-6 h-6 text-orange-400" />
+                    <div className="flex-1">
+                      <Link href={`/workspace/${project.id}`} className="font-semibold hover:underline">{project.name}</Link>
+                      <div className="text-xs text-muted-foreground flex items-center gap-2">
+                          <span>{project.id}</span>
+                          <span>•</span>
+                          <span>Accessed 6 minutes ago</span>
+                      </div>
+                    </div>
+                     <AlertDialog>
                       <AlertDialogTrigger asChild>
                          <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-destructive">
-                           <Trash2 className="h-4 w-4" />
+                           <MoreHorizontal className="h-4 w-4" />
                          </Button>
                       </AlertDialogTrigger>
                       <AlertDialogContent>
@@ -107,21 +181,28 @@ export default function Home() {
                         </AlertDialogFooter>
                       </AlertDialogContent>
                     </AlertDialog>
-                  </CardFooter>
-                </Card>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-16 border-2 border-dashed border-border rounded-lg">
-              <h3 className="text-xl font-medium text-muted-foreground">No projects yet.</h3>
-              <p className="text-muted-foreground mb-4">Click "New Project" to get started.</p>
-              <Button onClick={createNewProject} className="bg-primary hover:bg-primary/90 text-primary-foreground">
-                <Plus className="mr-2 h-4 w-4" /> Create Your First Project
-              </Button>
-            </div>
-          )}
-        </section>
-      </div>
-    </main>
+                  </Card>
+                ))}
+              </div>
+            ) : (
+                <div className="text-center py-16 border-2 border-dashed border-border rounded-lg">
+                    <h3 className="text-xl font-medium text-muted-foreground">No projects yet.</h3>
+                    <p className="text-muted-foreground mb-4">Click "New Project" to get started.</p>
+                    <Button onClick={createNewProject}>
+                        <Plus className="mr-2 h-4 w-4" /> Create Your First Project
+                    </Button>
+                </div>
+            )}
+          </TabsContent>
+          <TabsContent value="shared" className="mt-6">
+              <div className="text-center py-16 border-2 border-dashed border-border rounded-lg">
+                <h3 className="text-xl font-medium text-muted-foreground">No shared projects.</h3>
+                <p className="text-muted-foreground">Projects shared with you will appear here.</p>
+              </div>
+          </TabsContent>
+        </Tabs>
+
+      </main>
+    </div>
   );
 }
