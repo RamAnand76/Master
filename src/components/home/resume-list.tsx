@@ -58,10 +58,10 @@ export default function ResumeList({ projects, deleteProject, hasReachedLimit }:
                             {projects.map((project, i) => (
                                 <ShineBorder 
                                     key={project.id} 
-                                    className="animate-in fade-in bg-card"
+                                    className="animate-in fade-in"
                                     style={{ animationDelay: `${i * 100}ms`, animationFillMode: 'backwards' }}
                                 >
-                                    <div className="p-3 flex items-center gap-4 transition-colors">
+                                    <div className="p-3 flex items-center gap-4 transition-colors bg-background rounded-[calc(var(--border-radius)-1px)]">
                                         <FileText className="w-6 h-6 text-primary" />
                                         <div className="flex-1">
                                             <Link href={`/workspace/${project.id}`} className="font-semibold hover:underline">{project.name}</Link>
@@ -78,7 +78,7 @@ export default function ResumeList({ projects, deleteProject, hasReachedLimit }:
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent>
                                                     <AlertDialogTrigger asChild>
-                                                        <DropdownMenuItem className="text-destructive focus:text-destructive">
+                                                        <DropdownMenuItem className="text-destructive hover:!text-red-500 focus:!text-red-500">
                                                             <Trash2 className="mr-2 h-4 w-4"/>
                                                             Delete
                                                         </DropdownMenuItem>
