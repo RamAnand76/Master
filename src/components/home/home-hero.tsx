@@ -12,8 +12,9 @@ export default function HomeHero({ onNewResumeClick, hasReachedLimit }: HomeHero
         <div className="space-y-8">
             <div>
                 <h1 className="text-5xl font-bold">
-                    Hello, Welcome back
+                    Hello,
                 </h1>
+                <p className="text-3xl text-muted-foreground">Welcome back</p>
             </div>
             
             <div className="space-y-4">
