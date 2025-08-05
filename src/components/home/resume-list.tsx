@@ -14,8 +14,15 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { MoreHorizontal, ListTodo, FileText } from 'lucide-react';
+import { MoreHorizontal, ListTodo, FileText, Trash2 } from 'lucide-react';
 import type { ResumeData } from '@/lib/types';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+
 
 type ResumeListProps = {
     projects: ResumeData[];
@@ -47,23 +54,35 @@ export default function ResumeList({ projects, deleteProject, hasReachedLimit }:
                 <TabsContent value="workspaces" className="mt-6">
                     {projects.length > 0 ? (
                         <div className="space-y-2">
-                            {projects.map(project => (
-                                <Card key={project.id} className="bg-card border-border p-3 flex items-center gap-4 hover:bg-accent/50 transition-colors">
-                                    <FileText className="w-6 h-6 text-orange-400" />
+                            {projects.map((project, i) => (
+                                <Card 
+                                    key={project.id} 
+                                    className="bg-card border-border p-3 flex items-center gap-4 hover:bg-accent/50 transition-colors animate-in fade-in"
+                                    style={{ animationDelay: `${i * 100}ms`, animationFillMode: 'backwards' }}
+                                >
+                                    <FileText className="w-6 h-6 text-primary" />
                                     <div className="flex-1">
                                         <Link href={`/workspace/${project.id}`} className="font-semibold hover:underline">{project.name}</Link>
                                         <div className="text-xs text-muted-foreground flex items-center gap-2">
-                                            <span>{project.id}</span>
-                                            <span>•</span>
-                                            <span>Accessed 6 minutes ago</span>
+                                            <span>{new Date().toLocaleDateString()}</span>
                                         </div>
                                     </div>
                                     <AlertDialog>
-                                        <AlertDialogTrigger asChild>
-                                            <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-destructive">
-                                                <MoreHorizontal className="h-4 w-4" />
-                                            </Button>
-                                        </AlertDialogTrigger>
+                                        <DropdownMenu>
+                                            <DropdownMenuTrigger asChild>
+                                                <Button variant="ghost" size="icon" className="text-muted-foreground">
+                                                    <MoreHorizontal className="h-4 w-4" />
+                                                </Button>
+                                            </DropdownMenuTrigger>
+                                            <DropdownMenuContent>
+                                                <AlertDialogTrigger asChild>
+                                                    <DropdownMenuItem className="text-destructive focus:text-destructive">
+                                                        <Trash2 className="mr-2 h-4 w-4"/>
+                                                        Delete
+                                                    </DropdownMenuItem>
+                                                </AlertDialogTrigger>
+                                            </DropdownMenuContent>
+                                        </DropdownMenu>
                                         <AlertDialogContent>
                                             <AlertDialogHeader>
                                                 <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>

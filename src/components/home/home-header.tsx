@@ -7,8 +7,9 @@ import { AppLogo } from './app-logo';
 export default function HomeHeader() {
     return (
         <header className="p-4 flex justify-between items-center border-b border-border">
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
                 <AppLogo />
+                <span className="font-semibold text-xl tracking-tighter">ResuMaster</span>
             </div>
             <div className="flex items-center gap-4">
                 <Button variant="ghost" size="icon"><Sun className="h-5 w-5"/></Button>
