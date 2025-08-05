@@ -1,6 +1,7 @@
 
 import { Plus } from 'lucide-react';
 import { RainbowButton } from '@/components/magicui/rainbow-button';
+import { AnimatedGradientText } from '@/components/magicui/animated-gradient-text';
 
 type HomeHeroProps = {
     onNewResumeClick: () => void;
@@ -11,9 +12,14 @@ export default function HomeHero({ onNewResumeClick, hasReachedLimit }: HomeHero
     return (
         <div className="space-y-8">
             <div>
-                <h1 className="text-5xl font-bold">
-                    Hello,
-                </h1>
+                 <AnimatedGradientText
+                    speed={2}
+                    colorFrom="#408080"
+                    colorTo="#00FFFF"
+                    className="text-5xl font-bold"
+                >
+                   Hello,
+                </AnimatedGradientText>
                 <p className="text-3xl text-muted-foreground">Welcome back</p>
             </div>
             

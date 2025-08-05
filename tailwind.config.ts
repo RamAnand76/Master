@@ -96,11 +96,23 @@ export default {
             "background-position": "calc(100% + var(--shimmer-size)) 0",
           },
         },
+        "gradient": {
+          "0%": {
+            "background-position": "0% 50%",
+          },
+          "50%": {
+            "background-position": "100% 50%",
+          },
+          "100%": {
+            "background-position": "0% 50%",
+          }
+        }
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
         'shimmer': 'shimmer var(--shimmer-duration) infinite',
+        'gradient': 'gradient var(--animation-speed) ease infinite'
       },
     },
   },
