@@ -13,7 +13,7 @@ export default function ResumePreview({ resumeData }: { resumeData: ResumeData }
   const { personalDetails, summary, experience, education, projects, skills } = resumeData;
 
   return (
-    <div className="p-8 text-sm text-foreground bg-background font-body">
+    <div className="p-8 text-sm text-foreground bg-background font-body min-h-[calc(100vh-122px)]">
       <header className="text-center mb-8">
         {personalDetails?.name && <h1 className="text-3xl font-bold font-headline">{personalDetails.name}</h1>}
         <div className="flex justify-center items-center gap-x-4 gap-y-1 mt-2 text-xs text-muted-foreground flex-wrap">

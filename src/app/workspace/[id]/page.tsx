@@ -115,7 +115,6 @@ export default function WorkspacePage() {
                     <ArrowLeft className="mr-2 h-4 w-4"/> Back to Workspaces
                 </Link>
              </Button>
-            <h1 className="text-lg font-semibold text-center">{resumeName}</h1>
             <div className="flex items-center gap-4">
               {isSaving ? (
                 <span className="text-sm text-muted-foreground animate-pulse">Saving...</span>
@@ -127,11 +126,12 @@ export default function WorkspacePage() {
         </header>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-screen-2xl mx-auto p-4 sm:p-8">
-          <div className="lg:max-h-[calc(100vh-90px)] lg:overflow-y-auto pr-4">
+          <div className="lg:max-h-[calc(100vh-90px)] lg:overflow-y-auto pr-4 space-y-8">
+             <h1 className="text-2xl font-semibold text-center">{resumeName}</h1>
             <ResumeForm />
           </div>
           <div className="lg:max-h-[calc(100vh-90px)] lg:overflow-y-auto">
-            <div className="bg-background shadow-lg rounded-lg">
+            <div className="bg-background shadow-lg rounded-lg sticky top-[70px]">
               <ResumePreview resumeData={methods.watch()} />
             </div>
           </div>
