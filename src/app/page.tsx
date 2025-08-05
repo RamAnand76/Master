@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Plus, GitBranch, Sun, FileText, MoreHorizontal, ListTodo, AlertTriangle, Search } from 'lucide-react';
+import { Plus, GitBranch, Sun, FileText, MoreHorizontal, ListTodo, AlertTriangle, Search, Wand2 } from 'lucide-react';
 import type { ResumeData } from '@/lib/types';
 import Link from 'next/link';
 import {
@@ -69,11 +69,14 @@ export default function Home() {
       }
     }
   }, []);
+  
+  const hasReachedLimit = projects.length >= 5;
 
   const createNewProject = () => {
+    if (hasReachedLimit) return;
     const newProject = resumeDataSchema.parse({
       id: `studio-${Math.random().toString(36).substring(2, 12)}`,
-      name: `New Project ${projects.length + 1}`,
+      name: `New Resume ${projects.length + 1}`,
     });
 
     const updatedProjects = [...projects, newProject];
@@ -107,44 +110,46 @@ export default function Home() {
         <div className="mb-12">
             <h1 className="text-5xl font-bold">
                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 via-orange-500 to-pink-500">
-                    Hello, User
+                    ATS-Friendly Resume Builder
                 </span>
             </h1>
-            <p className="text-muted-foreground text-lg mt-2">Welcome back</p>
+            <p className="text-muted-foreground text-lg mt-2">Create a professional resume that gets past the bots.</p>
         </div>
 
-        <Card className="mb-8 bg-card border-border">
-          <CardHeader className="flex flex-row items-center gap-4">
-            <ListTodo className="w-6 h-6 text-primary"/>
-            <div className="flex-1">
-              <CardTitle>You have reached your workspace limit.</CardTitle>
-              <CardDescription>Upgrade to premium to have more.</CardDescription>
-            </div>
-            <Button>Upgrade</Button>
-          </CardHeader>
-        </Card>
+        {hasReachedLimit && (
+          <Card className="mb-8 bg-card border-border">
+            <CardHeader className="flex flex-row items-center gap-4">
+              <ListTodo className="w-6 h-6 text-primary"/>
+              <div className="flex-1">
+                <CardTitle>You have reached your workspace limit.</CardTitle>
+                <CardDescription>Upgrade to premium to create more resumes.</CardDescription>
+              </div>
+              <Button>Upgrade</Button>
+            </CardHeader>
+          </Card>
+        )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
             <div className="space-y-4">
-                <h2 className="text-lg font-semibold">Prototype an app with AI</h2>
+                <h2 className="text-lg font-semibold">Get AI-Powered Suggestions</h2>
                 <div className="relative">
-                    <Textarea placeholder="An app that helps me plan my day" className="bg-input pr-16"/>
-                    <Button variant="secondary" size="sm" className="absolute top-2 right-2">Tab</Button>
+                    <Textarea placeholder="Paste your resume summary here to get feedback..." className="bg-input pr-16"/>
+                    <Button variant="secondary" size="sm" className="absolute top-2 right-2"><Wand2 className="mr-2"/> Improve</Button>
                 </div>
-                 <Button variant="link" size="sm" className="text-muted-foreground">More sample prompts</Button>
+                 <Button variant="link" size="sm" className="text-muted-foreground">Learn more about AI suggestions</Button>
             </div>
             <div className="space-y-4">
-                <h2 className="text-lg font-semibold">Start coding an app</h2>
+                <h2 className="text-lg font-semibold">Start from scratch</h2>
                 <div className="flex items-center gap-4">
-                    <Button variant="secondary" className="w-full justify-start" onClick={createNewProject}><Plus className="mr-2"/> New Workspace</Button>
-                    <Button variant="secondary" className="w-full justify-start"><GitBranch className="mr-2"/> Import Repo</Button>
+                    <Button variant="secondary" className="w-full justify-start" onClick={createNewProject} disabled={hasReachedLimit}><Plus className="mr-2"/> New Resume</Button>
+                    <Button variant="secondary" className="w-full justify-start"><GitBranch className="mr-2"/> Import from LinkedIn</Button>
                 </div>
             </div>
         </div>
 
         <Tabs defaultValue="workspaces">
           <TabsList>
-            <TabsTrigger value="workspaces">My workspaces</TabsTrigger>
+            <TabsTrigger value="workspaces">My Resumes</TabsTrigger>
             <TabsTrigger value="shared">Shared with me</TabsTrigger>
           </TabsList>
           <TabsContent value="workspaces" className="mt-6">
@@ -187,18 +192,18 @@ export default function Home() {
               </div>
             ) : (
                 <div className="text-center py-16 border-2 border-dashed border-border rounded-lg">
-                    <h3 className="text-xl font-medium text-muted-foreground">No projects yet.</h3>
-                    <p className="text-muted-foreground mb-4">Click "New Project" to get started.</p>
-                    <Button onClick={createNewProject}>
-                        <Plus className="mr-2 h-4 w-4" /> Create Your First Project
+                    <h3 className="text-xl font-medium text-muted-foreground">No resumes yet.</h3>
+                    <p className="text-muted-foreground mb-4">Click "New Resume" to get started.</p>
+                    <Button onClick={createNewProject} disabled={hasReachedLimit}>
+                        <Plus className="mr-2 h-4 w-4" /> Create Your First Resume
                     </Button>
                 </div>
             )}
           </TabsContent>
           <TabsContent value="shared" className="mt-6">
               <div className="text-center py-16 border-2 border-dashed border-border rounded-lg">
-                <h3 className="text-xl font-medium text-muted-foreground">No shared projects.</h3>
-                <p className="text-muted-foreground">Projects shared with you will appear here.</p>
+                <h3 className="text-xl font-medium text-muted-foreground">No shared resumes.</h3>
+                <p className="text-muted-foreground">Resumes shared with you will appear here.</p>
               </div>
           </TabsContent>
         </Tabs>

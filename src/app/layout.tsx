@@ -3,8 +3,8 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-  title: "ResuMaster",
-  description: "Create your perfect ATS-friendly resume.",
+  title: "ResuMaster | ATS-Friendly Resume Builder",
+  description: "Build a professional, ATS-friendly resume in minutes. Get AI-powered suggestions to land your dream job.",
 };
 
 export default function RootLayout({
