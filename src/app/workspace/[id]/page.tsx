@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState, useCallback, useMemo } from 'react';
@@ -26,7 +27,8 @@ function debounce<F extends (...args: any[]) => any>(func: F, waitFor: number) {
 }
 
 export default function WorkspacePage() {
-  const params = useParams<{ id: string }>();
+  const params = useParams();
+  const id = Array.isArray(params.id) ? params.id[0] : params.id;
   const [isLoaded, setIsLoaded] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isSaved, setIsSaved] = useState(true);
@@ -37,12 +39,14 @@ export default function WorkspacePage() {
     mode: 'onChange',
   });
 
+  const resumeName = methods.watch('name');
+
   useEffect(() => {
     const savedProjects = localStorage.getItem('resuMasterProjects');
     if (savedProjects) {
        try {
         const projects: ResumeData[] = JSON.parse(savedProjects);
-        const currentProject = projects.find(p => p.id === params.id);
+        const currentProject = projects.find(p => p.id === id);
         if (currentProject) {
           methods.reset(currentProject);
         }
@@ -51,13 +55,13 @@ export default function WorkspacePage() {
       }
     }
     setIsLoaded(true);
-  }, [params.id, methods]);
+  }, [id, methods]);
   
   const saveData = useCallback((data: ResumeData) => {
     try {
       const savedProjects = localStorage.getItem('resuMasterProjects');
       let projects: ResumeData[] = savedProjects ? JSON.parse(savedProjects) : [];
-      const projectIndex = projects.findIndex(p => p.id === params.id);
+      const projectIndex = projects.findIndex(p => p.id === id);
   
       if (projectIndex > -1) {
         projects[projectIndex] = data;
@@ -73,7 +77,7 @@ export default function WorkspacePage() {
         description: "Could not save your changes.",
       });
     }
-  }, [params.id, toast]);
+  }, [id, toast]);
 
   const debouncedSave = useMemo(() => debounce(saveData, 1000), [saveData]);
 
@@ -111,6 +115,7 @@ export default function WorkspacePage() {
                     <ArrowLeft className="mr-2 h-4 w-4"/> Back to Workspaces
                 </Link>
              </Button>
+            <h1 className="text-lg font-semibold text-center">{resumeName}</h1>
             <div className="flex items-center gap-4">
               {isSaving ? (
                 <span className="text-sm text-muted-foreground animate-pulse">Saving...</span>

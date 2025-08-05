@@ -12,7 +12,6 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
 import { Wand2, Trash2 } from 'lucide-react';
 import { ResumeData } from '@/lib/types';
 import AiSuggestionDialog from './ai-suggestion-dialog';
@@ -36,21 +35,6 @@ export default function ResumeForm() {
 
     return (
         <div className="space-y-6">
-            <FormField
-                control={control}
-                name="name"
-                render={({ field }) => (
-                    <FormItem>
-                        <FormLabel className="text-lg font-semibold">Resume Title</FormLabel>
-                        <FormControl>
-                            <Input placeholder="e.g. Software Engineer Resume" {...field} className="text-lg h-12 bg-background"/>
-                        </FormControl>
-                        <FormMessage />
-                    </FormItem>
-                )}
-            />
-            <Separator />
-
             <SectionCard title="Personal Details">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <FormField control={control} name="personalDetails.name" render={({ field }) => ( <FormItem> <FormLabel>Full Name</FormLabel> <FormControl><Input placeholder="John Doe" {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
