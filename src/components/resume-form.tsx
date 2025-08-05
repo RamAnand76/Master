@@ -173,7 +173,7 @@ export default function ResumeForm() {
             <AiSuggestionDialog
                 open={!!suggestionField}
                 onOpenChange={(isOpen) => !isOpen && setSuggestionField(null)}
-                fieldName={suggestionField!}
+                fieldName={suggestionField}
                 currentValue={getValues(suggestionField || 'summary')}
             />
         </div>

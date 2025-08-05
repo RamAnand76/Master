@@ -19,7 +19,7 @@ import type { ResumeData } from "@/lib/types";
 type AiSuggestionDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  fieldName: keyof Pick<ResumeData, 'summary'>;
+  fieldName: keyof Pick<ResumeData, 'summary'> | null;
   currentValue: string;
 };
 
@@ -30,7 +30,7 @@ export default function AiSuggestionDialog({ open, onOpenChange, fieldName, curr
   const { toast } = useToast();
 
   useEffect(() => {
-    if (open && currentValue) {
+    if (open && currentValue && fieldName) {
       setIsLoading(true);
       setSuggestion(null);
       getAiSuggestions(currentValue)
@@ -47,13 +47,16 @@ export default function AiSuggestionDialog({ open, onOpenChange, fieldName, curr
   }, [open, currentValue, fieldName, toast, onOpenChange]);
 
   const handleUseSuggestion = () => {
-    if (suggestion) {
+    if (suggestion && fieldName) {
       setValue(fieldName, suggestion.improvedContent, { shouldDirty: true, shouldValidate: true });
       onOpenChange(false);
     }
   };
 
-  const toTitleCase = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
+  const toTitleCase = (str: string | null) => {
+    if (!str) return '';
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
