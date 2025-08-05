@@ -4,10 +4,9 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
-import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Plus, GitBranch, Sun, FileText, MoreHorizontal, ListTodo, AlertTriangle, Search, Wand2, Star } from 'lucide-react';
+import { Plus, Sun, FileText, MoreHorizontal, ListTodo } from 'lucide-react';
 import type { ResumeData } from '@/lib/types';
 import Link from 'next/link';
 import {
@@ -21,8 +20,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import { resumeDataSchema } from '@/lib/types';
 import { ShinyButton } from '@/components/magicui/shiny-button';
+import NewProjectModal from '@/components/new-project-modal';
 
 const AppLogo = () => (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -53,6 +52,7 @@ const AppLogo = () => (
 
 export default function Home() {
   const [projects, setProjects] = useState<ResumeData[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -72,17 +72,10 @@ export default function Home() {
   
   const hasReachedLimit = projects.length >= 5;
 
-  const createNewProject = () => {
-    if (hasReachedLimit) return;
-    const newProject = resumeDataSchema.parse({
-      id: `studio-${Math.random().toString(36).substring(2, 12)}`,
-      name: `New Resume ${projects.length + 1}`,
-    });
-
-    const updatedProjects = [...projects, newProject];
-    setProjects(updatedProjects);
-    localStorage.setItem('resuMasterProjects', JSON.stringify(updatedProjects));
-    router.push(`/workspace/${newProject.id}`);
+  const handleOpenModal = () => {
+    if (!hasReachedLimit) {
+      setIsModalOpen(true);
+    }
   };
 
   const deleteProject = (projectId: string) => {
@@ -93,6 +86,16 @@ export default function Home() {
   
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <NewProjectModal
+        isOpen={isModalOpen}
+        onOpenChange={setIsModalOpen}
+        onProjectCreate={(newProject) => {
+          const updatedProjects = [...projects, newProject];
+          setProjects(updatedProjects);
+          localStorage.setItem('resuMasterProjects', JSON.stringify(updatedProjects));
+          router.push(`/workspace/${newProject.id}`);
+        }}
+      />
       <header className="p-4 flex justify-between items-center border-b border-border">
           <div className="flex items-center gap-4">
               <AppLogo />
@@ -117,7 +120,7 @@ export default function Home() {
         </div>
 
         <div className="mb-12 flex justify-center">
-            <ShinyButton className="h-16 text-xl px-12 border" onClick={createNewProject} disabled={hasReachedLimit}>
+            <ShinyButton className="h-16 text-xl px-12 border" onClick={handleOpenModal} disabled={hasReachedLimit}>
                 <Plus className="mr-4 h-6 w-6" /> Create New Resume
             </ShinyButton>
         </div>
