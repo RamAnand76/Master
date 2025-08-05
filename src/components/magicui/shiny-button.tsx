@@ -59,8 +59,8 @@ const ShinyButton = React.forwardRef<HTMLButtonElement, ShinyButtonProps>(
               "--shimmer-size": shimmerSize,
               "--shimmer-duration": shimmerDuration,
               "--border-radius": borderRadius,
-              "background-size": "200% 200%",
-              "background-image": `radial-gradient(
+              backgroundSize: "200% 200%",
+              backgroundImage: `radial-gradient(
               farthest-side,
               var(--shimmer-color),
               transparent
