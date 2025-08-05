@@ -1,7 +1,7 @@
 
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   AlertDialog,
@@ -58,12 +58,10 @@ export default function ResumeList({ projects, deleteProject, hasReachedLimit }:
                             {projects.map((project, i) => (
                                 <ShineBorder 
                                     key={project.id} 
-                                    className="animate-in fade-in"
+                                    className="animate-in fade-in bg-card"
                                     style={{ animationDelay: `${i * 100}ms`, animationFillMode: 'backwards' }}
                                 >
-                                    <Card 
-                                        className="bg-card border-none p-3 flex items-center gap-4 transition-colors"
-                                    >
+                                    <div className="p-3 flex items-center gap-4 transition-colors">
                                         <FileText className="w-6 h-6 text-primary" />
                                         <div className="flex-1">
                                             <Link href={`/workspace/${project.id}`} className="font-semibold hover:underline">{project.name}</Link>
@@ -102,7 +100,7 @@ export default function ResumeList({ projects, deleteProject, hasReachedLimit }:
                                                 </AlertDialogFooter>
                                             </AlertDialogContent>
                                         </AlertDialog>
-                                    </Card>
+                                    </div>
                                 </ShineBorder>
                             ))}
                         </div>
