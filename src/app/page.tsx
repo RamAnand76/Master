@@ -4,11 +4,10 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Plus, GitBranch, Sun, FileText, MoreHorizontal, ListTodo, AlertTriangle, Search, Wand2 } from 'lucide-react';
+import { Plus, GitBranch, Sun, FileText, MoreHorizontal, ListTodo, AlertTriangle, Search, Wand2, Star } from 'lucide-react';
 import type { ResumeData } from '@/lib/types';
 import Link from 'next/link';
 import {
@@ -107,7 +106,7 @@ export default function Home() {
       </header>
 
       <main className="p-8 max-w-6xl mx-auto">
-        <div className="mb-12">
+        <div className="mb-12 text-center">
             <h1 className="text-5xl font-bold">
                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 via-orange-500 to-pink-500">
                     ATS-Friendly Resume Builder
@@ -116,6 +115,12 @@ export default function Home() {
             <p className="text-muted-foreground text-lg mt-2">Create a professional resume that gets past the bots.</p>
         </div>
 
+        <div className="mb-12 flex justify-center">
+            <Button size="lg" className="h-16 text-xl px-12" onClick={createNewProject} disabled={hasReachedLimit}>
+                <Plus className="mr-4 h-6 w-6" /> Create New Resume
+            </Button>
+        </div>
+        
         {hasReachedLimit && (
           <Card className="mb-8 bg-card border-border">
             <CardHeader className="flex flex-row items-center gap-4">
@@ -128,24 +133,6 @@ export default function Home() {
             </CardHeader>
           </Card>
         )}
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-            <div className="space-y-4">
-                <h2 className="text-lg font-semibold">Get AI-Powered Suggestions</h2>
-                <div className="relative">
-                    <Textarea placeholder="Paste your resume summary here to get feedback..." className="bg-input pr-16"/>
-                    <Button variant="secondary" size="sm" className="absolute top-2 right-2"><Wand2 className="mr-2"/> Improve</Button>
-                </div>
-                 <Button variant="link" size="sm" className="text-muted-foreground">Learn more about AI suggestions</Button>
-            </div>
-            <div className="space-y-4">
-                <h2 className="text-lg font-semibold">Start from scratch</h2>
-                <div className="flex items-center gap-4">
-                    <Button variant="secondary" className="w-full justify-start" onClick={createNewProject} disabled={hasReachedLimit}><Plus className="mr-2"/> New Resume</Button>
-                    <Button variant="secondary" className="w-full justify-start"><GitBranch className="mr-2"/> Import from LinkedIn</Button>
-                </div>
-            </div>
-        </div>
 
         <Tabs defaultValue="workspaces">
           <TabsList>
@@ -193,10 +180,7 @@ export default function Home() {
             ) : (
                 <div className="text-center py-16 border-2 border-dashed border-border rounded-lg">
                     <h3 className="text-xl font-medium text-muted-foreground">No resumes yet.</h3>
-                    <p className="text-muted-foreground mb-4">Click "New Resume" to get started.</p>
-                    <Button onClick={createNewProject} disabled={hasReachedLimit}>
-                        <Plus className="mr-2 h-4 w-4" /> Create Your First Resume
-                    </Button>
+                    <p className="text-muted-foreground mb-4">Click "Create New Resume" to get started.</p>
                 </div>
             )}
           </TabsContent>
