@@ -19,6 +19,7 @@ import { useState } from 'react';
 import { educationSchema, experienceSchema, projectSchema, skillSchema } from '@/lib/types';
 import SectionCard from './resume-form/section-card';
 import FieldArrayItem from './resume-form/field-array-item';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
 
 export default function ResumeForm() {
     const { control, getValues } = useFormContext<ResumeData>();
@@ -61,9 +62,18 @@ export default function ResumeForm() {
                             </FormItem>
                         )}
                     />
-                    <Button type="button" size="icon" variant="ghost" className="absolute top-1 right-1 text-accent-foreground/50 hover:text-accent-foreground/80" onClick={() => handleGetSuggestion('summary')}>
-                        <Wand2 className="h-4 w-4" />
-                    </Button>
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button type="button" size="icon" variant="ghost" className="absolute top-1 right-1 text-accent-foreground/50 hover:text-accent-foreground/80" onClick={() => handleGetSuggestion('summary')} aria-label="Get AI Suggestions">
+                                    <Wand2 className="h-4 w-4" />
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <p>Get AI Suggestions</p>
+                            </TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
                 </div>
             </SectionCard>
             
@@ -118,6 +128,7 @@ export default function ResumeForm() {
                                 size="icon"
                                 className="absolute top-0 right-0 h-full w-8 text-muted-foreground hover:text-destructive"
                                 onClick={() => removeSkill(index)}
+                                aria-label="Remove skill"
                             >
                                 <Trash2 className="h-4 w-4" />
                             </Button>

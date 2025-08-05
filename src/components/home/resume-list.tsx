@@ -14,7 +14,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { MoreHorizontal, ListTodo, FileText, Trash2 } from 'lucide-react';
+import { MoreHorizontal, ListTodo, FileText, Trash2, FilePlus2, Users } from 'lucide-react';
 import type { ResumeData } from '@/lib/types';
 import {
   DropdownMenu,
@@ -70,7 +70,7 @@ export default function ResumeList({ projects, deleteProject, hasReachedLimit }:
                                     <AlertDialog>
                                         <DropdownMenu>
                                             <DropdownMenuTrigger asChild>
-                                                <Button variant="ghost" size="icon" className="text-muted-foreground">
+                                                <Button variant="ghost" size="icon" className="text-muted-foreground" aria-label="Options">
                                                     <MoreHorizontal className="h-4 w-4" />
                                                 </Button>
                                             </DropdownMenuTrigger>
@@ -102,14 +102,16 @@ export default function ResumeList({ projects, deleteProject, hasReachedLimit }:
                             ))}
                         </div>
                     ) : (
-                        <div className="text-center py-16 border-2 border-dashed border-border rounded-lg">
+                        <div className="text-center py-16 border-2 border-dashed border-border rounded-lg flex flex-col items-center justify-center">
+                            <FilePlus2 className="w-16 h-16 text-muted-foreground/50 mb-4" />
                             <h3 className="text-xl font-medium text-muted-foreground">No resumes yet.</h3>
                             <p className="text-muted-foreground mb-4">Click "Create New Resume" to get started.</p>
                         </div>
                     )}
                 </TabsContent>
                 <TabsContent value="shared" className="mt-6">
-                    <div className="text-center py-16 border-2 border-dashed border-border rounded-lg">
+                    <div className="text-center py-16 border-2 border-dashed border-border rounded-lg flex flex-col items-center justify-center">
+                        <Users className="w-16 h-16 text-muted-foreground/50 mb-4" />
                         <h3 className="text-xl font-medium text-muted-foreground">No shared resumes.</h3>
                         <p className="text-muted-foreground">Resumes shared with you will appear here.</p>
                     </div>
