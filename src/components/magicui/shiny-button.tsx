@@ -18,7 +18,7 @@ const ShinyButton = React.forwardRef<HTMLButtonElement, ShinyButtonProps>(
       shimmerColor = "#ffffff",
       shimmerSize = "0.05em",
       shimmerDuration = "3s",
-      borderRadius = "100px",
+      borderRadius,
       background = "radial-gradient(ellipse 80% 50% at 50% 120%, hsl(var(--primary)), #000)",
       className,
       children,
@@ -38,12 +38,16 @@ const ShinyButton = React.forwardRef<HTMLButtonElement, ShinyButtonProps>(
           } as CSSProperties
         }
         className={cn(
-          "group relative inline-flex cursor-pointer items-center justify-center overflow-hidden whitespace-nowrap rounded-md px-6 py-2 text-base font-medium text-white/80 transition-all duration-300 ease-in-out",
+          "group relative inline-flex cursor-pointer items-center justify-center overflow-hidden whitespace-nowrap px-6 py-2 text-base font-medium text-white/80 transition-all duration-300 ease-in-out",
           "hover:text-white",
           "disabled:cursor-not-allowed",
           "dark:from-black/60 dark:to-black/60",
           className,
         )}
+        style={{
+            ...props.style,
+            borderRadius: borderRadius,
+        }}
         ref={ref}
         {...props}
       >

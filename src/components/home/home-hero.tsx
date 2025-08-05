@@ -20,7 +20,12 @@ export default function HomeHero({ onNewResumeClick, hasReachedLimit }: HomeHero
             </div>
 
             <div className="mb-12 flex justify-center">
-                <ShinyButton className="h-16 text-xl px-12 border" onClick={onNewResumeClick} disabled={hasReachedLimit}>
+                <ShinyButton 
+                    className="h-16 text-xl px-12 border" 
+                    onClick={onNewResumeClick} 
+                    disabled={hasReachedLimit}
+                    borderRadius="100px"
+                >
                     <Plus className="mr-4 h-6 w-6" /> Create New Resume
                 </ShinyButton>
             </div>
