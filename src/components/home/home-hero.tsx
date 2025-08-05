@@ -1,5 +1,5 @@
 
-import { ShinyButton } from '@/components/magicui/shiny-button';
+import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 
 type HomeHeroProps = {
@@ -9,26 +9,23 @@ type HomeHeroProps = {
 
 export default function HomeHero({ onNewResumeClick, hasReachedLimit }: HomeHeroProps) {
     return (
-        <>
-            <div className="mb-12 text-center">
+        <div className="space-y-8">
+            <div>
                 <h1 className="text-5xl font-bold">
-                    Hey there, let's build your next
-                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 via-orange-500 to-pink-500">
-                        &nbsp;Resume
-                    </span>
+                    Hello, Welcome back
                 </h1>
             </div>
-
-            <div className="mb-12 flex justify-center">
-                <ShinyButton 
-                    className="h-16 text-xl px-12 border" 
+            
+            <div className="space-y-4">
+                <h2 className="text-lg font-medium">Start a new resume</h2>
+                 <Button 
                     onClick={onNewResumeClick} 
                     disabled={hasReachedLimit}
-                    borderRadius="100px"
+                    size="lg"
                 >
-                    <Plus className="mr-4 h-6 w-6" /> Create New Resume
-                </ShinyButton>
+                    <Plus className="mr-2 h-5 w-5" /> Create New Resume
+                </Button>
             </div>
-        </>
+        </div>
     );
 }

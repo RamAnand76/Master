@@ -57,14 +57,17 @@ export default function Home() {
       />
       <HomeHeader />
 
-      <main className="p-8 max-w-6xl mx-auto">
-        <HomeHero onNewResumeClick={handleOpenModal} hasReachedLimit={hasReachedLimit} />
-        
-        <ResumeList 
-          projects={projects} 
-          deleteProject={deleteProject} 
-          hasReachedLimit={hasReachedLimit} 
-        />
+      <main className="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-7xl mx-auto p-8">
+        <div className="lg:col-span-1">
+          <HomeHero onNewResumeClick={handleOpenModal} hasReachedLimit={hasReachedLimit} />
+        </div>
+        <div className="lg:col-span-1">
+          <ResumeList 
+            projects={projects} 
+            deleteProject={deleteProject} 
+            hasReachedLimit={hasReachedLimit} 
+          />
+        </div>
       </main>
     </div>
   );
