@@ -108,11 +108,11 @@ export default function Home() {
       <main className="p-8 max-w-6xl mx-auto">
         <div className="mb-12 text-center">
             <h1 className="text-5xl font-bold">
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 via-orange-500 to-pink-500">
-                    ATS-Friendly Resume Builder
-                </span>
+              Hey there, let&apos;s build your next
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 via-orange-500 to-pink-500">
+                  &nbsp;Resume
+              </span>
             </h1>
-            <p className="text-muted-foreground text-lg mt-2">Create a professional resume that gets past the bots.</p>
         </div>
 
         <div className="mb-12 flex justify-center">
