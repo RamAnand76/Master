@@ -22,6 +22,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { resumeDataSchema } from '@/lib/types';
+import { ShinyButton } from '@/components/magicui/shiny-button';
 
 const AppLogo = () => (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -116,9 +117,9 @@ export default function Home() {
         </div>
 
         <div className="mb-12 flex justify-center">
-            <Button size="lg" className="h-16 text-xl px-12" onClick={createNewProject} disabled={hasReachedLimit}>
+            <ShinyButton className="h-16 text-xl px-12" onClick={createNewProject} disabled={hasReachedLimit}>
                 <Plus className="mr-4 h-6 w-6" /> Create New Resume
-            </Button>
+            </ShinyButton>
         </div>
         
         {hasReachedLimit && (
