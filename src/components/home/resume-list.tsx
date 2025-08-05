@@ -22,6 +22,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { ShineBorder } from '../magicui/shine-border';
 
 
 type ResumeListProps = {
@@ -55,50 +56,54 @@ export default function ResumeList({ projects, deleteProject, hasReachedLimit }:
                     {projects.length > 0 ? (
                         <div className="space-y-2">
                             {projects.map((project, i) => (
-                                <Card 
+                                <ShineBorder 
                                     key={project.id} 
-                                    className="bg-card border-border p-3 flex items-center gap-4 hover:bg-accent/50 transition-colors animate-in fade-in"
+                                    className="animate-in fade-in"
                                     style={{ animationDelay: `${i * 100}ms`, animationFillMode: 'backwards' }}
                                 >
-                                    <FileText className="w-6 h-6 text-primary" />
-                                    <div className="flex-1">
-                                        <Link href={`/workspace/${project.id}`} className="font-semibold hover:underline">{project.name}</Link>
-                                        <div className="text-xs text-muted-foreground flex items-center gap-2">
-                                            <span>{new Date().toLocaleDateString()}</span>
+                                    <Card 
+                                        className="bg-card border-none p-3 flex items-center gap-4 transition-colors"
+                                    >
+                                        <FileText className="w-6 h-6 text-primary" />
+                                        <div className="flex-1">
+                                            <Link href={`/workspace/${project.id}`} className="font-semibold hover:underline">{project.name}</Link>
+                                            <div className="text-xs text-muted-foreground flex items-center gap-2">
+                                                <span>{new Date().toLocaleDateString()}</span>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <AlertDialog>
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger asChild>
-                                                <Button variant="ghost" size="icon" className="text-muted-foreground" aria-label="Options">
-                                                    <MoreHorizontal className="h-4 w-4" />
-                                                </Button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent>
-                                                <AlertDialogTrigger asChild>
-                                                    <DropdownMenuItem className="text-destructive focus:text-destructive">
-                                                        <Trash2 className="mr-2 h-4 w-4"/>
+                                        <AlertDialog>
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger asChild>
+                                                    <Button variant="ghost" size="icon" className="text-muted-foreground" aria-label="Options">
+                                                        <MoreHorizontal className="h-4 w-4" />
+                                                    </Button>
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent>
+                                                    <AlertDialogTrigger asChild>
+                                                        <DropdownMenuItem className="text-destructive focus:text-destructive">
+                                                            <Trash2 className="mr-2 h-4 w-4"/>
+                                                            Delete
+                                                        </DropdownMenuItem>
+                                                    </AlertDialogTrigger>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                            <AlertDialogContent>
+                                                <AlertDialogHeader>
+                                                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                                    <AlertDialogDescription>
+                                                        This action cannot be undone. This will permanently delete your project.
+                                                    </AlertDialogDescription>
+                                                </AlertDialogHeader>
+                                                <AlertDialogFooter>
+                                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                    <AlertDialogAction onClick={() => deleteProject(project.id)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
                                                         Delete
-                                                    </DropdownMenuItem>
-                                                </AlertDialogTrigger>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
-                                        <AlertDialogContent>
-                                            <AlertDialogHeader>
-                                                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                                                <AlertDialogDescription>
-                                                    This action cannot be undone. This will permanently delete your project.
-                                                </AlertDialogDescription>
-                                            </AlertDialogHeader>
-                                            <AlertDialogFooter>
-                                                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                <AlertDialogAction onClick={() => deleteProject(project.id)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-                                                    Delete
-                                                </AlertDialogAction>
-                                            </AlertDialogFooter>
-                                        </AlertDialogContent>
-                                    </AlertDialog>
-                                </Card>
+                                                    </AlertDialogAction>
+                                                </AlertDialogFooter>
+                                            </AlertDialogContent>
+                                        </AlertDialog>
+                                    </Card>
+                                </ShineBorder>
                             ))}
                         </div>
                     ) : (
