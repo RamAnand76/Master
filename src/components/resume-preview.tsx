@@ -42,7 +42,7 @@ export default function ResumePreview({ resumeData }: { resumeData: ResumeData }
                     </div>
                     <p className="text-sm italic text-muted-foreground">{exp.company}</p>
                     <ul className="mt-1 text-muted-foreground list-disc pl-5 whitespace-pre-wrap text-sm">
-                        {exp.description.split('\n').map((line, i) => line.trim() && <li key={i}>{line.replace(/^- /, '')}</li>)}
+                        {exp.description && exp.description.split('\n').map((line, i) => line.trim() && <li key={i}>{line.replace(/^- /, '')}</li>)}
                     </ul>
                 </div>
             ))}
@@ -59,7 +59,7 @@ export default function ResumePreview({ resumeData }: { resumeData: ResumeData }
                     </div>
                     <p className="text-sm italic text-muted-foreground">{edu.institution}</p>
                      <ul className="mt-1 text-muted-foreground list-disc pl-5 whitespace-pre-wrap text-sm">
-                        {edu.description.split('\n').map((line, i) => line.trim() && <li key={i}>{line.replace(/^- /, '')}</li>)}
+                        {edu.description && edu.description.split('\n').map((line, i) => line.trim() && <li key={i}>{line.replace(/^- /, '')}</li>)}
                     </ul>
                 </div>
             ))}
@@ -72,10 +72,10 @@ export default function ResumePreview({ resumeData }: { resumeData: ResumeData }
                   <div key={proj.id} className="mb-4">
                       <div className="flex items-baseline gap-2">
                         <h3 className="font-semibold text-base">{proj.name}</h3>
-                        {proj.url && proj.url.startsWith('http') && <a href={proj.url} target="_blank" rel="noopener noreferrer" className="text-accent text-xs hover:underline">(Link)</a>}
+                        {proj.url && proj.url.startsWith('http') && <a href={proj.url} target="_blank" rel="noopener noreferrer" className="text-accent-foreground text-xs hover:underline">(Link)</a>}
                       </div>
                       <ul className="mt-1 text-muted-foreground list-disc pl-5 whitespace-pre-wrap text-sm">
-                        {proj.description.split('\n').map((line, i) => line.trim() && <li key={i}>{line.replace(/^- /, '')}</li>)}
+                        {proj.description && proj.description.split('\n').map((line, i) => line.trim() && <li key={i}>{line.replace(/^- /, '')}</li>)}
                     </ul>
                   </div>
               ))}

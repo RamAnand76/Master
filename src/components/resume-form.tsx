@@ -105,7 +105,7 @@ export default function ResumeForm() {
                             </FormItem>
                         )}
                     />
-                    <Button type="button" size="icon" variant="ghost" className="absolute top-1 right-1 text-accent hover:text-accent/80" onClick={() => handleGetSuggestion('summary')}>
+                    <Button type="button" size="icon" variant="ghost" className="absolute top-1 right-1 text-accent-foreground/50 hover:text-accent-foreground/80" onClick={() => handleGetSuggestion('summary')}>
                         <Wand2 className="h-4 w-4" />
                     </Button>
                 </div>
