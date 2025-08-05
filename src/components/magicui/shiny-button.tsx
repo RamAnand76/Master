@@ -1,3 +1,4 @@
+
 import { cn } from "@/lib/utils";
 import React, { CSSProperties } from "react";
 
@@ -19,7 +20,7 @@ const ShinyButton = React.forwardRef<HTMLButtonElement, ShinyButtonProps>(
       shimmerSize = "0.05em",
       shimmerDuration = "3s",
       borderRadius,
-      background = "radial-gradient(ellipse 80% 50% at 50% 120%, hsl(var(--primary)), #000)",
+      background = "radial-gradient(ellipse 80% 50% at 50% 120%, hsl(var(--primary)), hsl(var(--primary) / 0.8))",
       className,
       children,
       ...props
