@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
+import { FloatingDock } from "@/components/ui/floating-dock";
+import { Home, FileText, Settings, User } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "ResuMaster | ATS-Friendly Resume Builder",
@@ -12,6 +14,29 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const navItems = [
+    {
+      title: "Home",
+      href: "/",
+      icon: <Home className="h-full w-full" />,
+    },
+    {
+      title: "My Resumes",
+      href: "/",
+      icon: <FileText className="h-full w-full" />,
+    },
+    {
+        title: "Account",
+        href: "#",
+        icon: <User className="h-full w-full" />,
+    },
+    {
+      title: "Settings",
+      href: "#",
+      icon: <Settings className="h-full w-full" />,
+    }
+  ];
+
   return (
     <html lang="en" className="dark">
       <head>
@@ -27,6 +52,7 @@ export default function RootLayout({
         />
       </head>
       <body className="font-body antialiased">
+        <FloatingDock items={navItems} />
         {children}
         <Toaster />
       </body>

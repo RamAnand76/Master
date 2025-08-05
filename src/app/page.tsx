@@ -44,7 +44,7 @@ export default function Home() {
   };
   
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background text-foreground pb-32">
       <NewProjectModal
         isOpen={isModalOpen}
         onOpenChange={setIsModalOpen}
