@@ -71,7 +71,7 @@ export const ShineBorder = ({
           } as React.CSSProperties
         }
       ></div>
-      <div className="h-full w-full rounded-[calc(var(--border-radius)-1px)] bg-background">
+      <div className="relative h-full w-full rounded-[calc(var(--border-radius)-1px)] bg-background">
         {children}
       </div>
     </div>
