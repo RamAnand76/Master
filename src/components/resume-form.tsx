@@ -13,7 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { Wand2 } from 'lucide-react';
+import { Wand2, Trash2 } from 'lucide-react';
 import { ResumeData } from '@/lib/types';
 import AiSuggestionDialog from './ai-suggestion-dialog';
 import { useState } from 'react';
