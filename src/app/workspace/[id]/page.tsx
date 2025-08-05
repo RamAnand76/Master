@@ -11,6 +11,7 @@ import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
+import { useParams } from 'next/navigation';
 
 
 function debounce<F extends (...args: any[]) => any>(func: F, waitFor: number) {
@@ -24,7 +25,8 @@ function debounce<F extends (...args: any[]) => any>(func: F, waitFor: number) {
     });
 }
 
-export default function WorkspacePage({ params }: { params: { id: string } }) {
+export default function WorkspacePage() {
+  const params = useParams<{ id: string }>();
   const [isLoaded, setIsLoaded] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isSaved, setIsSaved] = useState(true);
