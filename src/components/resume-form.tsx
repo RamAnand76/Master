@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useFormContext, useFieldArray } from 'react-hook-form';
@@ -11,43 +12,14 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { PlusCircle, Trash2, Wand2 } from 'lucide-react';
+import { Wand2 } from 'lucide-react';
 import { ResumeData } from '@/lib/types';
 import AiSuggestionDialog from './ai-suggestion-dialog';
 import { useState } from 'react';
 import { educationSchema, experienceSchema, projectSchema, skillSchema } from '@/lib/types';
-
-const SectionCard = ({ title, children, onAdd, addText }: { title: string, children: React.ReactNode, onAdd?: () => void, addText?: string }) => (
-    <Card className="bg-background border-none shadow-md mb-6 overflow-hidden">
-        <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle>{title}</CardTitle>
-            {onAdd && addText && (
-                <Button variant="ghost" size="sm" onClick={onAdd} type="button">
-                    <PlusCircle className="mr-2 h-4 w-4" />
-                    {addText}
-                </Button>
-            )}
-        </CardHeader>
-        <CardContent>{children}</CardContent>
-    </Card>
-);
-
-const FieldArrayItem = ({ index, onRemove, children }: { index: number; onRemove: (index: number) => void; children: React.ReactNode }) => (
-    <div className="relative p-4 border border-border rounded-lg mb-4">
-        {children}
-        <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            className="absolute top-2 right-2 text-muted-foreground hover:text-destructive"
-            onClick={() => onRemove(index)}
-        >
-            <Trash2 className="h-4 w-4" />
-        </Button>
-    </div>
-);
+import SectionCard from './resume-form/section-card';
+import FieldArrayItem from './resume-form/field-array-item';
 
 export default function ResumeForm() {
     const { control, getValues } = useFormContext<ResumeData>();
