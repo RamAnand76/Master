@@ -1,6 +1,6 @@
 
-import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
+import { RainbowButton } from '@/components/magicui/rainbow-button';
 
 type HomeHeroProps = {
     onNewResumeClick: () => void;
@@ -18,13 +18,12 @@ export default function HomeHero({ onNewResumeClick, hasReachedLimit }: HomeHero
             
             <div className="space-y-4">
                 <h2 className="text-lg font-medium">Start a new resume</h2>
-                 <Button 
+                 <RainbowButton 
                     onClick={onNewResumeClick} 
                     disabled={hasReachedLimit}
-                    size="lg"
                 >
                     <Plus className="mr-2 h-5 w-5" /> Create New Resume
-                </Button>
+                </RainbowButton>
             </div>
         </div>
     );
