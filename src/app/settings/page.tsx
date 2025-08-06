@@ -10,11 +10,12 @@ import { Separator } from '@/components/ui/separator';
 import { User, Palette, Crown, Database, AlertTriangle } from 'lucide-react';
 import ProfileDialog from '@/components/home/profile-dialog';
 import HomeHeader from '@/components/home/home-header';
+import { useUser } from '@/hooks/use-user';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 export default function SettingsPage() {
   const [isProfileDialogOpen, setIsProfileDialogOpen] = useState(false);
-  // Add state for dark mode if it's not globally managed yet.
-  // For now, it's just a UI toggle.
+  const { user, updateUser } = useUser();
   const [isDarkMode, setIsDarkMode] = useState(true);
 
   return (
@@ -34,12 +35,35 @@ export default function SettingsPage() {
               <User className="w-6 h-6 text-primary" />
               <div>
                 <CardTitle>Profile</CardTitle>
-                <CardDescription>Manage your personal information.</CardDescription>
+                <CardDescription>Manage your personal information and status.</CardDescription>
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
-               <p className="text-sm text-muted-foreground">This is where you can update your name and email address.</p>
-               <Button onClick={() => setIsProfileDialogOpen(true)}>Edit Profile</Button>
+               <div className="flex items-center justify-between">
+                    <div>
+                        <p className="font-medium">Name & Email</p>
+                        <p className="text-sm text-muted-foreground">Update your display name and email address.</p>
+                    </div>
+                    <Button onClick={() => setIsProfileDialogOpen(true)}>Edit Profile</Button>
+               </div>
+               <Separator />
+               <div className="space-y-2">
+                 <Label>You are a</Label>
+                 <Select 
+                    value={user.employmentStatus} 
+                    onValueChange={(value) => updateUser({ employmentStatus: value as any })}
+                >
+                    <SelectTrigger className="w-full md:w-1/2">
+                        <SelectValue placeholder="Select your status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="student">Student</SelectItem>
+                      <SelectItem value="fresher">Fresher</SelectItem>
+                      <SelectItem value="employed">Employed</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <p className="text-xs text-muted-foreground">This helps us tailor your experience.</p>
+               </div>
             </CardContent>
           </Card>
 

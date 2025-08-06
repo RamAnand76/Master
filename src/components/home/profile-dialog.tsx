@@ -11,12 +11,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const profileSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters.").max(50),
   email: z.string().email("Invalid email address.").or(z.literal('')),
-  employmentStatus: z.enum(['student', 'fresher', 'employed']).optional(),
 });
 
 type ProfileFormValues = z.infer<typeof profileSchema>;
@@ -34,7 +32,7 @@ export default function ProfileDialog({ open, onOpenChange }: ProfileDialogProps
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
-    defaultValues: { name: '', email: '', employmentStatus: undefined },
+    defaultValues: { name: '', email: '' },
   });
 
   useEffect(() => {
@@ -42,7 +40,6 @@ export default function ProfileDialog({ open, onOpenChange }: ProfileDialogProps
       form.reset({
         name: user.name || '',
         email: user.email || '',
-        employmentStatus: user.employmentStatus,
       });
     }
   }, [isLoaded, user, form, open]);
@@ -106,28 +103,6 @@ export default function ProfileDialog({ open, onOpenChange }: ProfileDialogProps
                   <FormControl>
                     <Input placeholder="your.email@example.com" {...field} />
                   </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="employmentStatus"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>You are a</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select your status" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="student">Student</SelectItem>
-                      <SelectItem value="fresher">Fresher</SelectItem>
-                      <SelectItem value="employed">Employed</SelectItem>
-                    </SelectContent>
-                  </Select>
                   <FormMessage />
                 </FormItem>
               )}
