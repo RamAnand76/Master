@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -12,9 +13,9 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { getAiSuggestions } from "@/lib/actions";
-import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import type { ResumeData } from "@/lib/types";
+import { MultiStepLoader } from "./ui/multi-step-loader";
 
 type AiSuggestionDialogProps = {
   open: boolean;
@@ -22,6 +23,14 @@ type AiSuggestionDialogProps = {
   fieldName: keyof Pick<ResumeData, 'summary'> | null;
   currentValue: string;
 };
+
+const loadingStates = [
+  { text: 'Analyzing your resume content...' },
+  { text: 'Identifying key skills and experiences...' },
+  { text: 'Checking for ATS optimization...' },
+  { text: 'Crafting impactful bullet points...' },
+  { text: 'Finalizing suggestions...' },
+];
 
 export default function AiSuggestionDialog({ open, onOpenChange, fieldName, currentValue }: AiSuggestionDialogProps) {
   const [isLoading, setIsLoading] = useState(false);
@@ -58,8 +67,13 @@ export default function AiSuggestionDialog({ open, onOpenChange, fieldName, curr
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
+  // When loading, show the loader. The loader itself is a modal.
+  if (isLoading) {
+    return <MultiStepLoader loadingStates={loadingStates} loading={true} duration={1500} />;
+  }
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open && !isLoading} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-3xl">
         <DialogHeader>
           <DialogTitle>AI Suggestions for your {toTitleCase(fieldName)}</DialogTitle>
@@ -67,12 +81,7 @@ export default function AiSuggestionDialog({ open, onOpenChange, fieldName, curr
             Our AI has analyzed your text and provided suggestions for improvement.
           </DialogDescription>
         </DialogHeader>
-        {isLoading ? (
-          <div className="flex items-center justify-center h-64">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
-            <p className="ml-4">Analyzing your resume...</p>
-          </div>
-        ) : suggestion ? (
+        {suggestion ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4 max-h-[60vh] overflow-y-auto p-1">
             <div>
               <h4 className="font-semibold mb-2">Suggested Improvement</h4>
@@ -90,7 +99,7 @@ export default function AiSuggestionDialog({ open, onOpenChange, fieldName, curr
         ) : null}
         <DialogFooter className="pt-4">
           <Button variant="ghost" onClick={() => onOpenChange(false)}>Cancel</Button>
-          <Button onClick={handleUseSuggestion} disabled={isLoading || !suggestion} className="bg-primary hover:bg-primary/90 text-primary-foreground">
+          <Button onClick={handleUseSuggestion} disabled={!suggestion} className="bg-primary hover:bg-primary/90 text-primary-foreground">
             Use this suggestion
           </Button>
         </DialogFooter>
