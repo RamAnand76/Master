@@ -24,6 +24,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { ShineBorder } from '../magicui/shine-border';
+import { Tooltip, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 
 
 type ResumeListProps = {
@@ -68,7 +69,7 @@ export default function ResumeList({ projects, deleteProject, hasReachedLimit, o
                                         <div className="flex-1">
                                             <Link href={`/workspace/${project.id}`} className="font-semibold hover:underline">{project.name}</Link>
                                             <div className="text-xs text-muted-foreground flex items-center gap-2">
-                                                <span>{new Date().toLocaleDateString()}</span>
+                                                <span>{project.createdAt ? new Date(project.createdAt).toLocaleDateString() : new Date().toLocaleDateString()}</span>
                                             </div>
                                         </div>
                                         <AlertDialog>
@@ -80,10 +81,19 @@ export default function ResumeList({ projects, deleteProject, hasReachedLimit, o
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent>
                                                     <AlertDialogTrigger asChild>
-                                                        <DropdownMenuItem className="text-red-400 hover:!text-red-400 focus:!text-red-400">
-                                                            <Trash2 className="mr-2 h-4 w-4"/>
-                                                            Delete
-                                                        </DropdownMenuItem>
+                                                    <TooltipProvider>
+                                                        <Tooltip>
+                                                            <TooltipTrigger asChild>
+                                                                <DropdownMenuItem className="text-red-400 hover:!text-red-400 focus:!text-red-400 focus:!bg-red-400/10" aria-label="Delete resume">
+                                                                    <Trash2 className="mr-2 h-4 w-4"/>
+                                                                    Delete
+                                                                </DropdownMenuItem>
+                                                            </TooltipTrigger>
+                                                            <TooltipContent>
+                                                                <p>Delete</p>
+                                                            </TooltipContent>
+                                                        </Tooltip>
+                                                    </TooltipProvider>
                                                     </AlertDialogTrigger>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>

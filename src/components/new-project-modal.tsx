@@ -43,6 +43,7 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate 
     const newProject = resumeDataSchema.parse({
       id: `studio-${Math.random().toString(36).substring(2, 12)}`,
       name: values.title,
+      createdAt: new Date().toISOString(),
       experience: [
         experienceSchema.parse({
           role: values.jobPosition,

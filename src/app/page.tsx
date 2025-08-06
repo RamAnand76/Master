@@ -18,9 +18,15 @@ export default function Home() {
     const savedProjects = localStorage.getItem('resuMasterProjects');
     if (savedProjects) {
       try {
-        const parsedProjects = JSON.parse(savedProjects);
+        const parsedProjects: ResumeData[] = JSON.parse(savedProjects);
         if (Array.isArray(parsedProjects)) {
-            setProjects(parsedProjects);
+            // Sort projects by createdAt date, newest first
+            const sortedProjects = parsedProjects.sort((a, b) => {
+              const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+              const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+              return dateB - dateA;
+            });
+            setProjects(sortedProjects);
         }
       } catch (error) {
         console.error("Failed to parse projects from localStorage", error);
@@ -49,7 +55,11 @@ export default function Home() {
         isOpen={isModalOpen}
         onOpenChange={setIsModalOpen}
         onProjectCreate={(newProject) => {
-          const updatedProjects = [...projects, newProject];
+          const updatedProjects = [...projects, newProject].sort((a, b) => {
+            const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+            const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+            return dateB - dateA;
+          });
           setProjects(updatedProjects);
           localStorage.setItem('resuMasterProjects', JSON.stringify(updatedProjects));
           router.push(`/workspace/${newProject.id}`);

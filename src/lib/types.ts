@@ -46,6 +46,7 @@ export const skillSchema = z.object({
 export const resumeDataSchema = z.object({
   id: z.string(),
   name: z.string().max(50).default('Untitled Resume'),
+  createdAt: z.string().datetime().default(() => new Date().toISOString()),
   personalDetails: personalDetailsSchema.default({
     name: 'Your Name', email: 'your.email@example.com', phone: '+1 (123) 456-7890', location: 'City, State', website: '', linkedin: '', github: ''
   }),
