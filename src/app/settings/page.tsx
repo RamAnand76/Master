@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function SettingsPage() {
@@ -10,14 +9,14 @@ export default function SettingsPage() {
           Manage your application settings.
         </p>
       </header>
-      <main className="max-w-7xl mx-auto">
+      <main className="max-w-2xl mx-auto">
         <Card>
           <CardHeader>
-            <CardTitle>Settings Coming Soon</CardTitle>
+            <CardTitle>Account Settings</CardTitle>
           </CardHeader>
           <CardContent>
             <p>
-                We are currently building the settings page. You'll be able to manage your preferences here shortly.
+                This is where account settings will be managed. More options coming soon!
             </p>
           </CardContent>
         </Card>
