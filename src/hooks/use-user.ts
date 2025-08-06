@@ -7,12 +7,13 @@ type User = {
   name: string;
   email: string;
   nameLastUpdatedAt: string | null;
+  employmentStatus?: 'student' | 'fresher' | 'employed';
 };
 
 const USER_STORAGE_KEY = 'resuMasterUser';
 
 export function useUser() {
-  const [user, setUser] = useState<User>({ name: '', email: '', nameLastUpdatedAt: null });
+  const [user, setUser] = useState<User>({ name: '', email: '', nameLastUpdatedAt: null, employmentStatus: undefined });
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
@@ -36,7 +37,7 @@ export function useUser() {
 
   const logout = useCallback(() => {
     localStorage.removeItem(USER_STORAGE_KEY);
-    setUser({ name: '', email: '', nameLastUpdatedAt: null });
+    setUser({ name: '', email: '', nameLastUpdatedAt: null, employmentStatus: undefined });
   }, []);
 
   return { user, updateUser, logout, isLoaded };
