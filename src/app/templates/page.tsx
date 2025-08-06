@@ -4,7 +4,11 @@
 import { useState } from 'react';
 import HomeHeader from '@/components/home/home-header';
 import TemplateCard from '@/components/templates/template-card';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Search } from 'lucide-react';
+import { InputGroup } from '@/components/ui/input-group';
 
 const templates = [
   {
@@ -58,15 +62,18 @@ const templates = [
 ];
 
 const categories = ['All', 'Creative', 'Professional', 'Modern'];
+const tiers = ['All', 'Free', 'Pro', 'Premium'];
 
 export default function TemplatesPage() {
+  const [searchTerm, setSearchTerm] = useState('');
   const [activeTier, setActiveTier] = useState('All');
   const [activeCategory, setActiveCategory] = useState('All');
 
   const filteredTemplates = templates.filter(template => {
     const tierMatch = activeTier === 'All' || template.tier === activeTier;
     const categoryMatch = activeCategory === 'All' || template.category === activeCategory;
-    return tierMatch && categoryMatch;
+    const searchMatch = template.name.toLowerCase().includes(searchTerm.toLowerCase()) || template.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
+    return tierMatch && categoryMatch && searchMatch;
   });
 
   return (
@@ -80,16 +87,31 @@ export default function TemplatesPage() {
           </p>
         </header>
 
-        <div className="flex flex-col items-center gap-6">
-            <Tabs defaultValue="All" onValueChange={setActiveTier} className="w-full max-w-sm mx-auto">
-                <TabsList className="grid w-full grid-cols-4">
-                    <TabsTrigger value="All">All</TabsTrigger>
-                    <TabsTrigger value="Free">Free</TabsTrigger>
-                    <TabsTrigger value="Pro">Pro</TabsTrigger>
-                    <TabsTrigger value="Premium">Premium</TabsTrigger>
-                </TabsList>
-            </Tabs>
+        <div className="flex flex-col md:flex-row items-center justify-center gap-4 mb-6">
+          <div className="w-full md:w-auto md:min-w-64">
+            <InputGroup startContent={<Search />}>
+              <Input 
+                placeholder="Search templates..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </InputGroup>
+          </div>
+          <div className="w-full md:w-auto">
+            <Select onValueChange={setActiveTier} defaultValue="All">
+              <SelectTrigger className="w-full md:w-[180px]">
+                <SelectValue placeholder="Filter by tier" />
+              </SelectTrigger>
+              <SelectContent>
+                {tiers.map(tier => (
+                  <SelectItem key={tier} value={tier}>{tier}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
 
+        <div className="flex flex-col items-center gap-6">
             <Tabs defaultValue="All" onValueChange={setActiveCategory} className="w-full max-w-md mx-auto">
                  <TabsList>
                     {categories.map(category => (
@@ -110,7 +132,7 @@ export default function TemplatesPage() {
           ) : (
             <div className="col-span-full text-center py-12">
                 <h3 className="text-lg font-medium text-muted-foreground">No templates match your criteria.</h3>
-                <p className="text-sm text-muted-foreground">Try selecting a different filter.</p>
+                <p className="text-sm text-muted-foreground">Try selecting a different filter or adjusting your search.</p>
             </div>
           )}
         </div>

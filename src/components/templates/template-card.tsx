@@ -6,15 +6,22 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Eye, Code } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 type TemplateCardProps = {
   name: string;
   imageUrl: string;
   tags: string[];
   dataAiHint: string;
+  tier: 'Free' | 'Pro' | 'Premium';
 };
 
-export default function TemplateCard({ name, imageUrl, tags, dataAiHint }: TemplateCardProps) {
+export default function TemplateCard({ name, imageUrl, tags, dataAiHint, tier }: TemplateCardProps) {
+    const tierColor = {
+        Free: 'bg-primary/80',
+        Pro: 'bg-orange-500',
+        Premium: 'bg-purple-600'
+    };
   return (
     <Card className="overflow-hidden group border-border/20 shadow-lg hover:shadow-xl transition-shadow duration-300">
       <CardContent className="p-0">
@@ -27,6 +34,9 @@ export default function TemplateCard({ name, imageUrl, tags, dataAiHint }: Templ
             className="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-105"
             data-ai-hint={dataAiHint}
           />
+          <Badge className={cn("absolute top-2 right-2 border-none text-white", tierColor[tier])}>
+            {tier}
+          </Badge>
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
           <div className="absolute bottom-0 left-0 p-4">
              <div className="flex flex-wrap gap-2">
