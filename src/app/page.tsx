@@ -69,7 +69,8 @@ export default function Home() {
           <ResumeList 
             projects={projects} 
             deleteProject={deleteProject} 
-            hasReachedLimit={hasReachedLimit} 
+            hasReachedLimit={hasReachedLimit}
+            onNewResumeClick={handleOpenModal} 
           />
         </div>
       </main>

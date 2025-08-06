@@ -1,4 +1,5 @@
 
+"use client";
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -29,9 +30,10 @@ type ResumeListProps = {
     projects: ResumeData[];
     deleteProject: (id: string) => void;
     hasReachedLimit: boolean;
+    onNewResumeClick: () => void;
 };
 
-export default function ResumeList({ projects, deleteProject, hasReachedLimit }: ResumeListProps) {
+export default function ResumeList({ projects, deleteProject, hasReachedLimit, onNewResumeClick }: ResumeListProps) {
     return (
         <>
             {hasReachedLimit && (
@@ -48,9 +50,9 @@ export default function ResumeList({ projects, deleteProject, hasReachedLimit }:
             )}
 
             <Tabs defaultValue="workspaces">
-                <TabsList>
-                    <TabsTrigger value="workspaces">My Resumes</TabsTrigger>
-                    <TabsTrigger value="shared">Shared with me</TabsTrigger>
+                <TabsList className="text-base md:text-sm">
+                    <TabsTrigger value="workspaces" className="px-4 py-2">My Resumes</TabsTrigger>
+                    <TabsTrigger value="shared" className="px-4 py-2">Shared with me</TabsTrigger>
                 </TabsList>
                 <TabsContent value="workspaces" className="mt-6">
                     {projects.length > 0 ? (
@@ -58,10 +60,10 @@ export default function ResumeList({ projects, deleteProject, hasReachedLimit }:
                             {projects.map((project, i) => (
                                 <ShineBorder 
                                     key={project.id} 
-                                    className="animate-in fade-in"
+                                    className="animate-in fade-in z-10"
                                     style={{ animationDelay: `${i * 100}ms`, animationFillMode: 'backwards' }}
                                 >
-                                    <div className="p-3 flex items-center gap-4 transition-colors bg-background rounded-[calc(var(--border-radius)-1px)]">
+                                    <div className="p-3 flex items-center gap-4 transition-colors bg-background rounded-md">
                                         <FileText className="w-6 h-6 text-primary" />
                                         <div className="flex-1">
                                             <Link href={`/workspace/${project.id}`} className="font-semibold hover:underline">{project.name}</Link>
@@ -78,7 +80,7 @@ export default function ResumeList({ projects, deleteProject, hasReachedLimit }:
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent>
                                                     <AlertDialogTrigger asChild>
-                                                        <DropdownMenuItem className="text-destructive hover:!text-red-500 focus:!text-red-500">
+                                                        <DropdownMenuItem className="text-red-400 hover:!text-red-400 focus:!text-red-400">
                                                             <Trash2 className="mr-2 h-4 w-4"/>
                                                             Delete
                                                         </DropdownMenuItem>
@@ -108,7 +110,11 @@ export default function ResumeList({ projects, deleteProject, hasReachedLimit }:
                         <div className="text-center py-16 border-2 border-dashed border-border rounded-lg flex flex-col items-center justify-center">
                             <FilePlus2 className="w-16 h-16 text-muted-foreground/50 mb-4" />
                             <h3 className="text-xl font-medium text-muted-foreground">No resumes yet.</h3>
-                            <p className="text-muted-foreground mb-4">Click "Create New Resume" to get started.</p>
+                            <p className="text-muted-foreground mb-4">Click the button below to get started.</p>
+                            <Button onClick={onNewResumeClick}>
+                                <FilePlus2 className="mr-2 h-4 w-4" />
+                                Create New Resume
+                            </Button>
                         </div>
                     )}
                 </TabsContent>
