@@ -12,7 +12,7 @@ type SectionCardProps = {
 
 export default function SectionCard({ title, children, onAdd, addText }: SectionCardProps) {
     return (
-        <Card className="bg-card/80 backdrop-blur-sm border-border/20 shadow-lg mb-6 overflow-hidden">
+        <Card className="bg-card border-border/20 shadow-lg mb-6 overflow-hidden">
             <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle>{title}</CardTitle>
                 {onAdd && addText && (

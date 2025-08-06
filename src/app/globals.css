@@ -45,9 +45,9 @@ body {
   .dark {
     --background: 0 0% 0%; /* #000000 */
     --foreground: 0 0% 98%;
-    --card: 0 0% 10% / 0.5;
+    --card: 240 4.8% 9.5%;
     --card-foreground: 0 0% 98%;
-    --popover: 0 0% 5% / 0.8;
+    --popover: 0 0% 5%;
     --popover-foreground: 0 0% 98%;
     --primary: 180 33% 37%; /* #408080 - Muted Teal */
     --primary-foreground: 0 0% 98%;
@@ -59,8 +59,8 @@ body {
     --accent-foreground: 0 0% 10%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 18% / 0.8;
-    --input: 0 0% 18% / 0.8;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
     --ring: 180 100% 50%; /* #00FFFF - Vibrant Teal */
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;

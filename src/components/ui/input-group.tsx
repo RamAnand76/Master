@@ -15,7 +15,7 @@ const InputGroup = React.forwardRef<HTMLDivElement, InputGroupProps>(
       <div
         ref={ref}
         className={cn(
-          "flex items-center w-full rounded-md border border-input bg-background text-sm ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2",
+          "flex items-center w-full rounded-md border border-input text-sm ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2",
           "[&_>_:first-child]:pl-3 [&_>_:last-child]:pr-3",
           "[&_input]:border-none [&_input]:w-full [&_input]:h-auto [&_input]:p-0 [&_input]:bg-transparent [&_input]:focus-visible:ring-0 [&_input]:focus-visible:ring-offset-0",
           className
