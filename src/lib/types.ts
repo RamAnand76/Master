@@ -55,6 +55,7 @@ export const resumeDataSchema = z.object({
   education: z.array(educationSchema).default([]),
   projects: z.array(projectSchema).default([]),
   skills: z.array(skillSchema).default([]),
+  jobDescription: z.string().optional(),
 });
 
 export type ResumeData = z.infer<typeof resumeDataSchema>;
@@ -63,3 +64,28 @@ export type Experience = z.infer<typeof experienceSchema>;
 export type Education = z.infer<typeof educationSchema>;
 export type Project = z.infer<typeof projectSchema>;
 export type Skill = z.infer<typeof skillSchema>;
+
+// AI Related Schemas
+export const SuggestResumeImprovementsInputSchema = z.object({
+  resumeContent: z.string().describe('The content of the resume to be improved.'),
+});
+export type SuggestResumeImprovementsInput = z.infer<typeof SuggestResumeImprovementsInputSchema>;
+
+export const SuggestResumeImprovementsOutputSchema = z.object({
+  improvedContent: z.string().describe('The improved content of the resume with suggestions.'),
+  explanation: z.string().describe('An explanation of the changes made and why they were suggested.'),
+});
+export type SuggestResumeImprovementsOutput = z.infer<typeof SuggestResumeImprovementsOutputSchema>;
+
+export const GenerateTailoredResumeInputSchema = z.object({
+  jobPosition: z.string().describe("The job position the user is applying for."),
+  company: z.string().describe("The company the user is applying to."),
+  jobDescription: z.string().describe("The job description provided by the user."),
+});
+export type GenerateTailoredResumeInput = z.infer<typeof GenerateTailoredResumeInputSchema>;
+
+export const GenerateTailoredResumeOutputSchema = z.object({
+  summary: z.string().describe("A professional summary tailored to the job description."),
+  experienceDescription: z.string().describe("A description for the most recent experience, tailored to the job description."),
+});
+export type GenerateTailoredResumeOutput = z.infer<typeof GenerateTailoredResumeOutputSchema>;
