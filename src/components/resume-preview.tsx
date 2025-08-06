@@ -18,17 +18,17 @@ export default function ResumePreview({ resumeData }: { resumeData: ResumeData }
         {personalDetails?.name && <h1 className="text-2xl font-bold tracking-tight">{personalDetails.name}</h1>}
         <div className="flex justify-center items-center gap-x-3 gap-y-1 mt-1 text-xs text-muted-foreground flex-wrap">
             {personalDetails?.location && <span>{personalDetails.location}</span>}
-            {personalDetails?.email && <a href={`mailto:${personalDetails.email}`} className="flex items-center gap-1 hover:text-primary"><Mail size={11}/>{personalDetails.email}</a>}
-            {personalDetails?.phone && <a href={`tel:${personalDetails.phone}`} className="flex items-center gap-1 hover:text-primary"><Phone size={11}/>{personalDetails.phone}</a>}
-            {personalDetails?.website && personalDetails.website.startsWith('http') && <a href={personalDetails.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-primary"><Globe size={11}/>Portfolio</a>}
-            {personalDetails?.linkedin && personalDetails.linkedin.startsWith('http') && <a href={personalDetails.linkedin} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-primary"><Linkedin size={11}/>LinkedIn</a>}
-            {personalDetails?.github && personalDetails.github.startsWith('http') && <a href={personalDetails.github} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-primary"><Github size={11}/>GitHub</a>}
+            {personalDetails?.email && <a href={`mailto:${personalDetails.email}`} className="flex items-center gap-1 hover:text-primary hover:underline"><Mail size={11}/>{personalDetails.email}</a>}
+            {personalDetails?.phone && <a href={`tel:${personalDetails.phone}`} className="flex items-center gap-1 hover:text-primary hover:underline"><Phone size={11}/>{personalDetails.phone}</a>}
+            {personalDetails?.website && personalDetails.website.startsWith('http') && <a href={personalDetails.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-primary hover:underline"><Globe size={11}/>Portfolio</a>}
+            {personalDetails?.linkedin && personalDetails.linkedin.startsWith('http') && <a href={personalDetails.linkedin} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-primary hover:underline"><Linkedin size={11}/>LinkedIn</a>}
+            {personalDetails?.github && personalDetails.github.startsWith('http') && <a href={personalDetails.github} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-primary hover:underline"><Github size={11}/>GitHub</a>}
         </div>
       </header>
 
       {summary && (
         <Section title="Summary">
-          <p className="text-muted-foreground whitespace-pre-wrap text-xs">{summary}</p>
+          <p className="text-muted-foreground whitespace-pre-wrap text-xs leading-relaxed">{summary}</p>
         </Section>
       )}
 
