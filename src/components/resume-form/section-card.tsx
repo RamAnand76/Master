@@ -26,3 +26,5 @@ export default function SectionCard({ title, children, onAdd, addText }: Section
         </Card>
     );
 }
+
+    

@@ -1,3 +1,4 @@
+
 import { z } from 'zod';
 
 // Helper to generate UUID on the client
@@ -89,3 +90,5 @@ export const GenerateTailoredResumeOutputSchema = z.object({
   experienceDescription: z.string().describe("A description for the most recent experience, tailored to the job description."),
 });
 export type GenerateTailoredResumeOutput = z.infer<typeof GenerateTailoredResumeOutputSchema>;
+
+    
