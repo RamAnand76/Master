@@ -15,21 +15,30 @@ const InputGroup = React.forwardRef<HTMLDivElement, InputGroupProps>(
       <div
         ref={ref}
         className={cn(
-          "flex items-center w-full rounded-md border border-input text-sm ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2",
-          "[&_>_:first-child]:pl-3 [&_>_:last-child]:pr-3",
-          "[&_input]:border-none [&_input]:w-full [&_input]:h-auto [&_input]:p-0 [&_input]:bg-transparent [&_input]:focus-visible:ring-0 [&_input]:focus-visible:ring-offset-0",
+          "relative flex items-center w-full",
           className
         )}
         {...props}
       >
         {startContent && (
-          <div className="flex items-center pr-2 [&>svg]:w-4 [&>svg]:h-4">
+          <div className="absolute left-3 flex items-center pointer-events-none [&>svg]:w-4 [&>svg]:h-4 text-muted-foreground">
             {startContent}
           </div>
         )}
-        {children}
+        {React.Children.map(children, (child) => {
+          if (React.isValidElement(child)) {
+            const childClassName = child.props.className || '';
+            const newClassName = cn(
+              childClassName,
+              startContent ? "pl-9" : "pl-3",
+              endContent ? "pr-9" : "pr-3"
+            );
+            return React.cloneElement(child, { className: newClassName } as React.HTMLAttributes<HTMLElement>);
+          }
+          return child;
+        })}
         {endContent && (
-          <div className="flex items-center pl-2 [&>svg]:w-4 [&>svg]:h-4">
+          <div className="absolute right-3 flex items-center pointer-events-none [&>svg]:w-4 [&>svg]:h-4 text-muted-foreground">
             {endContent}
           </div>
         )}
