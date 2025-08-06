@@ -13,6 +13,7 @@ import { ArrowLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useParams } from 'next/navigation';
 import { MultiStepLoader } from '@/components/ui/multi-step-loader';
+import { useUser } from '@/hooks/use-user';
 
 
 function debounce<F extends (...args: any[]) => any>(func: F, waitFor: number) {
@@ -41,6 +42,7 @@ export default function WorkspacePage() {
   const [isSaving, setIsSaving] = useState(false);
   const [isSaved, setIsSaved] = useState(true);
   const { toast } = useToast();
+  const { user, isLoaded: isUserLoaded } = useUser();
 
   const methods = useForm<ResumeData>({
     resolver: zodResolver(resumeDataSchema),
@@ -70,6 +72,13 @@ export default function WorkspacePage() {
     return () => clearTimeout(timer);
   }, [id, methods]);
   
+  useEffect(() => {
+    if (isUserLoaded && user.name) {
+      methods.setValue('personalDetails.name', user.name, { shouldValidate: true });
+    }
+  }, [isUserLoaded, user.name, methods]);
+
+
   const saveData = useCallback((data: ResumeData) => {
     try {
       const savedProjects = localStorage.getItem('resuMasterProjects');

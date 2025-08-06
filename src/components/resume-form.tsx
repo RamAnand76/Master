@@ -23,14 +23,14 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/t
 
 export default function ResumeForm() {
     const { control, getValues } = useFormContext<ResumeData>();
-    const [suggestionField, setSuggestionField] = useState<'summary' | null>(null);
+    const [suggestionField, setSuggestionField] = useState<'summary' | 'experience.0.description' | null>(null);
 
     const { fields: experienceFields, append: appendExperience, remove: removeExperience } = useFieldArray({ control, name: 'experience' });
     const { fields: educationFields, append: appendEducation, remove: removeEducation } = useFieldArray({ control, name: 'education' });
     const { fields: projectFields, append: appendProject, remove: removeProject } = useFieldArray({ control, name: 'projects' });
     const { fields: skillFields, append: appendSkill, remove: removeSkill } = useFieldArray({ control, name: 'skills' });
     
-    const handleGetSuggestion = (fieldName: 'summary') => {
+    const handleGetSuggestion = (fieldName: 'summary' | 'experience.0.description') => {
         setSuggestionField(fieldName);
     };
 
@@ -38,7 +38,7 @@ export default function ResumeForm() {
         <div className="space-y-6">
             <SectionCard title="Personal Details">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FormField control={control} name="personalDetails.name" render={({ field }) => ( <FormItem> <FormLabel>Full Name</FormLabel> <FormControl><Input placeholder="John Doe" {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
+                    <FormField control={control} name="personalDetails.name" render={({ field }) => ( <FormItem> <FormLabel>Full Name</FormLabel> <FormControl><Input placeholder="John Doe" {...field} disabled /></FormControl> <FormMessage /> </FormItem> )}/>
                     <FormField control={control} name="personalDetails.email" render={({ field }) => ( <FormItem> <FormLabel>Email</FormLabel> <FormControl><Input placeholder="john.doe@email.com" {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
                     <FormField control={control} name="personalDetails.phone" render={({ field }) => ( <FormItem> <FormLabel>Phone</FormLabel> <FormControl><Input placeholder="(123) 456-7890" {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
                     <FormField control={control} name="personalDetails.location" render={({ field }) => ( <FormItem> <FormLabel>Location</FormLabel> <FormControl><Input placeholder="New York, NY" {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
@@ -86,7 +86,21 @@ export default function ResumeForm() {
                             <FormField control={control} name={`experience.${index}.startDate`} render={({ field }) => ( <FormItem> <FormLabel>Start Date</FormLabel> <FormControl><Input placeholder="Jan 2022" {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
                             <FormField control={control} name={`experience.${index}.endDate`} render={({ field }) => ( <FormItem> <FormLabel>End Date</FormLabel> <FormControl><Input placeholder="Present" {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
                         </div>
+                        <div className="relative">
                         <FormField control={control} name={`experience.${index}.description`} render={({ field }) => ( <FormItem className="mt-4"> <FormLabel>Description</FormLabel> <FormControl><Textarea placeholder="- Did this and that..." {...field} rows={4} /></FormControl> <FormMessage /> </FormItem> )}/>
+                        <TooltipProvider>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button type="button" size="icon" variant="ghost" className="absolute top-5 right-1 text-accent-foreground/50 hover:text-accent-foreground/80" onClick={() => handleGetSuggestion(`experience.0.description`)} aria-label="Get AI Suggestions">
+                                        <Wand2 className="h-4 w-4" />
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>Get AI Suggestions for this experience</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
+                        </div>
                     </FieldArrayItem>
                 ))}
             </SectionCard>
