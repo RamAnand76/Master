@@ -21,8 +21,8 @@ export default function RootLayout({
       icon: <Home className="h-full w-full" />,
     },
     {
-      title: "My Resumes",
-      href: "/",
+      title: "Templates",
+      href: "/templates",
       icon: <FileText className="h-full w-full" />,
     },
     {
@@ -32,7 +32,7 @@ export default function RootLayout({
     },
     {
       title: "Settings",
-      href: "#",
+      href: "/settings",
       icon: <Settings className="h-full w-full" />,
     }
   ];
