@@ -59,7 +59,11 @@ export default function Home() {
 
       <main className="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-7xl mx-auto p-8">
         <div className="lg:col-span-1">
-          <HomeHero onNewResumeClick={handleOpenModal} hasReachedLimit={hasReachedLimit} />
+          <HomeHero 
+            name="Ramanand" 
+            onNewResumeClick={handleOpenModal} 
+            hasReachedLimit={hasReachedLimit} 
+          />
         </div>
         <div className="lg:col-span-1">
           <ResumeList 

@@ -4,11 +4,12 @@ import { RainbowButton } from '@/components/magicui/rainbow-button';
 import { AnimatedGradientText } from '@/components/magicui/animated-gradient-text';
 
 type HomeHeroProps = {
+    name?: string;
     onNewResumeClick: () => void;
     hasReachedLimit: boolean;
 };
 
-export default function HomeHero({ onNewResumeClick, hasReachedLimit }: HomeHeroProps) {
+export default function HomeHero({ name, onNewResumeClick, hasReachedLimit }: HomeHeroProps) {
     return (
         <div className="space-y-8">
             <div>
@@ -18,7 +19,7 @@ export default function HomeHero({ onNewResumeClick, hasReachedLimit }: HomeHero
                     colorTo="#00FFFF"
                     className="text-5xl font-bold"
                 >
-                   Hello,
+                   Hello, {name} 👋
                 </AnimatedGradientText>
                 <p className="text-3xl text-muted-foreground">Welcome back</p>
             </div>
