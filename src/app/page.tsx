@@ -68,14 +68,14 @@ export default function Home() {
       />
       <HomeHeader />
 
-      <main className="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-7xl mx-auto p-8">
-        <div className="lg:col-span-1">
+      <main className="max-w-4xl mx-auto p-8 space-y-12">
+        <div>
           <HomeHero 
             onNewResumeClick={handleOpenModal} 
             hasReachedLimit={hasReachedLimit} 
           />
         </div>
-        <div className="lg:col-span-1">
+        <div>
           <ResumeList 
             projects={projects} 
             deleteProject={deleteProject} 
