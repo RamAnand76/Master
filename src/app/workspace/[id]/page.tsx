@@ -10,9 +10,9 @@ import ResumePreview from '@/components/resume-preview';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
-import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
 import { useParams } from 'next/navigation';
+import { MultiStepLoader } from '@/components/ui/multi-step-loader';
 
 
 function debounce<F extends (...args: any[]) => any>(func: F, waitFor: number) {
@@ -25,6 +25,14 @@ function debounce<F extends (...args: any[]) => any>(func: F, waitFor: number) {
       timeout = setTimeout(() => resolve(func(...args)), waitFor);
     });
 }
+
+const loadingStates = [
+  { text: 'Loading your resume...' },
+  { text: 'Preparing your workspace...' },
+  { text: 'Assembling the editor...' },
+  { text: 'Finalizing the preview...' },
+  { text: 'Almost there...' },
+];
 
 export default function WorkspacePage() {
   const params = useParams();
@@ -54,7 +62,12 @@ export default function WorkspacePage() {
         console.error("Failed to parse projects from localStorage", e);
       }
     }
-    setIsLoaded(true);
+    // Simulate a longer loading time to see the loader
+    const timer = setTimeout(() => {
+        setIsLoaded(true);
+    }, 1500); 
+    
+    return () => clearTimeout(timer);
   }, [id, methods]);
   
   const saveData = useCallback((data: ResumeData) => {
@@ -96,12 +109,7 @@ export default function WorkspacePage() {
 
   if (!isLoaded) {
     return (
-        <div className="flex h-screen w-full items-center justify-center p-8 bg-secondary">
-            <div className="w-full max-w-screen-2xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div><Skeleton className="h-[80vh] w-full rounded-lg bg-background" /></div>
-                <div><Skeleton className="h-[80vh] w-full rounded-lg bg-background" /></div>
-            </div>
-        </div>
+        <MultiStepLoader loadingStates={loadingStates} loading={!isLoaded} duration={300} loop={false} />
     );
   }
 
