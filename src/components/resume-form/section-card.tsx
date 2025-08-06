@@ -14,7 +14,7 @@ export default function SectionCard({ title, children, onAdd, addText }: Section
     return (
         <Card className="bg-card border-border/20 shadow-lg mb-6 overflow-hidden">
             <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle className="text-primary">{title}</CardTitle>
+                <CardTitle className="text-accent">{title}</CardTitle>
                 {onAdd && addText && (
                     <Button variant="ghost" size="sm" onClick={onAdd} type="button">
                         <PlusCircle className="mr-2 h-4 w-4" />
