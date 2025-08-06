@@ -1,4 +1,5 @@
 
+import HomeHeader from '@/components/home/home-header';
 import TemplateCard from '@/components/templates/template-card';
 
 const templates = [
@@ -43,6 +44,7 @@ const templates = [
 export default function TemplatesPage() {
   return (
     <div className="min-h-screen bg-background text-foreground pb-24">
+      <HomeHeader />
       <main className="max-w-7xl mx-auto p-8">
         <header className="text-center mb-12">
           <h1 className="text-4xl font-bold tracking-tight">Resume Templates</h1>
