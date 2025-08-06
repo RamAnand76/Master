@@ -162,7 +162,7 @@ export default function WorkspacePage() {
           </div>
         </header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-screen-2xl mx-auto p-4 sm:p-6 pb-24">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-screen-2xl mx-auto p-4 sm:p-6 pb-32">
           <div className="lg:max-h-[calc(100vh-80px)] lg:overflow-y-auto pr-4 space-y-6">
              <h1 className="text-xl font-semibold text-center">{resumeName}</h1>
             <ResumeForm />
