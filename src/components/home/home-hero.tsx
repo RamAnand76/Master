@@ -22,7 +22,7 @@ export default function HomeHero({ onNewResumeClick, hasReachedLimit }: HomeHero
                     speed={2}
                     colorFrom="#408080"
                     colorTo="#00FFFF"
-                    className="text-4xl font-bold"
+                    className="text-4xl font-bold font-headline"
                 >
                    Hello, {name} 👋
                 </AnimatedGradientText>
