@@ -112,11 +112,8 @@ export default {
           "0%": {
             "background-position": "0 0",
           },
-          "50%": {
-            "background-position": "100% 0",
-          },
           "100%": {
-            "background-position": "0 0",
+            "background-position": "200% 0",
           }
         }
       },
