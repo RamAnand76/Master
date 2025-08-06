@@ -111,8 +111,8 @@ export default function TemplatesPage() {
           </div>
         </div>
 
-        <div className="flex flex-col items-center gap-6">
-            <Tabs defaultValue="All" onValueChange={setActiveCategory} className="w-full max-w-md mx-auto">
+        <div className="flex justify-center mb-8">
+            <Tabs defaultValue="All" onValueChange={setActiveCategory}>
                  <TabsList>
                     {categories.map(category => (
                         <TabsTrigger key={category} value={category} className="capitalize">
