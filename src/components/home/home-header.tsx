@@ -22,12 +22,12 @@ export default function HomeHeader() {
 
     return (
         <>
-            <header className="p-4 flex justify-between items-center border-b border-border">
-                <div className="flex items-center gap-3">
+            <header className="px-4 py-2 flex justify-between items-center border-b border-border">
+                <div className="flex items-center gap-2">
                     <AppLogo />
-                    <span className="font-semibold text-xl tracking-tighter">ResuMaster</span>
+                    <span className="font-semibold text-lg tracking-tight">ResuMaster</span>
                 </div>
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
                     <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger asChild>
@@ -43,7 +43,7 @@ export default function HomeHeader() {
 
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                             <Avatar className="cursor-pointer">
+                             <Avatar className="h-8 w-8 cursor-pointer">
                                 <AvatarImage src="https://placehold.co/40x40.png" data-ai-hint="user avatar" />
                                 <AvatarFallback>{user.name?.[0]?.toUpperCase() ?? 'U'}</AvatarFallback>
                             </Avatar>
