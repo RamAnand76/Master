@@ -9,8 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { type ResumeData, resumeDataSchema, experienceSchema, type GenerateTailoredResumeInput } from "@/lib/types";
-import { generateTailoredResumeAction } from "@/lib/actions";
+import { type ResumeData, resumeDataSchema, experienceSchema } from "@/lib/types";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { MultiStepLoader } from "./ui/multi-step-loader";
@@ -38,7 +37,6 @@ const loadingStates = [
   ];
 
 export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate }: NewProjectModalProps) {
-    const [isGenerating, setIsGenerating] = useState(false);
     const { toast } = useToast();
     const methods = useForm<NewProjectFormValues>({
         resolver: zodResolver(newProjectSchema),
@@ -53,30 +51,8 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate 
   const { handleSubmit, control } = methods;
 
   const onSubmit = async (values: NewProjectFormValues) => {
-    let summary = 'A brief professional summary about yourself.';
-    let experienceDescription = '- Bullet point about your achievement.';
-
-    if (values.jobDescription) {
-        setIsGenerating(true);
-        try {
-            const result = await generateTailoredResumeAction({
-                jobPosition: values.jobPosition,
-                company: values.company,
-                jobDescription: values.jobDescription,
-            });
-
-            if (result && !("error" in result)) {
-                summary = result.summary;
-                experienceDescription = result.experienceDescription;
-                toast({ title: "Success", description: "AI has tailored your resume!" });
-            } else {
-                toast({ variant: "destructive", title: "Error", description: result?.error || "Could not generate tailored content." });
-            }
-        } finally {
-            setIsGenerating(false);
-        }
-    }
-
+    const summary = 'A brief professional summary about yourself.';
+    const experienceDescription = '- Bullet point about your achievement.';
 
     const newProject = resumeDataSchema.parse({
       id: `studio-${Math.random().toString(36).substring(2, 12)}`,
@@ -97,10 +73,6 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate 
     onOpenChange(false);
     methods.reset();
   };
-  
-  if (isGenerating) {
-    return <MultiStepLoader loadingStates={loadingStates} loading={true} duration={1500} />;
-  }
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
