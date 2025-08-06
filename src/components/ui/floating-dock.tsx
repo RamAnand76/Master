@@ -67,7 +67,7 @@ const FloatingDockMobile = ({
                 <a
                   href={item.href}
                   key={item.title}
-                  className="flex h-10 w-10 items-center justify-center rounded-full bg-card"
+                  className="flex h-9 w-9 items-center justify-center rounded-full bg-card"
                 >
                   <div className="h-4 w-4">{item.icon}</div>
                 </a>
@@ -78,7 +78,7 @@ const FloatingDockMobile = ({
       </AnimatePresence>
       <button
         onClick={() => setOpen(!open)}
-        className="flex h-12 w-12 items-center justify-center rounded-full bg-card border border-border"
+        className="flex h-11 w-11 items-center justify-center rounded-full bg-card border border-border"
       >
         <IconLayoutNavbarCollapse className="h-5 w-5 text-muted-foreground" />
       </button>
@@ -99,7 +99,7 @@ const FloatingDockDesktop = ({
       onMouseMove={(e) => mouseX.set(e.pageX)}
       onMouseLeave={() => mouseX.set(Infinity)}
       className={cn(
-        "fixed bottom-4 left-1/2 -translate-x-1/2 mx-auto hidden h-16 items-end gap-4 rounded-2xl bg-card border border-border px-4 pb-3 md:flex z-50",
+        "fixed bottom-4 left-1/2 -translate-x-1/2 mx-auto hidden h-14 items-end gap-3 rounded-2xl bg-card border border-border px-3 pb-2.5 md:flex z-50",
         className,
       )}
     >
@@ -129,14 +129,14 @@ function IconContainer({
     return val - bounds.x - bounds.width / 2;
   });
 
-  let widthTransform = useTransform(distance, [-150, 0, 150], [40, 80, 40]);
-  let heightTransform = useTransform(distance, [-150, 0, 150], [40, 80, 40]);
+  let widthTransform = useTransform(distance, [-120, 0, 120], [36, 72, 36]);
+  let heightTransform = useTransform(distance, [-120, 0, 120], [36, 72, 36]);
 
-  let widthTransformIcon = useTransform(distance, [-150, 0, 150], [20, 40, 20]);
+  let widthTransformIcon = useTransform(distance, [-120, 0, 120], [18, 36, 18]);
   let heightTransformIcon = useTransform(
     distance,
-    [-150, 0, 150],
-    [20, 40, 20],
+    [-120, 0, 120],
+    [18, 36, 18],
   );
 
   let width = useSpring(widthTransform, {
@@ -175,10 +175,10 @@ function IconContainer({
         <AnimatePresence>
           {hovered && (
             <motion.div
-              initial={{ opacity: 0, y: 10, x: "-50%" }}
+              initial={{ opacity: 0, y: 8, x: "-50%" }}
               animate={{ opacity: 1, y: 0, x: "-50%" }}
-              exit={{ opacity: 0, y: 2, x: "-50%" }}
-              className="absolute -top-8 left-1/2 w-fit rounded-md border border-border bg-card px-2 py-0.5 text-xs whitespace-pre text-foreground"
+              exit={{ opacity: 0, y: 8, x: "-50%" }}
+              className="absolute -top-7 left-1/2 w-fit rounded-md border border-border bg-card px-1.5 py-0.5 text-xs whitespace-pre text-foreground"
             >
               {title}
             </motion.div>

@@ -16,26 +16,27 @@ export default function HomeHero({ onNewResumeClick, hasReachedLimit }: HomeHero
     const name = user.name || 'there';
 
     return (
-        <div className="space-y-8">
+        <div className="space-y-6">
             <div>
                  <AnimatedGradientText
                     speed={2}
                     colorFrom="#408080"
                     colorTo="#00FFFF"
-                    className="text-5xl font-bold"
+                    className="text-4xl font-bold"
                 >
                    Hello, {name} 👋
                 </AnimatedGradientText>
-                <p className="text-3xl text-muted-foreground">Welcome back</p>
+                <p className="text-2xl text-muted-foreground">Welcome back</p>
             </div>
             
-            <div className="space-y-4">
-                <h2 className="text-lg font-medium">Start a new resume</h2>
+            <div className="space-y-3">
+                <h2 className="text-base font-medium">Start a new resume</h2>
                  <RainbowButton 
                     onClick={onNewResumeClick} 
                     disabled={hasReachedLimit}
+                    className="h-10"
                 >
-                    <Plus className="mr-2 h-5 w-5" /> Create New Resume
+                    <Plus className="mr-2 h-4 w-4" /> Create New Resume
                 </RainbowButton>
             </div>
         </div>

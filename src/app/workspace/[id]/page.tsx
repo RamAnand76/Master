@@ -126,29 +126,29 @@ export default function WorkspacePage() {
     <FormProvider {...methods}>
       <main className="min-h-screen bg-secondary">
         <header className="bg-background/80 backdrop-blur-sm sticky top-0 z-10 border-b border-border">
-          <div className="max-w-screen-2xl mx-auto px-4 sm:px-8 py-3 flex items-center justify-between">
-             <Button asChild variant="ghost" className="text-primary-foreground hover:bg-secondary">
+          <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 py-2 flex items-center justify-between">
+             <Button asChild variant="ghost" size="sm" className="text-sm">
                 <Link href="/">
                     <ArrowLeft className="mr-2 h-4 w-4"/> Back to Workspaces
                 </Link>
              </Button>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
               {isSaving ? (
-                <span className="text-sm text-muted-foreground animate-pulse">Saving...</span>
+                <span className="text-xs text-muted-foreground animate-pulse">Saving...</span>
               ) : (
-                <span className="text-sm text-muted-foreground">{isSaved ? 'All changes saved' : 'Unsaved changes'}</span>
+                <span className="text-xs text-muted-foreground">{isSaved ? 'All changes saved' : 'Unsaved changes'}</span>
               )}
             </div>
           </div>
         </header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-screen-2xl mx-auto p-4 sm:p-8">
-          <div className="lg:max-h-[calc(100vh-90px)] lg:overflow-y-auto pr-4 space-y-8">
-             <h1 className="text-2xl font-semibold text-center">{resumeName}</h1>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-screen-2xl mx-auto p-4 sm:p-6">
+          <div className="lg:max-h-[calc(100vh-80px)] lg:overflow-y-auto pr-4 space-y-6">
+             <h1 className="text-xl font-semibold text-center">{resumeName}</h1>
             <ResumeForm />
           </div>
-          <div className="lg:max-h-[calc(100vh-90px)] lg:overflow-y-auto">
-            <div className="bg-background shadow-lg rounded-lg sticky top-[70px]">
+          <div className="lg:max-h-[calc(100vh-80px)] lg:overflow-y-auto">
+            <div className="bg-background shadow-lg rounded-lg sticky top-[60px]">
               <ResumePreview resumeData={methods.watch()} />
             </div>
           </div>

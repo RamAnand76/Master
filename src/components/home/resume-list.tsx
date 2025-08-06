@@ -38,24 +38,24 @@ export default function ResumeList({ projects, deleteProject, hasReachedLimit, o
     return (
         <>
             {hasReachedLimit && (
-                <Card className="mb-8 bg-card border-border">
-                    <CardHeader className="flex flex-row items-center gap-4">
-                        <ListTodo className="w-6 h-6 text-primary"/>
+                <Card className="mb-6 bg-card border-border">
+                    <CardHeader className="flex flex-row items-center gap-4 p-4">
+                        <ListTodo className="w-5 h-5 text-primary"/>
                         <div className="flex-1">
-                            <CardTitle>You have reached your workspace limit.</CardTitle>
-                            <CardDescription>Upgrade to premium to create more resumes.</CardDescription>
+                            <CardTitle className="text-base">You have reached your workspace limit.</CardTitle>
+                            <CardDescription className="text-xs">Upgrade to premium to create more resumes.</CardDescription>
                         </div>
-                        <Button>Upgrade</Button>
+                        <Button size="sm">Upgrade</Button>
                     </CardHeader>
                 </Card>
             )}
 
             <Tabs defaultValue="workspaces">
-                <TabsList className="text-base md:text-sm">
-                    <TabsTrigger value="workspaces" className="px-4 py-2">My Resumes</TabsTrigger>
-                    <TabsTrigger value="shared" className="px-4 py-2">Shared with me</TabsTrigger>
+                <TabsList className="text-sm">
+                    <TabsTrigger value="workspaces" className="px-3 py-1.5">My Resumes</TabsTrigger>
+                    <TabsTrigger value="shared" className="px-3 py-1.5">Shared with me</TabsTrigger>
                 </TabsList>
-                <TabsContent value="workspaces" className="mt-6">
+                <TabsContent value="workspaces" className="mt-4">
                     {projects.length > 0 ? (
                         <div className="space-y-2">
                             {projects.map((project, i) => (
@@ -64,10 +64,10 @@ export default function ResumeList({ projects, deleteProject, hasReachedLimit, o
                                     className="animate-in fade-in z-10"
                                     style={{ animationDelay: `${i * 100}ms`, animationFillMode: 'backwards' }}
                                 >
-                                    <div className="p-3 flex items-center gap-4 transition-colors bg-background rounded-md">
-                                        <FileText className="w-6 h-6 text-primary" />
+                                    <div className="p-2.5 flex items-center gap-3 transition-colors bg-background rounded-md">
+                                        <FileText className="w-5 h-5 text-primary" />
                                         <div className="flex-1">
-                                            <Link href={`/workspace/${project.id}`} className="font-semibold hover:underline">{project.name}</Link>
+                                            <Link href={`/workspace/${project.id}`} className="font-medium text-sm hover:underline">{project.name}</Link>
                                             <div className="text-xs text-muted-foreground flex items-center gap-2">
                                                 <span>{project.createdAt ? new Date(project.createdAt).toLocaleDateString() : new Date().toLocaleDateString()}</span>
                                             </div>
@@ -75,7 +75,7 @@ export default function ResumeList({ projects, deleteProject, hasReachedLimit, o
                                         <AlertDialog>
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger asChild>
-                                                    <Button variant="ghost" size="icon" className="text-muted-foreground" aria-label="Options">
+                                                    <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground" aria-label="Options">
                                                         <MoreHorizontal className="h-4 w-4" />
                                                     </Button>
                                                 </DropdownMenuTrigger>
@@ -117,11 +117,11 @@ export default function ResumeList({ projects, deleteProject, hasReachedLimit, o
                             ))}
                         </div>
                     ) : (
-                        <div className="text-center py-16 border-2 border-dashed border-border rounded-lg flex flex-col items-center justify-center">
-                            <FilePlus2 className="w-16 h-16 text-muted-foreground/50 mb-4" />
-                            <h3 className="text-xl font-medium text-muted-foreground">No resumes yet.</h3>
-                            <p className="text-muted-foreground mb-4">Click the button below to get started.</p>
-                            <Button onClick={onNewResumeClick}>
+                        <div className="text-center py-12 border-2 border-dashed border-border rounded-lg flex flex-col items-center justify-center">
+                            <FilePlus2 className="w-12 h-12 text-muted-foreground/50 mb-3" />
+                            <h3 className="text-lg font-medium text-muted-foreground">No resumes yet.</h3>
+                            <p className="text-sm text-muted-foreground mb-4">Click the button below to get started.</p>
+                            <Button onClick={onNewResumeClick} size="sm">
                                 <FilePlus2 className="mr-2 h-4 w-4" />
                                 Create New Resume
                             </Button>
@@ -129,10 +129,10 @@ export default function ResumeList({ projects, deleteProject, hasReachedLimit, o
                     )}
                 </TabsContent>
                 <TabsContent value="shared" className="mt-6">
-                    <div className="text-center py-16 border-2 border-dashed border-border rounded-lg flex flex-col items-center justify-center">
-                        <Users className="w-16 h-16 text-muted-foreground/50 mb-4" />
-                        <h3 className="text-xl font-medium text-muted-foreground">No shared resumes.</h3>
-                        <p className="text-muted-foreground">Resumes shared with you will appear here.</p>
+                    <div className="text-center py-12 border-2 border-dashed border-border rounded-lg flex flex-col items-center justify-center">
+                        <Users className="w-12 h-12 text-muted-foreground/50 mb-3" />
+                        <h3 className="text-lg font-medium text-muted-foreground">No shared resumes.</h3>
+                        <p className="text-sm text-muted-foreground">Resumes shared with you will appear here.</p>
                     </div>
                 </TabsContent>
             </Tabs>
