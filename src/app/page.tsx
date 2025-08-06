@@ -8,11 +8,13 @@ import NewProjectModal from '@/components/new-project-modal';
 import HomeHeader from '@/components/home/home-header';
 import HomeHero from '@/components/home/home-hero';
 import ResumeList from '@/components/home/resume-list';
+import { useUser } from '@/hooks/use-user';
 
 export default function Home() {
   const [projects, setProjects] = useState<ResumeData[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
+  const { user } = useUser();
 
   useEffect(() => {
     const savedProjects = localStorage.getItem('resuMasterProjects');
@@ -20,7 +22,6 @@ export default function Home() {
       try {
         const parsedProjects: ResumeData[] = JSON.parse(savedProjects);
         if (Array.isArray(parsedProjects)) {
-            // Sort projects by createdAt date, newest first
             const sortedProjects = parsedProjects.sort((a, b) => {
               const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
               const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
@@ -70,7 +71,6 @@ export default function Home() {
       <main className="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-7xl mx-auto p-8">
         <div className="lg:col-span-1">
           <HomeHero 
-            name="Ramanand" 
             onNewResumeClick={handleOpenModal} 
             hasReachedLimit={hasReachedLimit} 
           />

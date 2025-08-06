@@ -1,15 +1,20 @@
 
+"use client";
+
 import { Plus } from 'lucide-react';
 import { RainbowButton } from '@/components/magicui/rainbow-button';
 import { AnimatedGradientText } from '@/components/magicui/animated-gradient-text';
+import { useUser } from '@/hooks/use-user';
 
 type HomeHeroProps = {
-    name?: string;
     onNewResumeClick: () => void;
     hasReachedLimit: boolean;
 };
 
-export default function HomeHero({ name, onNewResumeClick, hasReachedLimit }: HomeHeroProps) {
+export default function HomeHero({ onNewResumeClick, hasReachedLimit }: HomeHeroProps) {
+    const { user } = useUser();
+    const name = user.name || 'there';
+
     return (
         <div className="space-y-8">
             <div>
