@@ -12,7 +12,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { Wand2, Trash2 } from 'lucide-react';
+import { Wand2, Trash2, Mail, Phone, Globe, Linkedin, Github } from 'lucide-react';
 import { ResumeData } from '@/lib/types';
 import AiSuggestionDialog from './ai-suggestion-dialog';
 import { useState } from 'react';
@@ -20,6 +20,7 @@ import { educationSchema, experienceSchema, projectSchema, skillSchema } from '@
 import SectionCard from './resume-form/section-card';
 import FieldArrayItem from './resume-form/field-array-item';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
+import { InputGroup } from './ui/input-group';
 
 export default function ResumeForm() {
     const { control, getValues } = useFormContext<ResumeData>();
@@ -39,12 +40,12 @@ export default function ResumeForm() {
             <SectionCard title="Personal Details">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <FormField control={control} name="personalDetails.name" render={({ field }) => ( <FormItem> <FormLabel>Full Name</FormLabel> <FormControl><Input placeholder="John Doe" {...field} disabled /></FormControl> <FormMessage /> </FormItem> )}/>
-                    <FormField control={control} name="personalDetails.email" render={({ field }) => ( <FormItem> <FormLabel>Email</FormLabel> <FormControl><Input placeholder="john.doe@email.com" {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
-                    <FormField control={control} name="personalDetails.phone" render={({ field }) => ( <FormItem> <FormLabel>Phone</FormLabel> <FormControl><Input placeholder="(123) 456-7890" {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
+                    <FormField control={control} name="personalDetails.email" render={({ field }) => ( <FormItem> <FormLabel>Email</FormLabel> <FormControl><InputGroup startContent={<Mail className="text-muted-foreground" />}><Input type="email" placeholder="john.doe@email.com" {...field} /></InputGroup></FormControl> <FormMessage /> </FormItem> )}/>
+                    <FormField control={control} name="personalDetails.phone" render={({ field }) => ( <FormItem> <FormLabel>Phone</FormLabel> <FormControl><InputGroup startContent={<Phone className="text-muted-foreground" />}><Input placeholder="(123) 456-7890" {...field} /></InputGroup></FormControl> <FormMessage /> </FormItem> )}/>
                     <FormField control={control} name="personalDetails.location" render={({ field }) => ( <FormItem> <FormLabel>Location</FormLabel> <FormControl><Input placeholder="New York, NY" {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
-                    <FormField control={control} name="personalDetails.website" render={({ field }) => ( <FormItem> <FormLabel>Portfolio/Website</FormLabel> <FormControl><Input placeholder="https://johndoe.dev" {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
-                    <FormField control={control} name="personalDetails.linkedin" render={({ field }) => ( <FormItem> <FormLabel>LinkedIn</FormLabel> <FormControl><Input placeholder="https://linkedin.com/in/johndoe" {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
-                    <FormField control={control} name="personalDetails.github" render={({ field }) => ( <FormItem> <FormLabel>GitHub</FormLabel> <FormControl><Input placeholder="https://github.com/johndoe" {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
+                    <FormField control={control} name="personalDetails.website" render={({ field }) => ( <FormItem> <FormLabel>Portfolio/Website</FormLabel> <FormControl><InputGroup startContent={<Globe className="text-muted-foreground" />}><Input placeholder="https://johndoe.dev" {...field} /></InputGroup></FormControl> <FormMessage /> </FormItem> )}/>
+                    <FormField control={control} name="personalDetails.linkedin" render={({ field }) => ( <FormItem> <FormLabel>LinkedIn</FormLabel> <FormControl><InputGroup startContent={<Linkedin className="text-muted-foreground" />}><Input placeholder="https://linkedin.com/in/johndoe" {...field} /></InputGroup></FormControl> <FormMessage /> </FormItem> )}/>
+                    <FormField control={control} name="personalDetails.github" render={({ field }) => ( <FormItem> <FormLabel>GitHub</FormLabel> <FormControl><InputGroup startContent={<Github className="text-muted-foreground" />}><Input placeholder="https://github.com/johndoe" {...field} /></InputGroup></FormControl> <FormMessage /> </FormItem> )}/>
                 </div>
             </SectionCard>
 
@@ -160,5 +161,3 @@ export default function ResumeForm() {
         </div>
     );
 }
-
-    

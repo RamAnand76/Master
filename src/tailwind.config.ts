@@ -1,4 +1,3 @@
-
 import type {Config} from 'tailwindcss';
 
 export default {
@@ -111,6 +110,9 @@ export default {
         "shine-border": {
           "0%": {
             "background-position": "0 0",
+          },
+          "50%": {
+            "background-position": "100% 0",
           },
           "100%": {
             "background-position": "200% 0",

@@ -106,13 +106,25 @@ export default {
           "100%": {
             "background-position": "0% 50%",
           }
+        },
+        "shine-border": {
+          "0%": {
+            "background-position": "0 0",
+          },
+          "50%": {
+            "background-position": "100% 0",
+          },
+          "100%": {
+            "background-position": "200% 0",
+          }
         }
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
         'shimmer': 'shimmer var(--shimmer-duration) infinite',
-        'gradient': 'gradient var(--animation-speed) ease infinite'
+        'gradient': 'gradient var(--animation-speed) ease infinite',
+        "shine-border": "shine-border var(--duration) linear infinite",
       },
     },
   },
