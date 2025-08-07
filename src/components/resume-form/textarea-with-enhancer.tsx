@@ -4,7 +4,7 @@
 import { ControllerRenderProps } from 'react-hook-form';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, LoaderCircle } from 'lucide-react';
 import { CharacterCount } from './character-count';
 import { ResumeData } from '@/lib/types';
 
@@ -13,6 +13,7 @@ type TextareaWithEnhancerProps = {
   placeholder: string;
   max: number;
   onEnhance: () => void;
+  isLoading: boolean;
   rows?: number;
 };
 
@@ -21,6 +22,7 @@ export default function TextareaWithEnhancer({
   placeholder,
   max,
   onEnhance,
+  isLoading,
   rows = 5,
 }: TextareaWithEnhancerProps) {
 
@@ -37,11 +39,16 @@ export default function TextareaWithEnhancer({
           type="button"
           size="icon"
           variant="ghost"
-          className="h-7 w-7 text-primary hover:text-primary"
+          className="h-7 w-7 text-primary hover:text-primary disabled:opacity-100 disabled:cursor-progress"
           onClick={onEnhance}
+          disabled={isLoading}
           aria-label="Enhance with AI"
         >
-          <Sparkles className="h-4 w-4" />
+          {isLoading ? (
+            <LoaderCircle className="h-4 w-4 animate-spin" />
+          ) : (
+            <Sparkles className="h-4 w-4" />
+          )}
         </Button>
       </div>
       <div className="absolute bottom-2.5 left-3">

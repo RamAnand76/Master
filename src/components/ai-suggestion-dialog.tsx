@@ -15,32 +15,16 @@ import { Button } from "@/components/ui/button";
 import { getAiSuggestions, generateTailoredResumeAction } from "@/lib/actions";
 import { useToast } from "@/hooks/use-toast";
 import type { ResumeData } from "@/lib/types";
-import { MultiStepLoader } from "./ui/multi-step-loader";
 
 type AiSuggestionDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   fieldName: 'summary' | `experience.${number}.description` | `education.${number}.description` | `projects.${number}.description` | null;
   currentValue: string;
+  setIsLoading: (isLoading: boolean) => void;
 };
 
-const loadingStates = [
-  { text: 'Analyzing your resume content...' },
-  { text: 'Identifying key skills and experiences...' },
-  { text: 'Checking for ATS optimization...' },
-  { text: 'Crafting impactful bullet points...' },
-  { text: 'Finalizing suggestions...' },
-];
-
-const tailoredLoadingStates = [
-    { text: "Analyzing job description..." },
-    { text: "Tailoring your professional summary..." },
-    { text: "Optimizing your work experience..." },
-    { text: "Building your new resume..." },
-];
-
-export default function AiSuggestionDialog({ open, onOpenChange, fieldName, currentValue }: AiSuggestionDialogProps) {
-  const [isLoading, setIsLoading] = useState(false);
+export default function AiSuggestionDialog({ open, onOpenChange, fieldName, currentValue, setIsLoading }: AiSuggestionDialogProps) {
   const [suggestion, setSuggestion] = useState<{ improvedContent: string; explanation: string } | null>(null);
   const [tailoredContent, setTailoredContent] = useState<{ summary: string; experienceDescription: string} | null>(null);
   const { setValue, getValues } = useFormContext<ResumeData>();
@@ -79,7 +63,7 @@ export default function AiSuggestionDialog({ open, onOpenChange, fieldName, curr
           .finally(() => setIsLoading(false));
       }
     }
-  }, [open, currentValue, fieldName, toast, onOpenChange, isTailoredMode, jobDescription, jobPosition, company]);
+  }, [open, currentValue, fieldName, toast, onOpenChange, isTailoredMode, jobDescription, jobPosition, company, setIsLoading]);
 
   const handleUseSuggestion = () => {
     if (isTailoredMode && tailoredContent && fieldName) {
@@ -111,13 +95,8 @@ export default function AiSuggestionDialog({ open, onOpenChange, fieldName, curr
     ? `This has been tailored for the ${jobPosition} role at ${company}.`
     : suggestion?.explanation;
 
-  // When loading, show the loader. The loader itself is a modal.
-  if (isLoading) {
-    return <MultiStepLoader loadingStates={isTailoredMode ? tailoredLoadingStates : loadingStates} loading={true} duration={1500} loop={false} />;
-  }
-
   return (
-    <Dialog open={open && !isLoading} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-3xl">
         <DialogHeader>
           <DialogTitle>AI Suggestions for your {toTitleCase(fieldName)}</DialogTitle>

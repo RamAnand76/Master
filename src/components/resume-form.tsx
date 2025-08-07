@@ -25,6 +25,7 @@ import TextareaWithEnhancer from './resume-form/textarea-with-enhancer';
 export default function ResumeForm() {
     const { control, getValues } = useFormContext<ResumeData>();
     const [suggestionField, setSuggestionField] = useState<'summary' | `experience.${number}.description` | `education.${number}.description` | `projects.${number}.description` | null>(null);
+    const [isAiLoading, setIsAiLoading] = useState(false);
 
     const { fields: experienceFields, append: appendExperience, remove: removeExperience } = useFieldArray({ control, name: 'experience' });
     const { fields: educationFields, append: appendEducation, remove: removeEducation } = useFieldArray({ control, name: 'education' });
@@ -60,6 +61,7 @@ export default function ResumeForm() {
                              placeholder="A brief professional summary..."
                              max={resumeDataSchema.shape.summary.maxLength!}
                              onEnhance={() => handleGetSuggestion('summary')}
+                             isLoading={isAiLoading && suggestionField === 'summary'}
                            />
                            <FormMessage />
                         </FormItem>
@@ -85,6 +87,7 @@ export default function ResumeForm() {
                                         placeholder="- Did this and that..."
                                         max={experienceSchema.shape.description.maxLength!}
                                         onEnhance={() => handleGetSuggestion(`experience.${index}.description`)}
+                                        isLoading={isAiLoading && suggestionField === `experience.${index}.description`}
                                      />
                                     <FormMessage /> 
                                 </FormItem> 
@@ -112,6 +115,7 @@ export default function ResumeForm() {
                                         placeholder="- Relevant coursework..."
                                         max={educationSchema.shape.description.maxLength!}
                                         onEnhance={() => handleGetSuggestion(`education.${index}.description`)}
+                                        isLoading={isAiLoading && suggestionField === `education.${index}.description`}
                                     />
                                     <FormMessage /> 
                                 </FormItem> 
@@ -137,6 +141,7 @@ export default function ResumeForm() {
                                         placeholder="- Built this amazing app..."
                                         max={projectSchema.shape.description.maxLength!}
                                         onEnhance={() => handleGetSuggestion(`projects.${index}.description`)}
+                                        isLoading={isAiLoading && suggestionField === `projects.${index}.description`}
                                     />
                                     <FormMessage /> 
                                 </FormItem> 
@@ -167,10 +172,15 @@ export default function ResumeForm() {
             </SectionCard>
 
             <AiSuggestionDialog
-                open={!!suggestionField}
-                onOpenChange={(isOpen) => !isOpen && setSuggestionField(null)}
+                open={!!suggestionField && !isAiLoading}
+                onOpenChange={(isOpen) => {
+                    if (!isOpen) {
+                        setSuggestionField(null);
+                    }
+                }}
                 fieldName={suggestionField}
                 currentValue={getValues(suggestionField || 'summary')}
+                setIsLoading={setIsAiLoading}
             />
         </div>
     );
