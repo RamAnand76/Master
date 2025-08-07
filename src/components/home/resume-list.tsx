@@ -54,7 +54,7 @@ export default function ResumeList({ projects, deleteProject, hasReachedLimit, o
                         <TabsTrigger value="shared">Shared with me</TabsTrigger>
                     </TabsList>
                 </CardHeader>
-                <TabsContent value="workspaces" className="m-0">
+                <TabsContent value="workspaces" className="m-0 min-h-[250px]">
                     <div className="p-4 pt-2">
                     {projects.length > 0 ? (
                         <div className="space-y-2">
@@ -126,7 +126,7 @@ export default function ResumeList({ projects, deleteProject, hasReachedLimit, o
                     )}
                     </div>
                 </TabsContent>
-                <TabsContent value="shared" className="mt-0">
+                <TabsContent value="shared" className="mt-0 min-h-[250px]">
                     <div className="p-4 pt-2">
                         <div className="text-center py-12 border-2 border-dashed border-border/30 rounded-lg flex flex-col items-center justify-center">
                             <Users className="w-12 h-12 text-muted-foreground/50 mb-3" />
