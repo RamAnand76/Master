@@ -25,7 +25,7 @@ export default function Home() {
             const sortedProjects = parsedProjects.sort((a, b) => {
               const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
               const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-              return dateB - dateA;
+              return dateB - a.createdAt;
             });
             setProjects(sortedProjects);
         }
@@ -68,14 +68,14 @@ export default function Home() {
       />
       <HomeHeader />
 
-      <main className="max-w-4xl mx-auto p-8 space-y-12">
-        <div>
+      <main className="max-w-screen-xl mx-auto grid lg:grid-cols-2 gap-12 p-8">
+        <div className="lg:col-span-1">
           <HomeHero 
             onNewResumeClick={handleOpenModal} 
             hasReachedLimit={hasReachedLimit} 
           />
         </div>
-        <div>
+        <div className="lg:col-span-1">
           <ResumeList 
             projects={projects} 
             deleteProject={deleteProject} 
