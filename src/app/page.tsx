@@ -25,7 +25,7 @@ export default function Home() {
             const sortedProjects = parsedProjects.sort((a, b) => {
               const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
               const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-              return dateB - a.createdAt;
+              return dateB - dateA;
             });
             setProjects(sortedProjects);
         }
@@ -51,7 +51,7 @@ export default function Home() {
   };
   
   return (
-    <div className="min-h-screen bg-background text-foreground pb-24">
+    <div className="min-h-screen bg-background text-foreground flex flex-col">
       <NewProjectModal
         isOpen={isModalOpen}
         onOpenChange={setIsModalOpen}
@@ -68,20 +68,22 @@ export default function Home() {
       />
       <HomeHeader />
 
-      <main className="max-w-screen-xl mx-auto grid lg:grid-cols-2 gap-12 p-8">
-        <div className="lg:col-span-1">
-          <HomeHero 
-            onNewResumeClick={handleOpenModal} 
-            hasReachedLimit={hasReachedLimit} 
-          />
-        </div>
-        <div className="lg:col-span-1">
-          <ResumeList 
-            projects={projects} 
-            deleteProject={deleteProject} 
-            hasReachedLimit={hasReachedLimit}
-            onNewResumeClick={handleOpenModal} 
-          />
+      <main className="flex-1 flex items-center justify-center">
+        <div className="max-w-screen-xl w-full mx-auto grid lg:grid-cols-2 gap-12 p-8">
+            <div className="lg:col-span-1">
+              <HomeHero 
+                onNewResumeClick={handleOpenModal} 
+                hasReachedLimit={hasReachedLimit} 
+              />
+            </div>
+            <div className="lg:col-span-1">
+              <ResumeList 
+                projects={projects} 
+                deleteProject={deleteProject} 
+                hasReachedLimit={hasReachedLimit}
+                onNewResumeClick={handleOpenModal} 
+              />
+            </div>
         </div>
       </main>
     </div>
