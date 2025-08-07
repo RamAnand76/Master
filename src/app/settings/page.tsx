@@ -12,6 +12,7 @@ import ProfileDialog from '@/components/home/profile-dialog';
 import HomeHeader from '@/components/home/home-header';
 import { useUser } from '@/hooks/use-user';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import Link from 'next/link';
 
 export default function SettingsPage() {
   const [isProfileDialogOpen, setIsProfileDialogOpen] = useState(false);
@@ -98,7 +99,9 @@ export default function SettingsPage() {
             </CardHeader>
             <CardContent className="flex items-center justify-between">
               <p className="text-sm">You are currently on the <span className="font-semibold text-primary">Free</span> plan.</p>
-              <Button>Upgrade to Pro</Button>
+              <Button asChild>
+                <Link href="/billing">Upgrade to Pro</Link>
+              </Button>
             </CardContent>
           </Card>
 
