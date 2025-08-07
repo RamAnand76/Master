@@ -20,7 +20,7 @@ export const experienceSchema = z.object({
   role: z.string().max(50).default('Job Title'),
   startDate: z.string().max(20).default('Month Year'),
   endDate: z.string().max(20).default('Present'),
-  description: z.string().max(2000).default('- Bullet point about your achievement.'),
+  description: z.string().max(2000, "Description cannot exceed 2000 characters.").default('- Bullet point about your achievement.'),
 });
 
 export const educationSchema = z.object({
@@ -29,13 +29,13 @@ export const educationSchema = z.object({
   degree: z.string().max(100).default('Degree and Major'),
   startDate: z.string().max(20).default('Month Year'),
   endDate: z.string().max(20).default('Month Year'),
-  description: z.string().max(1000).default('- Relevant coursework or honors.'),
+  description: z.string().max(1000, "Description cannot exceed 1000 characters.").default('- Relevant coursework or honors.'),
 });
 
 export const projectSchema = z.object({
     id: z.string().default(generateId),
     name: z.string().max(50).default('Project Title'),
-    description: z.string().max(1000).default('A brief description of your project.'),
+    description: z.string().max(1000, "Description cannot exceed 1000 characters.").default('A brief description of your project.'),
     url: z.string().url({ message: "Invalid URL" }).max(100).or(z.literal('')).default('')
 });
 
@@ -51,12 +51,14 @@ export const resumeDataSchema = z.object({
   personalDetails: personalDetailsSchema.default({
     name: 'Your Name', email: 'your.email@example.com', phone: '+1 (123) 456-7890', location: 'City, State', website: '', linkedin: '', github: ''
   }),
-  summary: z.string().max(1000).default('A brief professional summary about yourself.'),
+  summary: z.string().max(1000, "Summary cannot exceed 1000 characters.").default('A brief professional summary about yourself.'),
   experience: z.array(experienceSchema).default([]),
   education: z.array(educationSchema).default([]),
   projects: z.array(projectSchema).default([]),
   skills: z.array(skillSchema).default([]),
   jobDescription: z.string().optional(),
+  jobPosition: z.string().optional(),
+  company: z.string().optional(),
 });
 
 export type ResumeData = z.infer<typeof resumeDataSchema>;
@@ -90,5 +92,3 @@ export const GenerateTailoredResumeOutputSchema = z.object({
   experienceDescription: z.string().describe("A description for the most recent experience, tailored to the job description."),
 });
 export type GenerateTailoredResumeOutput = z.infer<typeof GenerateTailoredResumeOutputSchema>;
-
-    

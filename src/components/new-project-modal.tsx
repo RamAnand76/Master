@@ -13,6 +13,7 @@ import { type ResumeData, resumeDataSchema, experienceSchema } from "@/lib/types
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { MultiStepLoader } from "./ui/multi-step-loader";
+import { generateTailoredResumeAction } from "@/lib/actions";
 
 const newProjectSchema = z.object({
   title: z.string().min(1, "Title is required."),
@@ -38,6 +39,7 @@ const loadingStates = [
 
 export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate }: NewProjectModalProps) {
     const { toast } = useToast();
+    const [isGenerating, setIsGenerating] = useState(false);
     const methods = useForm<NewProjectFormValues>({
         resolver: zodResolver(newProjectSchema),
         defaultValues: {
@@ -48,11 +50,44 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate 
         }
     });
 
-  const { handleSubmit, control } = methods;
+  const { handleSubmit, control, watch } = methods;
+  const jobDescription = watch('jobDescription');
 
   const onSubmit = async (values: NewProjectFormValues) => {
-    const summary = 'A brief professional summary about yourself.';
-    const experienceDescription = '- Bullet point about your achievement.';
+    setIsGenerating(true);
+
+    let summary = 'A brief professional summary about yourself.';
+    let experienceDescription = '- Bullet point about your achievement.';
+
+    if (values.jobDescription) {
+        try {
+            const result = await generateTailoredResumeAction({
+                jobPosition: values.jobPosition,
+                company: values.company,
+                jobDescription: values.jobDescription,
+            });
+
+            if (result && "summary" in result) {
+                summary = result.summary;
+                experienceDescription = result.experienceDescription;
+            } else {
+                toast({
+                    variant: "destructive",
+                    title: "AI Enhancement Failed",
+                    description: result?.error || "Could not generate tailored content. Using default values.",
+                });
+            }
+        } catch (error) {
+            console.error(error);
+            toast({
+                variant: "destructive",
+                title: "AI Enhancement Error",
+                description: "An unexpected error occurred while generating content.",
+            });
+        }
+    }
+    
+    setIsGenerating(false);
 
     const newProject = resumeDataSchema.parse({
       id: `studio-${Math.random().toString(36).substring(2, 12)}`,
@@ -67,6 +102,8 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate 
         }),
       ],
       jobDescription: values.jobDescription,
+      jobPosition: values.jobPosition,
+      company: values.company,
     });
     
     onProjectCreate(newProject);
@@ -75,7 +112,9 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate 
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onOpenChange}>
+    <>
+    <MultiStepLoader loadingStates={loadingStates} loading={isGenerating} duration={1500} />
+    <Dialog open={isOpen && !isGenerating} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Create a New Resume</DialogTitle>
@@ -139,11 +178,14 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate 
             />
             <DialogFooter>
                 <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>Cancel</Button>
-                <Button type="submit">Create Resume</Button>
+                <Button type="submit" disabled={isGenerating}>
+                    {jobDescription ? 'Create & Enhance with AI' : 'Create Resume'}
+                </Button>
             </DialogFooter>
           </form>
         </FormProvider>
       </DialogContent>
     </Dialog>
+    </>
   );
 }
