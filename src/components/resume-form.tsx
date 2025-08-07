@@ -10,7 +10,6 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Wand2, Trash2, Mail, Phone, Globe, Linkedin, Github } from 'lucide-react';
 import { ResumeData } from '@/lib/types';
@@ -20,7 +19,7 @@ import { educationSchema, experienceSchema, projectSchema, skillSchema, personal
 import SectionCard from './resume-form/section-card';
 import FieldArrayItem from './resume-form/field-array-item';
 import { InputGroup } from './ui/input-group';
-import { CharacterCount } from './resume-form/character-count';
+import TextareaWithEnhancer from './resume-form/textarea-with-enhancer';
 
 
 export default function ResumeForm() {
@@ -56,20 +55,16 @@ export default function ResumeForm() {
                     name="summary"
                     render={({ field }) => (
                         <FormItem>
-                            <FormControl>
-                                <Textarea placeholder="A brief professional summary..." {...field} rows={5} />
-                            </FormControl>
-                            <FormMessage />
+                           <TextareaWithEnhancer
+                             field={field}
+                             placeholder="A brief professional summary..."
+                             max={resumeDataSchema.shape.summary.maxLength!}
+                             onEnhance={() => handleGetSuggestion('summary')}
+                           />
+                           <FormMessage />
                         </FormItem>
                     )}
                 />
-                <div className="flex items-center justify-between mt-2">
-                    <Button type="button" size="sm" variant="ghost" className="text-primary hover:text-primary" onClick={() => handleGetSuggestion('summary')}>
-                        <Wand2 className="mr-2 h-4 w-4" />
-                        Enhance with AI
-                    </Button>
-                    <CharacterCount<ResumeData> name="summary" max={resumeDataSchema.shape.summary.maxLength!} />
-                </div>
             </SectionCard>
             
             <SectionCard title="Experience" onAdd={() => appendExperience(experienceSchema.parse({}))} addText="Add Experience">
@@ -82,14 +77,18 @@ export default function ResumeForm() {
                             <FormField control={control} name={`experience.${index}.endDate`} render={({ field }) => ( <FormItem> <FormLabel>End Date</FormLabel> <FormControl><Input placeholder="Present" {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
                         </div>
                         <div className="mt-4">
-                            <FormField control={control} name={`experience.${index}.description`} render={({ field }) => ( <FormItem> <FormLabel>Description</FormLabel> <FormControl><Textarea placeholder="- Did this and that..." {...field} rows={4} /></FormControl> <FormMessage /> </FormItem> )}/>
-                             <div className="flex items-center justify-between mt-2">
-                                <Button type="button" size="sm" variant="ghost" className="text-primary hover:text-primary" onClick={() => handleGetSuggestion(`experience.${index}.description`)}>
-                                    <Wand2 className="mr-2 h-4 w-4" />
-                                    Enhance with AI
-                                </Button>
-                                <CharacterCount<ResumeData> name={`experience.${index}.description`} max={experienceSchema.shape.description.maxLength!} />
-                            </div>
+                            <FormField control={control} name={`experience.${index}.description`} render={({ field }) => ( 
+                                <FormItem> 
+                                    <FormLabel>Description</FormLabel> 
+                                     <TextareaWithEnhancer
+                                        field={field}
+                                        placeholder="- Did this and that..."
+                                        max={experienceSchema.shape.description.maxLength!}
+                                        onEnhance={() => handleGetSuggestion(`experience.${index}.description`)}
+                                     />
+                                    <FormMessage /> 
+                                </FormItem> 
+                            )}/>
                         </div>
                     </FieldArrayItem>
                 ))}
@@ -105,14 +104,18 @@ export default function ResumeForm() {
                             <FormField control={control} name={`education.${index}.endDate`} render={({ field }) => ( <FormItem> <FormLabel>End Date</FormLabel> <FormControl><Input placeholder="May 2022" {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
                         </div>
                          <div className="mt-4">
-                            <FormField control={control} name={`education.${index}.description`} render={({ field }) => ( <FormItem> <FormLabel>Description</FormLabel> <FormControl><Textarea placeholder="- Relevant coursework..." {...field} rows={3} /></FormControl> <FormMessage /> </FormItem> )}/>
-                             <div className="flex items-center justify-between mt-2">
-                                <Button type="button" size="sm" variant="ghost" className="text-primary hover:text-primary" onClick={() => handleGetSuggestion(`education.${index}.description`)}>
-                                    <Wand2 className="mr-2 h-4 w-4" />
-                                    Enhance with AI
-                                </Button>
-                                <CharacterCount<ResumeData> name={`education.${index}.description`} max={educationSchema.shape.description.maxLength!} />
-                            </div>
+                            <FormField control={control} name={`education.${index}.description`} render={({ field }) => ( 
+                                <FormItem> 
+                                    <FormLabel>Description</FormLabel> 
+                                    <TextareaWithEnhancer
+                                        field={field}
+                                        placeholder="- Relevant coursework..."
+                                        max={educationSchema.shape.description.maxLength!}
+                                        onEnhance={() => handleGetSuggestion(`education.${index}.description`)}
+                                    />
+                                    <FormMessage /> 
+                                </FormItem> 
+                            )}/>
                         </div>
                     </FieldArrayItem>
                 ))}
@@ -126,14 +129,18 @@ export default function ResumeForm() {
                             <FormField control={control} name={`projects.${index}.url`} render={({ field }) => ( <FormItem> <FormLabel>Project URL</FormLabel> <FormControl><Input placeholder="https://resumaster.app" {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
                         </div>
                         <div className="mt-4">
-                            <FormField control={control} name={`projects.${index}.description`} render={({ field }) => ( <FormItem> <FormLabel>Description</FormLabel> <FormControl><Textarea placeholder="- Built this amazing app..." {...field} rows={3} /></FormControl> <FormMessage /> </FormItem> )}/>
-                            <div className="flex items-center justify-between mt-2">
-                                <Button type="button" size="sm" variant="ghost" className="text-primary hover:text-primary" onClick={() => handleGetSuggestion(`projects.${index}.description`)}>
-                                    <Wand2 className="mr-2 h-4 w-4" />
-                                    Enhance with AI
-                                </Button>
-                                <CharacterCount<ResumeData> name={`projects.${index}.description`} max={projectSchema.shape.description.maxLength!} />
-                            </div>
+                            <FormField control={control} name={`projects.${index}.description`} render={({ field }) => ( 
+                                <FormItem> 
+                                    <FormLabel>Description</FormLabel> 
+                                    <TextareaWithEnhancer
+                                        field={field}
+                                        placeholder="- Built this amazing app..."
+                                        max={projectSchema.shape.description.maxLength!}
+                                        onEnhance={() => handleGetSuggestion(`projects.${index}.description`)}
+                                    />
+                                    <FormMessage /> 
+                                </FormItem> 
+                            )}/>
                         </div>
                     </FieldArrayItem>
                 ))}
