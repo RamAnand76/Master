@@ -51,9 +51,9 @@ export default function ResumeList({ projects, deleteProject, hasReachedLimit, o
             )}
 
             <Tabs defaultValue="workspaces">
-                <TabsList className="text-sm">
-                    <TabsTrigger value="workspaces" className="px-3 py-1.5">My Resumes</TabsTrigger>
-                    <TabsTrigger value="shared" className="px-3 py-1.5">Shared with me</TabsTrigger>
+                <TabsList>
+                    <TabsTrigger value="workspaces">My Resumes</TabsTrigger>
+                    <TabsTrigger value="shared">Shared with me</TabsTrigger>
                 </TabsList>
                 <TabsContent value="workspaces" className="mt-4">
                     {projects.length > 0 ? (
