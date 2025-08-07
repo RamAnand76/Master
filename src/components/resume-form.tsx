@@ -19,7 +19,6 @@ import { useState } from 'react';
 import { educationSchema, experienceSchema, projectSchema, skillSchema, personalDetailsSchema, resumeDataSchema } from '@/lib/types';
 import SectionCard from './resume-form/section-card';
 import FieldArrayItem from './resume-form/field-array-item';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
 import { InputGroup } from './ui/input-group';
 import { CharacterCount } from './resume-form/character-count';
 
@@ -52,32 +51,24 @@ export default function ResumeForm() {
             </SectionCard>
 
             <SectionCard title="Summary">
-                <div className="relative">
-                    <FormField
-                        control={control}
-                        name="summary"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormControl>
-                                    <Textarea placeholder="A brief professional summary..." {...field} rows={5} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                     <CharacterCount<ResumeData> name="summary" max={resumeDataSchema.shape.summary.maxLength!} />
-                    <TooltipProvider>
-                        <Tooltip>
-                            <TooltipTrigger asChild>
-                                <Button type="button" size="icon" variant="ghost" className="absolute top-1 right-1 text-accent-foreground/50 hover:text-accent-foreground/80" onClick={() => handleGetSuggestion('summary')} aria-label="Get AI Suggestions">
-                                    <Wand2 className="h-4 w-4" />
-                                </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                                <p>Enhance with AI</p>
-                            </TooltipContent>
-                        </Tooltip>
-                    </TooltipProvider>
+                <FormField
+                    control={control}
+                    name="summary"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormControl>
+                                <Textarea placeholder="A brief professional summary..." {...field} rows={5} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <div className="flex items-center justify-between mt-2">
+                    <Button type="button" size="sm" variant="ghost" className="text-primary hover:text-primary" onClick={() => handleGetSuggestion('summary')}>
+                        <Wand2 className="mr-2 h-4 w-4" />
+                        Enhance with AI
+                    </Button>
+                    <CharacterCount<ResumeData> name="summary" max={resumeDataSchema.shape.summary.maxLength!} />
                 </div>
             </SectionCard>
             
@@ -90,21 +81,15 @@ export default function ResumeForm() {
                             <FormField control={control} name={`experience.${index}.startDate`} render={({ field }) => ( <FormItem> <FormLabel>Start Date</FormLabel> <FormControl><Input placeholder="Jan 2022" {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
                             <FormField control={control} name={`experience.${index}.endDate`} render={({ field }) => ( <FormItem> <FormLabel>End Date</FormLabel> <FormControl><Input placeholder="Present" {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
                         </div>
-                        <div className="relative mt-4">
+                        <div className="mt-4">
                             <FormField control={control} name={`experience.${index}.description`} render={({ field }) => ( <FormItem> <FormLabel>Description</FormLabel> <FormControl><Textarea placeholder="- Did this and that..." {...field} rows={4} /></FormControl> <FormMessage /> </FormItem> )}/>
-                             <CharacterCount<ResumeData> name={`experience.${index}.description`} max={experienceSchema.shape.description.maxLength!} />
-                             <TooltipProvider>
-                                <Tooltip>
-                                    <TooltipTrigger asChild>
-                                        <Button type="button" size="icon" variant="ghost" className="absolute top-1 right-1 text-accent-foreground/50 hover:text-accent-foreground/80" onClick={() => handleGetSuggestion(`experience.${index}.description`)} aria-label="Get AI Suggestions">
-                                            <Wand2 className="h-4 w-4" />
-                                        </Button>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                        <p>Enhance with AI</p>
-                                    </TooltipContent>
-                                </Tooltip>
-                            </TooltipProvider>
+                             <div className="flex items-center justify-between mt-2">
+                                <Button type="button" size="sm" variant="ghost" className="text-primary hover:text-primary" onClick={() => handleGetSuggestion(`experience.${index}.description`)}>
+                                    <Wand2 className="mr-2 h-4 w-4" />
+                                    Enhance with AI
+                                </Button>
+                                <CharacterCount<ResumeData> name={`experience.${index}.description`} max={experienceSchema.shape.description.maxLength!} />
+                            </div>
                         </div>
                     </FieldArrayItem>
                 ))}
@@ -119,21 +104,15 @@ export default function ResumeForm() {
                             <FormField control={control} name={`education.${index}.startDate`} render={({ field }) => ( <FormItem> <FormLabel>Start Date</FormLabel> <FormControl><Input placeholder="Aug 2018" {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
                             <FormField control={control} name={`education.${index}.endDate`} render={({ field }) => ( <FormItem> <FormLabel>End Date</FormLabel> <FormControl><Input placeholder="May 2022" {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
                         </div>
-                         <div className="relative mt-4">
+                         <div className="mt-4">
                             <FormField control={control} name={`education.${index}.description`} render={({ field }) => ( <FormItem> <FormLabel>Description</FormLabel> <FormControl><Textarea placeholder="- Relevant coursework..." {...field} rows={3} /></FormControl> <FormMessage /> </FormItem> )}/>
-                             <CharacterCount<ResumeData> name={`education.${index}.description`} max={educationSchema.shape.description.maxLength!} />
-                             <TooltipProvider>
-                                <Tooltip>
-                                    <TooltipTrigger asChild>
-                                        <Button type="button" size="icon" variant="ghost" className="absolute top-1 right-1 text-accent-foreground/50 hover:text-accent-foreground/80" onClick={() => handleGetSuggestion(`education.${index}.description`)} aria-label="Get AI Suggestions">
-                                            <Wand2 className="h-4 w-4" />
-                                        </Button>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                        <p>Enhance with AI</p>
-                                    </TooltipContent>
-                                </Tooltip>
-                            </TooltipProvider>
+                             <div className="flex items-center justify-between mt-2">
+                                <Button type="button" size="sm" variant="ghost" className="text-primary hover:text-primary" onClick={() => handleGetSuggestion(`education.${index}.description`)}>
+                                    <Wand2 className="mr-2 h-4 w-4" />
+                                    Enhance with AI
+                                </Button>
+                                <CharacterCount<ResumeData> name={`education.${index}.description`} max={educationSchema.shape.description.maxLength!} />
+                            </div>
                         </div>
                     </FieldArrayItem>
                 ))}
@@ -146,21 +125,15 @@ export default function ResumeForm() {
                             <FormField control={control} name={`projects.${index}.name`} render={({ field }) => ( <FormItem> <FormLabel>Project Name</FormLabel> <FormControl><Input placeholder="ResuMaster" {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
                             <FormField control={control} name={`projects.${index}.url`} render={({ field }) => ( <FormItem> <FormLabel>Project URL</FormLabel> <FormControl><Input placeholder="https://resumaster.app" {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
                         </div>
-                        <div className="relative mt-4">
+                        <div className="mt-4">
                             <FormField control={control} name={`projects.${index}.description`} render={({ field }) => ( <FormItem> <FormLabel>Description</FormLabel> <FormControl><Textarea placeholder="- Built this amazing app..." {...field} rows={3} /></FormControl> <FormMessage /> </FormItem> )}/>
-                             <CharacterCount<ResumeData> name={`projects.${index}.description`} max={projectSchema.shape.description.maxLength!} />
-                             <TooltipProvider>
-                                <Tooltip>
-                                    <TooltipTrigger asChild>
-                                        <Button type="button" size="icon" variant="ghost" className="absolute top-1 right-1 text-accent-foreground/50 hover:text-accent-foreground/80" onClick={() => handleGetSuggestion(`projects.${index}.description`)} aria-label="Get AI Suggestions">
-                                            <Wand2 className="h-4 w-4" />
-                                        </Button>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                        <p>Enhance with AI</p>
-                                    </TooltipContent>
-                                </Tooltip>
-                            </TooltipProvider>
+                            <div className="flex items-center justify-between mt-2">
+                                <Button type="button" size="sm" variant="ghost" className="text-primary hover:text-primary" onClick={() => handleGetSuggestion(`projects.${index}.description`)}>
+                                    <Wand2 className="mr-2 h-4 w-4" />
+                                    Enhance with AI
+                                </Button>
+                                <CharacterCount<ResumeData> name={`projects.${index}.description`} max={projectSchema.shape.description.maxLength!} />
+                            </div>
                         </div>
                     </FieldArrayItem>
                 ))}
