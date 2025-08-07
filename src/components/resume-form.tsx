@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Wand2, Trash2, Mail, Phone, Globe, Linkedin, Github } from 'lucide-react';
+import { Trash2, Mail, Phone, Globe, Linkedin, Github } from 'lucide-react';
 import { ResumeData } from '@/lib/types';
 import AiSuggestionDialog from './ai-suggestion-dialog';
 import { useState } from 'react';

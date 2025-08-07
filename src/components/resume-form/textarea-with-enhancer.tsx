@@ -4,8 +4,7 @@
 import { ControllerRenderProps } from 'react-hook-form';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { Wand2 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { Sparkles } from 'lucide-react';
 import { CharacterCount } from './character-count';
 import { ResumeData } from '@/lib/types';
 
@@ -24,9 +23,6 @@ export default function TextareaWithEnhancer({
   onEnhance,
   rows = 5,
 }: TextareaWithEnhancerProps) {
-  const value = field.value || '';
-  const length = value.length;
-  const isOverLimit = length > max;
 
   return (
     <div className="relative">
@@ -34,7 +30,7 @@ export default function TextareaWithEnhancer({
         {...field}
         placeholder={placeholder}
         rows={rows}
-        className="pb-10" // Add padding to the bottom to make space for the button and count
+        className="pb-10 pr-10" // Add padding to make space for the button and count
       />
       <div className="absolute bottom-2 right-2 flex items-center gap-2">
         <Button
@@ -43,19 +39,13 @@ export default function TextareaWithEnhancer({
           variant="ghost"
           className="h-7 w-7 text-primary hover:text-primary"
           onClick={onEnhance}
+          aria-label="Enhance with AI"
         >
-          <Wand2 className="h-4 w-4" />
+          <Sparkles className="h-4 w-4" />
         </Button>
       </div>
-      <div
-        className={cn(
-          'absolute bottom-2.5 left-3 text-xs text-muted-foreground',
-          {
-            'text-destructive': isOverLimit,
-          }
-        )}
-      >
-        {length} / {max}
+      <div className="absolute bottom-2.5 left-3">
+        <CharacterCount name={field.name as keyof ResumeData} max={max} />
       </div>
     </div>
   );

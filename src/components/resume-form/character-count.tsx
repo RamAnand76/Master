@@ -13,7 +13,7 @@ type CharacterCountProps<T extends FieldValues> = {
 export function CharacterCount<T extends FieldValues>({ name, max }: CharacterCountProps<T>) {
   const { watch } = useFormContext<T>();
   const value = watch(name);
-  const length = value?.length || 0;
+  const length = typeof value === 'string' ? value.length : 0;
   const isOverLimit = length > max;
 
   return (
