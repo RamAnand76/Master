@@ -39,7 +39,7 @@ export default function TextareaWithEnhancer({
           type="button"
           size="icon"
           variant="ghost"
-          className="h-7 w-7 text-primary hover:text-primary hover:bg-transparent disabled:opacity-100 disabled:cursor-progress"
+          className="h-7 w-7 text-primary hover:text-primary/90 hover:bg-transparent disabled:opacity-100 disabled:cursor-progress"
           onClick={onEnhance}
           disabled={isLoading}
           aria-label="Enhance with AI"
