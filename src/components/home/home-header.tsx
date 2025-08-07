@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { LogOut, Sun, User } from 'lucide-react';
+import { Crown, LogOut, Sun, User } from 'lucide-react';
 import { AppLogo } from './app-logo';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -57,6 +57,10 @@ export default function HomeHeader() {
                             <DropdownMenuItem onSelect={() => setIsProfileDialogOpen(true)}>
                                 <User className="mr-2 h-4 w-4" />
                                 <span>Profile</span>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem disabled>
+                                <Crown className="mr-2 h-4 w-4" />
+                                <span>Free Plan</span>
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem onClick={handleLogout} className="text-red-400 hover:!text-red-400 focus:!text-red-400 focus:!bg-red-400/10">
