@@ -94,13 +94,6 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate 
       name: values.title,
       createdAt: new Date().toISOString(),
       summary,
-      experience: [
-        experienceSchema.parse({
-          role: values.jobPosition,
-          company: values.company,
-          description: experienceDescription,
-        }),
-      ],
       jobDescription: values.jobDescription,
       jobPosition: values.jobPosition,
       company: values.company,
