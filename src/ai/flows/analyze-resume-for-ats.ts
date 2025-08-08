@@ -28,7 +28,10 @@ You must provide a score from 0 to 100, where 100 is a perfect match. The score 
 2. Relevance: Is the experience described relevant to the job position?
 3. Clarity and Impact: Is the language clear, concise, and action-oriented?
 
-You must also provide a list of critical keywords that are present in the job description but are missing from the resume. Finally, provide a brief, actionable feedback summary on how to improve the score.
+You must also provide:
+- A list of critical keywords present in the job description that are also found in the resume (matchingKeywords).
+- A list of critical keywords from the job description that are missing from the resume (missingKeywords).
+- A brief, actionable feedback summary on how to improve the score.
 
 Job Description:
 {{{jobDescription}}}
@@ -64,6 +67,7 @@ const analyzeResumeForAtsFlow = ai.defineFlow(
             score: 0,
             feedback: "Add a job description to get an ATS analysis.",
             missingKeywords: [],
+            matchingKeywords: [],
         }
     }
     const { output } = await prompt(input);

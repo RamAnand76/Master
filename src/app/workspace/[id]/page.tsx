@@ -16,6 +16,7 @@ import { MultiStepLoader } from '@/components/ui/multi-step-loader';
 import { useUser } from '@/hooks/use-user';
 import { analyzeResumeAction } from '@/lib/actions';
 import AtsPanel from '@/components/workspace/ats-panel';
+import KeywordSuggestionDialog from '@/components/workspace/keyword-suggestion-dialog';
 
 
 function debounce<F extends (...args: any[]) => any>(func: F, waitFor: number) {
@@ -47,6 +48,7 @@ export default function WorkspacePage() {
   const { user, isLoaded: isUserLoaded } = useUser();
   const [atsAnalysis, setAtsAnalysis] = useState<AtsAnalysis | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [selectedKeyword, setSelectedKeyword] = useState<string | null>(null);
 
   const methods = useForm<ResumeData>({
     resolver: zodResolver(resumeDataSchema),
@@ -58,7 +60,7 @@ export default function WorkspacePage() {
 
   const performAtsAnalysis = useCallback(async (data: ResumeData) => {
     if (!data.jobDescription) {
-      setAtsAnalysis({ score: 0, feedback: "Add a job description for an ATS analysis.", missingKeywords: [] });
+      setAtsAnalysis({ score: 0, feedback: "Add a job description for an ATS analysis.", missingKeywords: [], matchingKeywords: [] });
       return;
     }
     setIsAnalyzing(true);
@@ -95,7 +97,7 @@ export default function WorkspacePage() {
           if (currentProject.jobDescription) {
             performAtsAnalysis(currentProject);
           } else {
-            setAtsAnalysis({ score: 0, feedback: "Add a job description for an ATS analysis.", missingKeywords: [] });
+            setAtsAnalysis({ score: 0, feedback: "Add a job description for an ATS analysis.", missingKeywords: [], matchingKeywords: [] });
           }
         }
       } catch (e) {
@@ -108,7 +110,7 @@ export default function WorkspacePage() {
     }, 1500); 
     
     return () => clearTimeout(timer);
-  }, [id, methods]);
+  }, [id, methods, performAtsAnalysis]);
   
   useEffect(() => {
     if (isUserLoaded && user.name) {
@@ -158,7 +160,7 @@ export default function WorkspacePage() {
       });
     });
     return () => subscription.unsubscribe();
-  }, [methods.watch, debouncedSave, debouncedAtsAnalysis]);
+  }, [methods, debouncedSave, debouncedAtsAnalysis]);
 
   if (!isLoaded) {
     return (
@@ -192,15 +194,25 @@ export default function WorkspacePage() {
             <ResumeForm />
           </div>
           <div className="space-y-4">
-            <AtsPanel analysis={atsAnalysis} isAnalyzing={isAnalyzing} />
+            <AtsPanel 
+                analysis={atsAnalysis} 
+                isAnalyzing={isAnalyzing}
+                onKeywordClick={(keyword) => setSelectedKeyword(keyword)}
+            />
             <div className="lg:max-h-[calc(100vh-160px)] lg:overflow-y-auto rounded-lg bg-background shadow-lg">
               <div className="origin-top scale-[.90] lg:scale-[.85] xl:scale-[.90]">
-                <ResumePreview resumeData={methods.watch()} />
+                <ResumePreview resumeData={methods.watch()} atsAnalysis={atsAnalysis} />
               </div>
             </div>
           </div>
         </div>
       </main>
+      <KeywordSuggestionDialog 
+        open={!!selectedKeyword}
+        onOpenChange={(isOpen) => !isOpen && setSelectedKeyword(null)}
+        keyword={selectedKeyword}
+        resume={resumeData}
+      />
     </FormProvider>
   );
 }

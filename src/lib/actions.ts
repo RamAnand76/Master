@@ -1,9 +1,11 @@
+
 "use server";
 
 import { suggestResumeImprovements } from "@/ai/flows/suggest-resume-improvements";
 import { generateTailoredResume } from "@/ai/flows/generate-tailored-resume";
 import { analyzeResumeForAts } from "@/ai/flows/analyze-resume-for-ats";
-import { GenerateTailoredResumeInput, type AnalyzeResumeForAtsInput } from "./types";
+import { getKeywordSuggestion } from "@/ai/flows/get-keyword-suggestion";
+import { GenerateTailoredResumeInput, type AnalyzeResumeForAtsInput, type GetKeywordSuggestionInput } from "./types";
 
 export async function getAiSuggestions(resumeContent: string) {
   if (!resumeContent.trim()) {
@@ -36,5 +38,15 @@ export async function analyzeResumeAction(input: AnalyzeResumeForAtsInput) {
     } catch (error) {
         console.error("ATS analysis error:", error);
         return { error: "Failed to analyze resume for ATS. Please try again later." };
+    }
+}
+
+export async function getKeywordSuggestionAction(input: GetKeywordSuggestionInput) {
+    try {
+        const result = await getKeywordSuggestion(input);
+        return result;
+    } catch (error) {
+        console.error("Keyword suggestion error:", error);
+        return { error: "Failed to get keyword suggestion. Please try again later." };
     }
 }

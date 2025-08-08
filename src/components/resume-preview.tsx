@@ -1,5 +1,27 @@
-import type { ResumeData } from '@/lib/types';
+import type { ResumeData, AtsAnalysis } from '@/lib/types';
 import { Mail, Phone, Globe, Linkedin, Github } from 'lucide-react';
+import React from 'react';
+
+const HighlightedText = ({ text, keywords }: { text: string; keywords: string[] }) => {
+    if (!keywords || keywords.length === 0 || !text) {
+        return <>{text}</>;
+    }
+    const regex = new RegExp(`(${keywords.join('|')})`, 'gi');
+    const parts = text.split(regex);
+    return (
+        <>
+            {parts.map((part, i) =>
+                keywords.some(kw => new RegExp(`^${kw}$`, 'i').test(part)) ? (
+                    <span key={i} className="bg-green-500/20 rounded px-1">
+                        {part}
+                    </span>
+                ) : (
+                    <React.Fragment key={i}>{part}</React.Fragment>
+                )
+            )}
+        </>
+    );
+};
 
 const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
     <div className="mb-4">
@@ -8,9 +30,10 @@ const Section = ({ title, children }: { title: string; children: React.ReactNode
     </div>
 );
 
-export default function ResumePreview({ resumeData }: { resumeData: ResumeData }) {
+export default function ResumePreview({ resumeData, atsAnalysis }: { resumeData: ResumeData, atsAnalysis: AtsAnalysis | null }) {
   if (!resumeData) return null;
   const { personalDetails, summary, experience, education, projects, skills } = resumeData;
+  const matchingKeywords = atsAnalysis?.matchingKeywords ?? [];
 
   return (
     <div className="p-6 text-xs text-foreground bg-background font-body min-h-[calc(100vh-112px)]">
@@ -28,7 +51,9 @@ export default function ResumePreview({ resumeData }: { resumeData: ResumeData }
 
       {summary && (
         <Section title="Summary">
-          <p className="text-muted-foreground whitespace-pre-wrap text-xs leading-relaxed">{summary}</p>
+          <p className="text-muted-foreground whitespace-pre-wrap text-xs leading-relaxed">
+            <HighlightedText text={summary} keywords={matchingKeywords} />
+          </p>
         </Section>
       )}
 
@@ -41,9 +66,9 @@ export default function ResumePreview({ resumeData }: { resumeData: ResumeData }
                         <span className="text-xs text-muted-foreground">{exp.startDate} - {exp.endDate}</span>
                     </div>
                     <p className="text-xs italic text-muted-foreground">{exp.company}</p>
-                    <ul className="mt-1.5 text-muted-foreground list-disc pl-4 space-y-0.5 whitespace-pre-wrap text-xs">
-                        {exp.description && exp.description.split('\n').map((line, i) => line.trim().replace(/^- /, '') && <li key={i}>{line.replace(/^- /, '')}</li>)}
-                    </ul>
+                    <div className="mt-1.5 text-muted-foreground list-disc pl-4 space-y-0.5 whitespace-pre-wrap text-xs">
+                         <HighlightedText text={exp.description} keywords={matchingKeywords} />
+                    </div>
                 </div>
             ))}
         </Section>
@@ -58,9 +83,9 @@ export default function ResumePreview({ resumeData }: { resumeData: ResumeData }
                         <span className="text-xs text-muted-foreground">{edu.startDate} - {edu.endDate}</span>
                     </div>
                     <p className="text-xs italic text-muted-foreground">{edu.institution}</p>
-                     <ul className="mt-1.5 text-muted-foreground list-disc pl-4 space-y-0.5 whitespace-pre-wrap text-xs">
-                        {edu.description && edu.description.split('\n').map((line, i) => line.trim().replace(/^- /, '') && <li key={i}>{line.replace(/^- /, '')}</li>)}
-                    </ul>
+                     <div className="mt-1.5 text-muted-foreground list-disc pl-4 space-y-0.5 whitespace-pre-wrap text-xs">
+                        <HighlightedText text={edu.description} keywords={matchingKeywords} />
+                    </div>
                 </div>
             ))}
         </Section>
@@ -74,9 +99,9 @@ export default function ResumePreview({ resumeData }: { resumeData: ResumeData }
                         <h3 className="font-semibold text-sm">{proj.name}</h3>
                         {proj.url && proj.url.startsWith('http') && <a href={proj.url} target="_blank" rel="noopener noreferrer" className="text-primary/80 text-xs hover:underline">(Link)</a>}
                       </div>
-                      <ul className="mt-1.5 text-muted-foreground list-disc pl-4 space-y-0.5 whitespace-pre-wrap text-xs">
-                        {proj.description && proj.description.split('\n').map((line, i) => line.trim().replace(/^- /, '') && <li key={i}>{line.replace(/^- /, '')}</li>)}
-                    </ul>
+                      <div className="mt-1.5 text-muted-foreground list-disc pl-4 space-y-0.5 whitespace-pre-wrap text-xs">
+                        <HighlightedText text={proj.description} keywords={matchingKeywords} />
+                    </div>
                   </div>
               ))}
           </Section>
@@ -87,7 +112,7 @@ export default function ResumePreview({ resumeData }: { resumeData: ResumeData }
               <div className="flex flex-wrap gap-1.5">
                   {skills.filter(s => s.name).map(skill => (
                       <span key={skill.id} className="bg-secondary text-secondary-foreground rounded-md px-2 py-0.5 text-xs font-medium">
-                          {skill.name}
+                          <HighlightedText text={skill.name} keywords={matchingKeywords} />
                       </span>
                   ))}
               </div>
