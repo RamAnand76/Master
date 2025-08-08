@@ -4,18 +4,18 @@
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { type ResumeData, resumeDataSchema } from '@/lib/types';
+import { type ResumeData, resumeDataSchema, type AtsAnalysis } from '@/lib/types';
 import ResumeForm from '@/components/resume-form';
 import ResumePreview from '@/components/resume-preview';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { ArrowLeft, Download, FileText } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useParams } from 'next/navigation';
 import { MultiStepLoader } from '@/components/ui/multi-step-loader';
 import { useUser } from '@/hooks/use-user';
-import { Card } from '@/components/ui/card';
-import { CircularProgress } from '@/components/ui/circular-progress';
+import { analyzeResumeAction } from '@/lib/actions';
+import AtsPanel from '@/components/workspace/ats-panel';
 
 
 function debounce<F extends (...args: any[]) => any>(func: F, waitFor: number) {
@@ -45,7 +45,8 @@ export default function WorkspacePage() {
   const [isSaved, setIsSaved] = useState(true);
   const { toast } = useToast();
   const { user, isLoaded: isUserLoaded } = useUser();
-  const [atsScore, setAtsScore] = useState(0);
+  const [atsAnalysis, setAtsAnalysis] = useState<AtsAnalysis | null>(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   const methods = useForm<ResumeData>({
     resolver: zodResolver(resumeDataSchema),
@@ -55,21 +56,33 @@ export default function WorkspacePage() {
   const resumeName = methods.watch('name');
   const resumeData = methods.watch();
 
-  useEffect(() => {
-    // Mock ATS score calculation
-    const calculateAtsScore = (data: ResumeData) => {
-        let score = 0;
-        if (data.personalDetails?.name && data.personalDetails.name !== 'Your Name') score += 10;
-        if (data.personalDetails?.email && data.personalDetails.email !== 'your.email@example.com') score += 10;
-        if (data.summary && data.summary !== 'A brief professional summary about yourself.') score += 15;
-        if (data.experience?.length > 0) score += 25;
-        if (data.education?.length > 0) score += 15;
-        if (data.skills?.length > 0) score += 15;
-        if (data.projects?.length > 0) score += 10;
-        return Math.min(score, 100);
-    };
-    setAtsScore(calculateAtsScore(resumeData));
-  }, [resumeData]);
+  const performAtsAnalysis = useCallback(async (data: ResumeData) => {
+    if (!data.jobDescription) {
+      setAtsAnalysis({ score: 0, feedback: "Add a job description for an ATS analysis.", missingKeywords: [] });
+      return;
+    }
+    setIsAnalyzing(true);
+    try {
+        const result = await analyzeResumeAction({
+            resumeSummary: data.summary,
+            resumeExperience: data.experience,
+            resumeSkills: data.skills,
+            jobDescription: data.jobDescription,
+        });
+        if (result && "score" in result) {
+            setAtsAnalysis(result);
+        } else {
+             toast({ variant: 'destructive', title: 'Error', description: result.error || 'Failed to analyze resume.' });
+        }
+    } catch (error) {
+        toast({ variant: 'destructive', title: 'Error', description: 'An unexpected error occurred during analysis.' });
+    } finally {
+        setIsAnalyzing(false);
+    }
+  }, [toast]);
+  
+  const debouncedAtsAnalysis = useMemo(() => debounce(performAtsAnalysis, 2000), [performAtsAnalysis]);
+
 
   useEffect(() => {
     const savedProjects = localStorage.getItem('resuMasterProjects');
@@ -79,6 +92,11 @@ export default function WorkspacePage() {
         const currentProject = projects.find(p => p.id === id);
         if (currentProject) {
           methods.reset(currentProject);
+          if (currentProject.jobDescription) {
+            performAtsAnalysis(currentProject);
+          } else {
+            setAtsAnalysis({ score: 0, feedback: "Add a job description for an ATS analysis.", missingKeywords: [] });
+          }
         }
       } catch (e) {
         console.error("Failed to parse projects from localStorage", e);
@@ -111,6 +129,7 @@ export default function WorkspacePage() {
         projects.push(data);
       }
       localStorage.setItem('resuMasterProjects', JSON.stringify(projects));
+      return data;
     } catch (e) {
       console.error("Failed to save to localStorage", e);
       toast({
@@ -118,6 +137,7 @@ export default function WorkspacePage() {
         title: "Save Error",
         description: "Could not save your changes.",
       });
+      return null;
     }
   }, [id, toast]);
 
@@ -128,13 +148,17 @@ export default function WorkspacePage() {
       setIsSaving(true);
       setIsSaved(false);
       // @ts-ignore
-      debouncedSave(value).then(() => {
+      debouncedSave(value).then((savedValue) => {
         setIsSaving(false);
         setIsSaved(true);
+        if(savedValue) {
+            // @ts-ignore
+            debouncedAtsAnalysis(savedValue);
+        }
       });
     });
     return () => subscription.unsubscribe();
-  }, [methods.watch, debouncedSave]);
+  }, [methods.watch, debouncedSave, debouncedAtsAnalysis]);
 
   if (!isLoaded) {
     return (
@@ -168,19 +192,7 @@ export default function WorkspacePage() {
             <ResumeForm />
           </div>
           <div className="space-y-4">
-              <Card className="p-4 flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                      <CircularProgress value={atsScore} size={40} strokeWidth={4} />
-                      <div>
-                          <h3 className="font-semibold">Real-Time ATS Score</h3>
-                          <p className="text-xs text-muted-foreground">This score estimates your resume's compatibility with ATS software.</p>
-                      </div>
-                  </div>
-                  <Button>
-                      <Download className="mr-2 h-4 w-4" />
-                      Download
-                  </Button>
-              </Card>
+            <AtsPanel analysis={atsAnalysis} isAnalyzing={isAnalyzing} />
             <div className="lg:max-h-[calc(100vh-160px)] lg:overflow-y-auto rounded-lg bg-background shadow-lg">
               <div className="origin-top scale-[.90] lg:scale-[.85] xl:scale-[.90]">
                 <ResumePreview resumeData={methods.watch()} />

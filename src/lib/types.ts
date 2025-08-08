@@ -92,3 +92,19 @@ export const GenerateTailoredResumeOutputSchema = z.object({
   experienceDescription: z.string().describe("A description for the most recent experience, tailored to the job description."),
 });
 export type GenerateTailoredResumeOutput = z.infer<typeof GenerateTailoredResumeOutputSchema>;
+
+export const AnalyzeResumeForAtsInputSchema = z.object({
+    resumeSummary: z.string().describe("The professional summary from the user's resume."),
+    resumeExperience: z.array(experienceSchema).describe("The work experience from the user's resume."),
+    resumeSkills: z.array(skillSchema).describe("The skills from the user's resume."),
+    jobDescription: z.string().describe("The target job description."),
+});
+export type AnalyzeResumeForAtsInput = z.infer<typeof AnalyzeResumeForAtsInputSchema>;
+
+export const AnalyzeResumeForAtsOutputSchema = z.object({
+    score: z.number().describe("An ATS score from 0 to 100."),
+    feedback: z.string().describe("Actionable feedback for the user on how to improve their resume for the given job description."),
+    missingKeywords: z.array(z.string()).describe("A list of critical keywords missing from the resume."),
+});
+export type AnalyzeResumeForAtsOutput = z.infer<typeof AnalyzeResumeForAtsOutputSchema>;
+export type AtsAnalysis = AnalyzeResumeForAtsOutput;
