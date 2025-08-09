@@ -19,6 +19,8 @@ import AtsPanel from '@/components/workspace/ats-panel';
 import KeywordSuggestionDialog from '@/components/workspace/keyword-suggestion-dialog';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { Accordion } from '@/components/ui/accordion';
+import JobDetailsCard from '@/components/workspace/job-details-card';
 
 
 function debounce<F extends (...args: any[]) => any>(func: F, waitFor: number) {
@@ -236,9 +238,12 @@ export default function WorkspacePage() {
         </header>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-screen-2xl mx-auto p-4 sm:p-6 pb-32">
-          <div className="lg:max-h-[calc(100vh-80px)] lg:overflow-y-auto pr-4 space-y-6">
-             <h1 className="text-xl font-semibold text-center">{resumeName}</h1>
-            <ResumeForm />
+          <div className="lg:max-h-[calc(100vh-80px)] lg:overflow-y-auto pr-4 space-y-4">
+            <h1 className="text-xl font-semibold text-center">{resumeName}</h1>
+            <Accordion type="multiple" defaultValue={['job-details']} className="w-full space-y-4">
+                <JobDetailsCard />
+                <ResumeForm />
+            </Accordion>
           </div>
           <div className="space-y-4">
             <AtsPanel 

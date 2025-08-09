@@ -15,11 +15,12 @@ import { Trash2, Mail, Phone, Globe, Linkedin, Github } from 'lucide-react';
 import { ResumeData } from '@/lib/types';
 import AiSuggestionDialog from './ai-suggestion-dialog';
 import { useState } from 'react';
-import { educationSchema, experienceSchema, projectSchema, skillSchema, personalDetailsSchema, resumeDataSchema } from '@/lib/types';
+import { educationSchema, experienceSchema, projectSchema, skillSchema } from '@/lib/types';
 import SectionCard from './resume-form/section-card';
 import FieldArrayItem from './resume-form/field-array-item';
 import { InputGroup } from './ui/input-group';
 import TextareaWithEnhancer from './resume-form/textarea-with-enhancer';
+import { resumeDataSchema } from '@/lib/types';
 
 
 export default function ResumeForm() {
@@ -37,8 +38,8 @@ export default function ResumeForm() {
     };
     
     return (
-        <div className="space-y-6">
-            <SectionCard title="Personal Details">
+        <>
+            <SectionCard title="Personal Details" value="personal-details">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <FormField control={control} name="personalDetails.name" render={({ field }) => ( <FormItem> <FormLabel>Full Name</FormLabel> <FormControl><Input placeholder="John Doe" {...field} disabled /></FormControl> <FormMessage /> </FormItem> )}/>
                     <FormField control={control} name="personalDetails.email" render={({ field }) => ( <FormItem> <FormLabel>Email</FormLabel> <FormControl><InputGroup startContent={<Mail />}><Input type="email" placeholder="john.doe@email.com" {...field} /></InputGroup></FormControl> <FormMessage /> </FormItem> )}/>
@@ -46,11 +47,11 @@ export default function ResumeForm() {
                     <FormField control={control} name="personalDetails.location" render={({ field }) => ( <FormItem> <FormLabel>Location</FormLabel> <FormControl><Input placeholder="New York, NY" {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
                     <FormField control={control} name="personalDetails.website" render={({ field }) => ( <FormItem> <FormLabel>Portfolio/Website</FormLabel> <FormControl><InputGroup startContent={<Globe />}><Input placeholder="https://johndoe.dev" {...field} /></InputGroup></FormControl> <FormMessage /> </FormItem> )}/>
                     <FormField control={control} name="personalDetails.linkedin" render={({ field }) => ( <FormItem> <FormLabel>LinkedIn</FormLabel> <FormControl><InputGroup startContent={<Linkedin />}><Input placeholder="https://linkedin.com/in/johndoe" {...field} /></InputGroup></FormControl> <FormMessage /> </FormItem> )}/>
-                    <FormField control={control} name="personalDetails.github" render={({ field }) => ( <FormItem> <FormLabel>GitHub</FormLabel> <FormControl><InputGroup startContent={<Github />}><Input placeholder="https://github.com/johndoe" {...field} /></InputGroup></FormControl> <FormMessage /> </FormItem> )}/>
+                    <FormField control={control} name="personalDetails.github" render={({ field }) => ( <FormItem> <FormLabel>GitHub</FormLabel> <FormControl><InputGroup startContent={<Github />}><Input placeholder="https://github.com/johndoe" /></InputGroup></FormControl> <FormMessage /> </FormItem> )}/>
                 </div>
             </SectionCard>
 
-            <SectionCard title="Summary">
+            <SectionCard title="Summary" value="summary">
                 <FormField
                     control={control}
                     name="summary"
@@ -69,7 +70,7 @@ export default function ResumeForm() {
                 />
             </SectionCard>
             
-            <SectionCard title="Experience" onAdd={() => appendExperience(experienceSchema.parse({}))} addText="Add Experience">
+            <SectionCard title="Experience" value="experience" onAdd={() => appendExperience(experienceSchema.parse({}))} addText="Add Experience">
                 {experienceFields.map((field, index) => (
                     <FieldArrayItem key={field.id} index={index} onRemove={removeExperience}>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -97,7 +98,7 @@ export default function ResumeForm() {
                 ))}
             </SectionCard>
 
-            <SectionCard title="Education" onAdd={() => appendEducation(educationSchema.parse({}))} addText="Add Education">
+            <SectionCard title="Education" value="education" onAdd={() => appendEducation(educationSchema.parse({}))} addText="Add Education">
                 {educationFields.map((field, index) => (
                     <FieldArrayItem key={field.id} index={index} onRemove={removeEducation}>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -125,7 +126,7 @@ export default function ResumeForm() {
                 ))}
             </SectionCard>
 
-            <SectionCard title="Projects" onAdd={() => appendProject(projectSchema.parse({}))} addText="Add Project">
+            <SectionCard title="Projects" value="projects" onAdd={() => appendProject(projectSchema.parse({}))} addText="Add Project">
                 {projectFields.map((field, index) => (
                     <FieldArrayItem key={field.id} index={index} onRemove={removeProject}>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -151,7 +152,7 @@ export default function ResumeForm() {
                 ))}
             </SectionCard>
 
-            <SectionCard title="Skills" onAdd={() => appendSkill(skillSchema.parse({}))} addText="Add Skill">
+            <SectionCard title="Skills" value="skills" onAdd={() => appendSkill(skillSchema.parse({}))} addText="Add Skill">
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     {skillFields.map((field, index) => (
                         <div key={field.id} className="relative">
@@ -182,6 +183,6 @@ export default function ResumeForm() {
                 currentValue={getValues(suggestionField || 'summary')}
                 setIsLoading={setIsAiLoading}
             />
-        </div>
+        </>
     );
 }
