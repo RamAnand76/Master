@@ -2,6 +2,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useFormContext } from "react-hook-form";
 import {
   Dialog,
   DialogContent,
@@ -27,6 +28,7 @@ export default function KeywordSuggestionDialog({ open, onOpenChange, keyword, r
   const [suggestion, setSuggestion] = useState<{ suggestion: string; example: string } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const { setValue } = useFormContext<ResumeData>();
 
   useEffect(() => {
     if (open && keyword) {
@@ -45,6 +47,19 @@ export default function KeywordSuggestionDialog({ open, onOpenChange, keyword, r
         .finally(() => setIsLoading(false));
     }
   }, [open, keyword, resume, toast, onOpenChange]);
+
+  const handleUseSuggestion = () => {
+    if (suggestion) {
+        // This is a simple implementation that replaces the description of the most recent experience.
+        // A more advanced version could try to find the best place to insert the text.
+        setValue('experience.0.description', suggestion.example, { shouldDirty: true, shouldValidate: true });
+        toast({
+            title: "Suggestion Applied",
+            description: `The keyword "${keyword}" has been added to your experience.`,
+        });
+        onOpenChange(false);
+    }
+  };
 
 
   return (
@@ -79,6 +94,9 @@ export default function KeywordSuggestionDialog({ open, onOpenChange, keyword, r
         )}
         <DialogFooter className="pt-4">
           <Button variant="ghost" onClick={() => onOpenChange(false)}>Close</Button>
+          <Button onClick={handleUseSuggestion} disabled={isLoading || !suggestion}>
+            Use this suggestion
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
