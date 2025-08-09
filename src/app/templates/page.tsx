@@ -2,6 +2,7 @@
 "use client";
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import HomeHeader from '@/components/home/home-header';
 import TemplateCard from '@/components/templates/template-card';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -9,9 +10,11 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Search } from 'lucide-react';
 import { InputGroup } from '@/components/ui/input-group';
+import type { ResumeData } from '@/lib/types';
 
 const templates = [
   {
+    id: 'classic',
     name: 'Classic',
     imageUrl: 'https://placehold.co/400x565.png',
     tags: ['Traditional', 'Professional'],
@@ -20,6 +23,7 @@ const templates = [
     category: 'Professional',
   },
   {
+    id: 'modern',
     name: 'Modern',
     imageUrl: 'https://placehold.co/400x565.png',
     tags: ['Creative', 'Minimalist'],
@@ -28,6 +32,7 @@ const templates = [
     category: 'Modern',
   },
   {
+    id: 'creative',
     name: 'Elegant',
     imageUrl: 'https://placehold.co/400x565.png',
     tags: ['Sophisticated', 'Simple'],
@@ -37,6 +42,7 @@ const templates = [
   },
   {
     name: 'Corporate',
+    id: 'classic',
     imageUrl: 'https://placehold.co/400x565.png',
     tags: ['ATS-Friendly', 'Formal'],
     dataAiHint: 'resume formal',
@@ -45,6 +51,7 @@ const templates = [
   },
   {
     name: 'Tech',
+    id: 'modern',
     imageUrl: 'https://placehold.co/400x565.png',
     tags: ['Developer', 'Modern'],
     dataAiHint: 'resume tech',
@@ -53,6 +60,7 @@ const templates = [
   },
   {
     name: 'Creative',
+    id: 'creative',
     imageUrl: 'https://placehold.co/400x565.png',
     tags: ['Designer', 'Visual'],
     dataAiHint: 'resume design',
@@ -68,6 +76,37 @@ export default function TemplatesPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTier, setActiveTier] = useState('All');
   const [activeCategory, setActiveCategory] = useState('All');
+  const router = useRouter();
+
+  const handleUseTemplate = (templateId: string) => {
+    const savedProjects = localStorage.getItem('resuMasterProjects');
+    if (savedProjects) {
+        try {
+            const projects: ResumeData[] = JSON.parse(savedProjects);
+            if (projects.length > 0) {
+                // Get the most recent project
+                const sortedProjects = projects.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+                const mostRecentProject = sortedProjects[0];
+                
+                // Update its template
+                mostRecentProject.template = templateId;
+                
+                // Save back to local storage
+                localStorage.setItem('resuMasterProjects', JSON.stringify(projects));
+                
+                // Navigate to the workspace
+                router.push(`/workspace/${mostRecentProject.id}`);
+            } else {
+                 // Handle case where there are no projects
+                 router.push('/');
+            }
+        } catch (error) {
+            console.error("Failed to update template:", error);
+        }
+    } else {
+        router.push('/');
+    }
+  };
 
   const filteredTemplates = templates.filter(template => {
     const tierMatch = activeTier === 'All' || template.tier === activeTier;
@@ -127,7 +166,7 @@ export default function TemplatesPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
           {filteredTemplates.length > 0 ? (
             filteredTemplates.map((template, index) => (
-              <TemplateCard key={index} {...template} />
+              <TemplateCard key={index} {...template} onUseTemplate={() => handleUseTemplate(template.id)} />
             ))
           ) : (
             <div className="col-span-full text-center py-12">

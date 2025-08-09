@@ -9,14 +9,16 @@ import { Eye, Code } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 type TemplateCardProps = {
+  id: string;
   name: string;
   imageUrl: string;
   tags: string[];
   dataAiHint: string;
   tier: 'Free' | 'Pro' | 'Premium';
+  onUseTemplate: (id: string) => void;
 };
 
-export default function TemplateCard({ name, imageUrl, tags, dataAiHint, tier }: TemplateCardProps) {
+export default function TemplateCard({ id, name, imageUrl, tags, dataAiHint, tier, onUseTemplate }: TemplateCardProps) {
     const tierBadgeColor = {
         Free: 'bg-primary/80',
         Pro: 'bg-orange-500',
@@ -57,7 +59,7 @@ export default function TemplateCard({ name, imageUrl, tags, dataAiHint, tier }:
                 <Eye className="mr-2 h-4 w-4"/>
                 Preview
             </Button>
-            <Button size="sm" className={cn(tierButtonColor[tier], 'text-white')}>
+            <Button size="sm" className={cn(tierButtonColor[tier], 'text-white')} onClick={() => onUseTemplate(id)}>
                 <Code className="mr-2 h-4 w-4"/>
                 Use Template
             </Button>

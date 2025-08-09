@@ -163,7 +163,10 @@ export default function WorkspacePage() {
   
   useEffect(() => {
     if (isUserLoaded && user.name) {
-      methods.setValue('personalDetails.name', user.name, { shouldValidate: true });
+      const currentName = methods.getValues('personalDetails.name');
+      if (!currentName || currentName === 'Your Name') {
+        methods.setValue('personalDetails.name', user.name, { shouldValidate: true, shouldDirty: true });
+      }
     }
   }, [isUserLoaded, user.name, methods]);
 

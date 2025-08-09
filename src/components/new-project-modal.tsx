@@ -73,8 +73,8 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate 
         return;
     }
 
-
-    let summary = 'A brief professional summary about yourself.';
+    let summary = resumeDataSchema.shape.summary.getDefaultValue() as string;
+    let experienceDescription = experienceSchema.shape.description.getDefaultValue() as string;
     const maxSummaryLength = resumeDataSchema.shape.summary.maxLength || 350;
 
     if (values.jobDescription) {
@@ -87,6 +87,7 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate 
 
             if (result && "summary" in result) {
                 summary = result.summary.substring(0, maxSummaryLength);
+                experienceDescription = result.experienceDescription;
             } else {
                 toast({
                     variant: "destructive",
@@ -111,10 +112,11 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate 
       name: values.title,
       createdAt: new Date().toISOString(),
       summary,
-      experience: [],
+      experience: experienceDescription ? [experienceSchema.parse({ description: experienceDescription })] : [],
       jobDescription: values.jobDescription,
       jobPosition: values.jobPosition,
       company: values.company,
+      template: 'classic',
     });
     
     onProjectCreate(newProject);
