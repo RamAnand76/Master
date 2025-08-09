@@ -19,15 +19,17 @@ export default function SectionCard({ title, value, children, onAdd, addText, cl
         <AccordionItem value={value}>
             <Card className={cn("bg-card border-border/20 shadow-lg overflow-hidden", className)}>
                 <CardHeader>
-                    <AccordionTrigger className="flex justify-between w-full hover:no-underline p-0">
-                        <CardTitle className="text-accent">{title}</CardTitle>
-                         {onAdd && addText && (
-                            <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); onAdd(); }} type="button" className="mr-4">
+                    <div className="flex justify-between items-center w-full">
+                        <AccordionTrigger className="flex-1 hover:no-underline p-0 text-left">
+                            <CardTitle className="text-accent">{title}</CardTitle>
+                        </AccordionTrigger>
+                        {onAdd && addText && (
+                            <Button variant="ghost" size="sm" onClick={onAdd} type="button" className="mr-4">
                                 <PlusCircle className="mr-2 h-4 w-4" />
                                 {addText}
                             </Button>
                         )}
-                    </AccordionTrigger>
+                    </div>
                 </CardHeader>
                 <AccordionContent>
                     <CardContent>{children}</CardContent>
