@@ -57,7 +57,7 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate 
     setIsGenerating(true);
 
     let summary = 'A brief professional summary about yourself.';
-    let experienceDescription = '- Bullet point about your achievement.';
+    const maxSummaryLength = resumeDataSchema.shape.summary.maxLength || 350;
 
     if (values.jobDescription) {
         try {
@@ -68,8 +68,7 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate 
             });
 
             if (result && "summary" in result) {
-                summary = result.summary;
-                experienceDescription = result.experienceDescription;
+                summary = result.summary.substring(0, maxSummaryLength);
             } else {
                 toast({
                     variant: "destructive",
@@ -94,6 +93,7 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate 
       name: values.title,
       createdAt: new Date().toISOString(),
       summary,
+      experience: [],
       jobDescription: values.jobDescription,
       jobPosition: values.jobPosition,
       company: values.company,
