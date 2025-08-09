@@ -2,7 +2,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { PlusCircle } from 'lucide-react';
+import { ChevronDown, PlusCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 type SectionCardProps = {
@@ -18,19 +18,20 @@ export default function SectionCard({ title, value, children, onAdd, addText, cl
     return (
         <AccordionItem value={value}>
             <Card className={cn("bg-card border-border/20 shadow-lg overflow-hidden", className)}>
-                <CardHeader>
-                    <div className="flex justify-between items-center w-full">
-                        <AccordionTrigger className="flex-1 hover:no-underline p-0 text-left">
-                            <CardTitle className="text-accent">{title}</CardTitle>
-                        </AccordionTrigger>
-                        {onAdd && addText && (
-                            <Button variant="ghost" size="sm" onClick={onAdd} type="button" className="mr-4">
-                                <PlusCircle className="mr-2 h-4 w-4" />
-                                {addText}
-                            </Button>
-                        )}
-                    </div>
-                </CardHeader>
+                <AccordionTrigger className="w-full hover:no-underline">
+                     <CardHeader className="flex flex-row items-center justify-between w-full p-4">
+                        <CardTitle className="text-accent">{title}</CardTitle>
+                        <div className="flex items-center gap-4">
+                            {onAdd && addText && (
+                                <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); onAdd(); }} type="button">
+                                    <PlusCircle className="mr-2 h-4 w-4" />
+                                    {addText}
+                                </Button>
+                            )}
+                            <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200 text-muted-foreground group-data-[state=open]:rotate-180" />
+                        </div>
+                    </CardHeader>
+                </AccordionTrigger>
                 <AccordionContent>
                     <CardContent>{children}</CardContent>
                 </AccordionContent>
