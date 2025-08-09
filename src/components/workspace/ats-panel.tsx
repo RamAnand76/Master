@@ -1,7 +1,8 @@
 
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { motion, AnimatePresence } from 'framer-motion';
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { CircularProgress } from "@/components/ui/circular-progress";
 import { Button } from "@/components/ui/button";
 import { Download, LoaderCircle, Lightbulb } from "lucide-react";
@@ -13,9 +14,10 @@ type AtsPanelProps = {
   analysis: AtsAnalysis | null;
   isAnalyzing: boolean;
   onKeywordClick: (keyword: string) => void;
+  onDownloadPdf: () => void;
 };
 
-export default function AtsPanel({ analysis, isAnalyzing, onKeywordClick }: AtsPanelProps) {
+export default function AtsPanel({ analysis, isAnalyzing, onKeywordClick, onDownloadPdf }: AtsPanelProps) {
   const score = analysis?.score ?? 0;
   
   return (
@@ -25,16 +27,34 @@ export default function AtsPanel({ analysis, isAnalyzing, onKeywordClick }: AtsP
                 {isAnalyzing ? (
                     <LoaderCircle className="h-10 w-10 text-primary animate-spin" />
                 ) : (
-                    <CircularProgress value={score} size={40} strokeWidth={4} />
+                    <AnimatePresence>
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.5 }}
+                        >
+                            <CircularProgress value={score} size={40} strokeWidth={4} />
+                        </motion.div>
+                    </AnimatePresence>
                 )}
                 <div className="flex-1">
-                    <h3 className="font-semibold">Real-Time ATS Score</h3>
-                    <p className="text-xs text-muted-foreground">
-                        {isAnalyzing ? "Analyzing your resume..." : (analysis?.feedback ?? "This score estimates your resume's compatibility with ATS software.")}
-                    </p>
+                     <AnimatePresence mode="wait">
+                        <motion.div
+                            key={isAnalyzing ? 'analyzing' : 'feedback'}
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 10 }}
+                            transition={{ duration: 0.3 }}
+                        >
+                            <h3 className="font-semibold">Real-Time ATS Score</h3>
+                            <p className="text-xs text-muted-foreground">
+                                {isAnalyzing ? "Analyzing your resume..." : (analysis?.feedback ?? "This score estimates your resume's compatibility with ATS software.")}
+                            </p>
+                        </motion.div>
+                    </AnimatePresence>
                 </div>
             </div>
-            <Button>
+            <Button onClick={onDownloadPdf}>
                 <Download className="mr-2 h-4 w-4" />
                 Download
             </Button>

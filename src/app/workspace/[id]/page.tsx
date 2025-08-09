@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useEffect, useState, useCallback, useMemo } from 'react';
+import { useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { type ResumeData, resumeDataSchema, type AtsAnalysis } from '@/lib/types';
@@ -17,6 +17,8 @@ import { useUser } from '@/hooks/use-user';
 import { analyzeResumeAction } from '@/lib/actions';
 import AtsPanel from '@/components/workspace/ats-panel';
 import KeywordSuggestionDialog from '@/components/workspace/keyword-suggestion-dialog';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 
 function debounce<F extends (...args: any[]) => any>(func: F, waitFor: number) {
@@ -49,6 +51,7 @@ export default function WorkspacePage() {
   const [atsAnalysis, setAtsAnalysis] = useState<AtsAnalysis | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [selectedKeyword, setSelectedKeyword] = useState<string | null>(null);
+  const resumePreviewRef = useRef<HTMLDivElement>(null);
 
   const methods = useForm<ResumeData>({
     resolver: zodResolver(resumeDataSchema),
@@ -57,6 +60,50 @@ export default function WorkspacePage() {
 
   const resumeName = methods.watch('name');
   const resumeData = methods.watch();
+
+  const handleDownloadPdf = async () => {
+    const input = resumePreviewRef.current;
+    if (!input) {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Could not find resume content to download.',
+      });
+      return;
+    }
+
+    toast({
+      title: 'Generating PDF...',
+      description: 'Your resume is being prepared for download.',
+    });
+
+    try {
+      const canvas = await html2canvas(input, {
+        scale: 2, // Higher scale for better quality
+        useCORS: true,
+        backgroundColor: '#141414' // Match your app's background
+      });
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      const imgWidth = canvas.width;
+      const imgHeight = canvas.height;
+      const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+      const imgX = (pdfWidth - imgWidth * ratio) / 2;
+      const imgY = 0;
+      
+      pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
+      pdf.save(`${resumeName || 'resume'}.pdf`);
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+      toast({
+        variant: 'destructive',
+        title: 'PDF Generation Failed',
+        description: 'An unexpected error occurred while creating the PDF.',
+      });
+    }
+  };
 
   const performAtsAnalysis = useCallback(async (data: ResumeData) => {
     if (!data.jobDescription) {
@@ -198,9 +245,10 @@ export default function WorkspacePage() {
                 analysis={atsAnalysis} 
                 isAnalyzing={isAnalyzing}
                 onKeywordClick={(keyword) => setSelectedKeyword(keyword)}
+                onDownloadPdf={handleDownloadPdf}
             />
             <div className="lg:max-h-[calc(100vh-160px)] lg:overflow-y-auto rounded-lg bg-background shadow-lg">
-              <div className="origin-top scale-[.90] lg:scale-[.85] xl:scale-[.90]">
+              <div ref={resumePreviewRef} className="origin-top scale-[.90] lg:scale-[.85] xl:scale-[.90]">
                 <ResumePreview resumeData={methods.watch()} atsAnalysis={atsAnalysis} />
               </div>
             </div>
