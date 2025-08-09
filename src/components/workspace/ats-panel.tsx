@@ -47,7 +47,7 @@ export default function AtsPanel({ analysis, isAnalyzing, onKeywordClick, onDown
                             transition={{ duration: 0.3 }}
                         >
                             <h3 className="font-semibold">Real-Time ATS Score</h3>
-                            <p className="text-xs text-muted-foreground">
+                            <p className="text-xs text-muted-foreground whitespace-pre-wrap">
                                 {isAnalyzing ? "Analyzing your resume..." : (analysis?.feedback ?? "This score estimates your resume's compatibility with ATS software.")}
                             </p>
                         </motion.div>

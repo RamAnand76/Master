@@ -13,7 +13,8 @@ import { type ResumeData, resumeDataSchema, experienceSchema } from "@/lib/types
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { MultiStepLoader } from "./ui/multi-step-loader";
-import { generateTailoredResumeAction } from "@/lib/actions";
+import { generateTailoredResumeAction, validateJobDetailsAction } from "@/lib/actions";
+import pLimit from "p-limit";
 
 const newProjectSchema = z.object({
   title: z.string().min(1, "Title is required."),
@@ -31,9 +32,9 @@ type NewProjectModalProps = {
 };
 
 const loadingStates = [
+    { text: "Validating job details..." },
     { text: "Analyzing job description..." },
     { text: "Tailoring your professional summary..." },
-    { text: "Optimizing your work experience..." },
     { text: "Building your new resume..." },
   ];
 
@@ -55,6 +56,23 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate 
 
   const onSubmit = async (values: NewProjectFormValues) => {
     setIsGenerating(true);
+
+    // Step 1: Validate Job Details
+    const validationResult = await validateJobDetailsAction({
+        jobPosition: values.jobPosition,
+        company: values.company,
+    });
+
+    if (!validationResult.isValid) {
+        toast({
+            variant: "destructive",
+            title: "Invalid Job Details",
+            description: validationResult.reason || "Please enter a valid job title and company name.",
+        });
+        setIsGenerating(false);
+        return;
+    }
+
 
     let summary = 'A brief professional summary about yourself.';
     const maxSummaryLength = resumeDataSchema.shape.summary.maxLength || 350;

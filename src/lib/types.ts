@@ -56,9 +56,9 @@ export const resumeDataSchema = z.object({
   education: z.array(educationSchema).default([]),
   projects: z.array(projectSchema).default([]),
   skills: z.array(skillSchema).default([]),
-  jobDescription: z.string().optional(),
-  jobPosition: z.string().optional(),
-  company: z.string().optional(),
+  jobDescription: z.string().default(''),
+  jobPosition: z.string().default(''),
+  company: z.string().default(''),
 });
 
 export type ResumeData = z.infer<typeof resumeDataSchema>;
@@ -103,7 +103,7 @@ export type AnalyzeResumeForAtsInput = z.infer<typeof AnalyzeResumeForAtsInputSc
 
 export const AnalyzeResumeForAtsOutputSchema = z.object({
     score: z.number().describe("An ATS score from 0 to 100."),
-    feedback: z.string().describe("Actionable feedback for the user on how to improve their resume for the given job description."),
+    feedback: z.string().describe("Actionable feedback for the user on how to improve their resume for the given job description. Each feedback point should be a separate bullet point starting with a hyphen."),
     matchingKeywords: z.array(z.string()).describe("A list of critical keywords found in both the resume and the job description."),
     missingKeywords: z.array(z.string()).describe("A list of critical keywords missing from the resume."),
 });
@@ -121,3 +121,15 @@ export const GetKeywordSuggestionOutputSchema = z.object({
     example: z.string().describe("A specific example of the updated text."),
 });
 export type GetKeywordSuggestionOutput = z.infer<typeof GetKeywordSuggestionOutputSchema>;
+
+export const ValidateJobDetailsInputSchema = z.object({
+    jobPosition: z.string().optional(),
+    company: z.string().optional(),
+});
+export type ValidateJobDetailsInput = z.infer<typeof ValidateJobDetailsInputSchema>;
+
+export const ValidateJobDetailsOutputSchema = z.object({
+    isValid: z.boolean().describe("Whether the job details are valid."),
+    reason: z.string().optional().describe("The reason why the job details are not valid."),
+});
+export type ValidateJobDetailsOutput = z.infer<typeof ValidateJobDetailsOutputSchema>;

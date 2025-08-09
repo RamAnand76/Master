@@ -36,7 +36,7 @@ A candidate with only a summary and no experience should receive a score below 1
 You must also provide:
 - A list of critical keywords present in the job description that are also found in the resume (matchingKeywords).
 - A list of critical keywords from the job description that are missing from the resume (missingKeywords).
-- A brief, direct, and actionable feedback summary on what the candidate *must* do to improve their score. Be blunt and professional.
+- Actionable feedback on what the candidate *must* do to improve their score. Each feedback point must be a separate bullet point starting with a hyphen. Be blunt and professional.
 
 Job Description:
 {{{jobDescription}}}
@@ -72,7 +72,7 @@ const analyzeResumeForAtsFlow = ai.defineFlow(
     if (!input.jobDescription || isResumeEmpty) {
         return {
             score: 0,
-            feedback: "Add a job description and fill out your resume to get an ATS analysis.",
+            feedback: "- Add a job description and fill out your resume to get an ATS analysis.",
             missingKeywords: [],
             matchingKeywords: [],
         }

@@ -5,7 +5,8 @@ import { suggestResumeImprovements } from "@/ai/flows/suggest-resume-improvement
 import { generateTailoredResume } from "@/ai/flows/generate-tailored-resume";
 import { analyzeResumeForAts } from "@/ai/flows/analyze-resume-for-ats";
 import { getKeywordSuggestion } from "@/ai/flows/get-keyword-suggestion";
-import { GenerateTailoredResumeInput, type AnalyzeResumeForAtsInput, type GetKeywordSuggestionInput } from "./types";
+import { validateJobDetails } from "@/ai/flows/validate-job-details";
+import { GenerateTailoredResumeInput, type AnalyzeResumeForAtsInput, type GetKeywordSuggestionInput, type ValidateJobDetailsInput } from "./types";
 
 export async function getAiSuggestions(resumeContent: string) {
   if (!resumeContent.trim()) {
@@ -48,5 +49,15 @@ export async function getKeywordSuggestionAction(input: GetKeywordSuggestionInpu
     } catch (error) {
         console.error("Keyword suggestion error:", error);
         return { error: "Failed to get keyword suggestion. Please try again later." };
+    }
+}
+
+export async function validateJobDetailsAction(input: ValidateJobDetailsInput) {
+    try {
+        const result = await validateJobDetails(input);
+        return result;
+    } catch (error) {
+        console.error("Job details validation error:", error);
+        return { error: "Failed to validate job details. Please try again later." };
     }
 }
