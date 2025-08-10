@@ -51,7 +51,7 @@ export default function Home() {
   };
   
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col">
+    <div className="h-screen bg-background text-foreground flex flex-col">
       <NewProjectModal
         isOpen={isModalOpen}
         onOpenChange={setIsModalOpen}
@@ -68,21 +68,23 @@ export default function Home() {
       />
       <HomeHeader />
 
-      <main className="flex-1 flex items-center justify-center">
-        <div className="max-w-screen-xl w-full mx-auto grid lg:grid-cols-2 gap-12 p-8">
-            <div className="lg:col-span-1">
-              <HomeHero 
-                onNewResumeClick={handleOpenModal} 
-                hasReachedLimit={hasReachedLimit} 
-              />
-            </div>
-            <div className="lg:col-span-1">
-              <ResumeList 
-                projects={projects} 
-                deleteProject={deleteProject} 
-                hasReachedLimit={hasReachedLimit}
-                onNewResumeClick={handleOpenModal} 
-              />
+      <main className="flex-1 overflow-y-auto">
+        <div className="min-h-full flex items-center justify-center">
+            <div className="max-w-screen-xl w-full mx-auto grid lg:grid-cols-2 gap-12 p-8">
+                <div className="lg:col-span-1">
+                  <HomeHero 
+                    onNewResumeClick={handleOpenModal} 
+                    hasReachedLimit={hasReachedLimit} 
+                  />
+                </div>
+                <div className="lg:col-span-1">
+                  <ResumeList 
+                    projects={projects} 
+                    deleteProject={deleteProject} 
+                    hasReachedLimit={hasReachedLimit}
+                    onNewResumeClick={handleOpenModal} 
+                  />
+                </div>
             </div>
         </div>
       </main>
