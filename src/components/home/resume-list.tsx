@@ -24,6 +24,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from '../ui/tooltip';
+import { ShineBorder } from '../magicui/shine-border';
+import { ShinyButton } from '../magicui/shiny-button';
 
 
 type ResumeListProps = {
@@ -35,7 +37,11 @@ type ResumeListProps = {
 
 export default function ResumeList({ projects, deleteProject, hasReachedLimit, onNewResumeClick }: ResumeListProps) {
     return (
-        <Card className="bg-card/30 border-border/20 shadow-sm">
+        <ShineBorder
+            className="bg-card/30 border-border/20 shadow-sm"
+            color={["#408080", "#00FFFF", "#408080"]}
+        >
+        <Card className="bg-transparent border-0">
             {hasReachedLimit && (
                 <CardHeader className="flex flex-row items-center gap-4 p-4 border-b border-border/40">
                     <ListTodo className="w-5 h-5 text-primary"/>
@@ -43,7 +49,7 @@ export default function ResumeList({ projects, deleteProject, hasReachedLimit, o
                         <CardTitle className="text-base">You have reached your workspace limit.</CardTitle>
                         <CardDescription className="text-xs">Upgrade to premium to create more resumes.</CardDescription>
                     </div>
-                    <Button size="sm">Upgrade</Button>
+                    <ShinyButton borderRadius='0.5rem'>Upgrade</ShinyButton>
                 </CardHeader>
             )}
 
@@ -137,5 +143,6 @@ export default function ResumeList({ projects, deleteProject, hasReachedLimit, o
                 </TabsContent>
             </Tabs>
         </Card>
+        </ShineBorder>
     );
 }
