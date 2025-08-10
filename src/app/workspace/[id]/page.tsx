@@ -222,7 +222,7 @@ export default function WorkspacePage() {
 
   return (
     <FormProvider {...methods}>
-      <main className="min-h-screen bg-secondary">
+       <div className="h-screen bg-secondary flex flex-col">
         <header className="bg-background/80 backdrop-blur-sm sticky top-0 z-10 border-b border-border">
           <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 py-2 flex items-center justify-between">
              <Button asChild variant="ghost" size="sm" className="text-sm">
@@ -240,29 +240,31 @@ export default function WorkspacePage() {
           </div>
         </header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-screen-2xl mx-auto p-4 sm:p-6 pb-32">
-          <div className="lg:max-h-[calc(100vh-80px)] lg:overflow-y-auto pr-4 space-y-4">
-            <h1 className="text-xl font-semibold text-center">{resumeName}</h1>
-            <Accordion type="multiple" defaultValue={['job-details']} className="w-full space-y-4">
-                <JobDetailsCard />
-                <ResumeForm />
-            </Accordion>
-          </div>
-          <div className="space-y-4">
-            <AtsPanel 
-                analysis={atsAnalysis} 
-                isAnalyzing={isAnalyzing}
-                onKeywordClick={(keyword) => setSelectedKeyword(keyword)}
-                onDownloadPdf={handleDownloadPdf}
-            />
-            <div className="lg:max-h-[calc(100vh-160px)] lg:overflow-y-auto rounded-lg bg-background shadow-lg">
-              <div ref={resumePreviewRef} className="origin-top scale-[.90] lg:scale-[.85] xl:scale-[.90]">
-                <ResumePreview resumeData={methods.watch()} atsAnalysis={atsAnalysis} />
+         <main className="flex-1 overflow-hidden">
+             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-screen-2xl mx-auto p-4 sm:p-6 h-full">
+              <div className="overflow-y-auto pr-4 space-y-4 h-full pb-32">
+                <h1 className="text-xl font-semibold text-center">{resumeName}</h1>
+                <Accordion type="multiple" defaultValue={['job-details']} className="w-full space-y-4">
+                    <JobDetailsCard />
+                    <ResumeForm />
+                </Accordion>
+              </div>
+              <div className="space-y-4 overflow-y-auto h-full pb-32">
+                <AtsPanel 
+                    analysis={atsAnalysis} 
+                    isAnalyzing={isAnalyzing}
+                    onKeywordClick={(keyword) => setSelectedKeyword(keyword)}
+                    onDownloadPdf={handleDownloadPdf}
+                />
+                <div className="rounded-lg bg-background shadow-lg">
+                  <div ref={resumePreviewRef} className="origin-top scale-[.90] lg:scale-[.85] xl:scale-[.90]">
+                    <ResumePreview resumeData={methods.watch()} atsAnalysis={atsAnalysis} />
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-      </main>
+         </main>
+      </div>
       <KeywordSuggestionDialog 
         open={!!selectedKeyword}
         onOpenChange={(isOpen) => !isOpen && setSelectedKeyword(null)}
