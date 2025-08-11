@@ -9,32 +9,41 @@ import HomeHeader from '@/components/home/home-header';
 import HomeHero from '@/components/home/home-hero';
 import ResumeList from '@/components/home/resume-list';
 import { useUser } from '@/hooks/use-user';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function Home() {
   const [projects, setProjects] = useState<ResumeData[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
-  const { user } = useUser();
+  const { user, isAuthenticated, isLoaded } = useUser();
 
   useEffect(() => {
-    const savedProjects = localStorage.getItem('resuMasterProjects');
-    if (savedProjects) {
-      try {
-        const parsedProjects: ResumeData[] = JSON.parse(savedProjects);
-        if (Array.isArray(parsedProjects)) {
-            const sortedProjects = parsedProjects.sort((a, b) => {
-              const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
-              const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-              return dateB - dateA;
-            });
-            setProjects(sortedProjects);
+    if (isLoaded && !isAuthenticated) {
+      router.push('/login');
+    }
+  }, [isLoaded, isAuthenticated, router]);
+  
+  useEffect(() => {
+    if (isAuthenticated) {
+      const savedProjects = localStorage.getItem('resuMasterProjects');
+      if (savedProjects) {
+        try {
+          const parsedProjects: ResumeData[] = JSON.parse(savedProjects);
+          if (Array.isArray(parsedProjects)) {
+              const sortedProjects = parsedProjects.sort((a, b) => {
+                const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+                const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+                return dateB - dateA;
+              });
+              setProjects(sortedProjects);
+          }
+        } catch (error) {
+          console.error("Failed to parse projects from localStorage", error);
+          setProjects([]);
         }
-      } catch (error) {
-        console.error("Failed to parse projects from localStorage", error);
-        setProjects([]);
       }
     }
-  }, []);
+  }, [isAuthenticated]);
   
   const hasReachedLimit = projects.length >= 5;
 
@@ -50,8 +59,25 @@ export default function Home() {
     localStorage.setItem('resuMasterProjects', JSON.stringify(updatedProjects));
   };
   
+  if (!isLoaded || !isAuthenticated) {
+    return (
+        <div className="min-h-screen bg-background p-8">
+            <Skeleton className="h-12 w-full mb-8" />
+            <div className="grid lg:grid-cols-2 gap-12">
+                <div className="space-y-6">
+                    <Skeleton className="h-24 w-2/3" />
+                    <Skeleton className="h-10 w-48" />
+                </div>
+                <div>
+                    <Skeleton className="h-64 w-full" />
+                </div>
+            </div>
+        </div>
+    );
+  }
+
   return (
-    <div className="h-screen bg-background text-foreground flex flex-col">
+    <div className="min-h-screen bg-background text-foreground flex flex-col">
       <NewProjectModal
         isOpen={isModalOpen}
         onOpenChange={setIsModalOpen}
@@ -69,7 +95,7 @@ export default function Home() {
       <HomeHeader />
 
       <main className="flex-1 overflow-y-auto">
-        <div className="min-h-full flex items-center justify-center">
+        <div className="flex items-center justify-center py-12">
             <div className="max-w-screen-xl w-full mx-auto grid lg:grid-cols-2 gap-12 p-8">
                 <div className="lg:col-span-1">
                   <HomeHero 
