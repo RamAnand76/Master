@@ -76,7 +76,7 @@ export default function ResumeList({ projects, deleteProject, hasReachedLimit, o
                                     <div className="text-xs text-muted-foreground">
                                         <span>{project.createdAt ? new Date(project.createdAt).toLocaleDateString() : new Date().toLocaleDateString()}</span>
                                     </div>
-                                    <AlertDialog key={project.id}>
+                                    <AlertDialog>
                                         <DropdownMenu>
                                             <DropdownMenuTrigger asChild>
                                                 <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground" aria-label="Options">
@@ -85,19 +85,14 @@ export default function ResumeList({ projects, deleteProject, hasReachedLimit, o
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent>
                                                 <AlertDialogTrigger asChild>
-                                                <TooltipProvider>
-                                                    <Tooltip>
-                                                        <TooltipTrigger asChild>
-                                                            <DropdownMenuItem className="text-red-400 hover:!text-red-400 focus:!text-red-400 focus:!bg-red-400/10" aria-label="Delete resume">
-                                                                <Trash2 className="mr-2 h-4 w-4"/>
-                                                                Delete
-                                                            </DropdownMenuItem>
-                                                        </TooltipTrigger>
-                                                        <TooltipContent>
-                                                            <p>Delete</p>
-                                                        </TooltipContent>
-                                                    </Tooltip>
-                                                </TooltipProvider>
+                                                    <DropdownMenuItem 
+                                                        className="text-red-400 hover:!text-red-400 focus:!text-red-400 focus:!bg-red-400/10" 
+                                                        aria-label="Delete resume"
+                                                        onSelect={(e) => e.preventDefault()}
+                                                    >
+                                                        <Trash2 className="mr-2 h-4 w-4"/>
+                                                        Delete
+                                                    </DropdownMenuItem>
                                                 </AlertDialogTrigger>
                                             </DropdownMenuContent>
                                         </DropdownMenu>
