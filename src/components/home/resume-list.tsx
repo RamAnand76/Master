@@ -76,7 +76,7 @@ export default function ResumeList({ projects, deleteProject, hasReachedLimit, o
                                     <div className="text-xs text-muted-foreground">
                                         <span>{project.createdAt ? new Date(project.createdAt).toLocaleDateString() : new Date().toLocaleDateString()}</span>
                                     </div>
-                                    <AlertDialog>
+                                    <AlertDialog key={project.id}>
                                         <DropdownMenu>
                                             <DropdownMenuTrigger asChild>
                                                 <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground" aria-label="Options">
