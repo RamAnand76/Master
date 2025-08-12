@@ -32,7 +32,6 @@ type NewProjectModalProps = {
 };
 
 const loadingStates = [
-    { text: "Validating job details..." },
     { text: "Analyzing job description..." },
     { text: "Tailoring your professional summary..." },
     { text: "Building your new resume..." },
@@ -55,22 +54,8 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate 
   const jobDescription = watch('jobDescription');
 
   const onSubmit = async (values: NewProjectFormValues) => {
-    setIsGenerating(true);
-
-    // Step 1: Validate Job Details
-    const validationResult = await validateJobDetailsAction({
-        jobPosition: values.jobPosition,
-        company: values.company,
-    });
-
-    if (!validationResult.isValid) {
-        toast({
-            variant: "destructive",
-            title: "Invalid Job Details",
-            description: validationResult.reason || "Please enter a valid job title and company name.",
-        });
-        setIsGenerating(false);
-        return;
+    if (values.jobDescription) {
+        setIsGenerating(true);
     }
 
     let summary = resumeDataSchema.shape.summary.getDefaultValue() as string;
