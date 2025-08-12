@@ -1,19 +1,26 @@
+
+"use client";
+
 import type { Metadata } from "next";
+import { usePathname } from 'next/navigation';
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { FloatingDock } from "@/components/ui/floating-dock";
 import { Home, FileText, Settings, User } from "lucide-react";
 
-export const metadata: Metadata = {
-  title: "ResuMaster | ATS-Friendly Resume Builder",
-  description: "Build a professional, ATS-friendly resume in minutes. Get AI-powered suggestions to land your dream job.",
-};
+// export const metadata: Metadata = {
+//   title: "ResuMaster | ATS-Friendly Resume Builder",
+//   description: "Build a professional, ATS-friendly resume in minutes. Get AI-powered suggestions to land your dream job.",
+// };
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const pathname = usePathname();
+  const showDock = !['/login', '/signup'].includes(pathname);
+
   const navItems = [
     {
       title: "Home",
@@ -40,6 +47,8 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <head>
+        <title>ResuMaster | ATS-Friendly Resume Builder</title>
+        <meta name="description" content="Build a professional, ATS-friendly resume in minutes. Get AI-powered suggestions to land your dream job." />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"
@@ -52,7 +61,7 @@ export default function RootLayout({
         />
       </head>
       <body className="font-body antialiased">
-        <FloatingDock items={navItems} />
+        {showDock && <FloatingDock items={navItems} />}
         {children}
         <Toaster />
       </body>
