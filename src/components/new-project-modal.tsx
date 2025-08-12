@@ -13,8 +13,7 @@ import { type ResumeData, resumeDataSchema, experienceSchema } from "@/lib/types
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { MultiStepLoader } from "./ui/multi-step-loader";
-import { generateTailoredResumeAction, validateJobDetailsAction } from "@/lib/actions";
-import pLimit from "p-limit";
+import { generateTailoredResumeAction } from "@/lib/actions";
 
 const newProjectSchema = z.object({
   title: z.string().min(1, "Title is required."),
@@ -58,8 +57,8 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate 
         setIsGenerating(true);
     }
 
-    let summary = resumeDataSchema.shape.summary.getDefaultValue() as string;
-    let experienceDescription = experienceSchema.shape.description.getDefaultValue() as string;
+    let summary = resumeDataSchema.shape.summary._def.defaultValue as string;
+    let experienceDescription = experienceSchema.shape.description._def.defaultValue as string;
     const maxSummaryLength = resumeDataSchema.shape.summary.maxLength || 350;
 
     if (values.jobDescription) {
