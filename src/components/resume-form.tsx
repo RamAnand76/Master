@@ -21,10 +21,12 @@ import FieldArrayItem from './resume-form/field-array-item';
 import { InputGroup } from './ui/input-group';
 import TextareaWithEnhancer from './resume-form/textarea-with-enhancer';
 import { resumeDataSchema } from '@/lib/types';
+import { Badge } from '../ui/badge';
+import { cn } from '@/lib/utils';
 
 
 export default function ResumeForm() {
-    const { control, getValues } = useFormContext<ResumeData>();
+    const { control, getValues, setValue } = useFormContext<ResumeData>();
     const [suggestionField, setSuggestionField] = useState<'summary' | `experience.${number}.description` | `education.${number}.description` | `projects.${number}.description` | null>(null);
     const [isAiLoading, setIsAiLoading] = useState(false);
 
@@ -33,8 +35,20 @@ export default function ResumeForm() {
     const { fields: projectFields, append: appendProject, remove: removeProject } = useFieldArray({ control, name: 'projects' });
     const { fields: skillFields, append: appendSkill, remove: removeSkill } = useFieldArray({ control, name: 'skills' });
     
+    const [skillInputValue, setSkillInputValue] = useState('');
+
     const handleGetSuggestion = (fieldName: 'summary' | `experience.${number}.description` | `education.${number}.description` | `projects.${number}.description`) => {
         setSuggestionField(fieldName);
+    };
+
+    const handleSkillInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter' || e.key === 'Tab') {
+          e.preventDefault();
+          if (skillInputValue.trim()) {
+            appendSkill(skillSchema.parse({ name: skillInputValue.trim() }));
+            setSkillInputValue('');
+          }
+        }
     };
     
     return (
@@ -152,24 +166,32 @@ export default function ResumeForm() {
                 ))}
             </SectionCard>
 
-            <SectionCard title="Skills" value="skills" onAdd={() => appendSkill(skillSchema.parse({}))} addText="Add Skill">
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                    {skillFields.map((field, index) => (
-                        <div key={field.id} className="relative">
-                            <FormField control={control} name={`skills.${index}.name`} render={({ field }) => ( <FormItem> <FormControl><Input placeholder="React" {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
-                             <Button
-                                type="button"
-                                variant="ghost"
-                                size="icon"
-                                className="absolute top-0 right-0 h-full w-8 text-muted-foreground hover:text-red-500"
-                                onClick={() => removeSkill(index)}
-                                aria-label="Remove skill"
-                            >
-                                <Trash2 className="h-4 w-4" />
-                            </Button>
+            <SectionCard title="Skills" value="skills">
+                 <div className="space-y-4">
+                    <Input
+                        placeholder="Type a skill and press Enter..."
+                        value={skillInputValue}
+                        onChange={(e) => setSkillInputValue(e.target.value)}
+                        onKeyDown={handleSkillInputKeyDown}
+                    />
+                     {skillFields.length > 0 && (
+                        <div className="flex flex-wrap gap-2">
+                        {skillFields.map((field, index) => (
+                            <Badge key={field.id} variant="secondary" className="flex items-center gap-1.5 pl-3 pr-1.5 py-1 text-sm">
+                                {getValues(`skills.${index}.name`)}
+                                <button
+                                    type="button"
+                                    className="rounded-full hover:bg-background/50 text-muted-foreground hover:text-foreground"
+                                    onClick={() => removeSkill(index)}
+                                    aria-label={`Remove ${getValues(`skills.${index}.name`)}`}
+                                >
+                                    <Trash2 className="h-3.5 w-3.5" />
+                                </button>
+                            </Badge>
+                        ))}
                         </div>
-                    ))}
-                </div>
+                    )}
+                 </div>
             </SectionCard>
 
             <AiSuggestionDialog
@@ -186,3 +208,4 @@ export default function ResumeForm() {
         </>
     );
 }
+
