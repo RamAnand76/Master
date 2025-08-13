@@ -9,6 +9,7 @@ type User = {
   nameLastUpdatedAt: string | null;
   employmentStatus?: 'student' | 'fresher' | 'employed';
   isAuthenticated: boolean;
+  credits: number;
 };
 
 const USER_STORAGE_KEY = 'resuMasterUser';
@@ -19,6 +20,7 @@ const defaultUser: User = {
   nameLastUpdatedAt: null,
   employmentStatus: undefined,
   isAuthenticated: false,
+  credits: 10,
 };
 
 export function useUser() {
@@ -33,6 +35,9 @@ export function useUser() {
         // Ensure isAuthenticated flag exists for older saved users
         if (parsedUser.isAuthenticated === undefined) {
           parsedUser.isAuthenticated = !!parsedUser.name;
+        }
+        if (parsedUser.credits === undefined) {
+          parsedUser.credits = 10;
         }
         setUser(parsedUser);
       }
