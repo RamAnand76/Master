@@ -21,7 +21,7 @@ import FieldArrayItem from './resume-form/field-array-item';
 import { InputGroup } from './ui/input-group';
 import TextareaWithEnhancer from './resume-form/textarea-with-enhancer';
 import { resumeDataSchema } from '@/lib/types';
-import { Badge } from '../ui/badge';
+import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 
 
@@ -208,4 +208,3 @@ export default function ResumeForm() {
         </>
     );
 }
-
