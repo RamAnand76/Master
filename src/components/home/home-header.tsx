@@ -68,7 +68,7 @@ export default function HomeHeader() {
                                 </DropdownMenuItem>
                                 <DropdownMenuItem disabled>
                                     <Database className="mr-2 h-4 w-4" />
-                                    <span>Credit Balance: {user.credits}</span>
+                                    <span>Balance: {user.credits} credits</span>
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem onClick={handleLogout} className="text-red-400 hover:!text-red-400 focus:!text-red-400 focus:!bg-red-400/10">
