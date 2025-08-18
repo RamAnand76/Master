@@ -1,9 +1,9 @@
 
 import type { ResumeData, AtsAnalysis } from '@/lib/types';
 import React from 'react';
-import ClassicTemplate from './templates/previews/classic';
-import ModernTemplate from './templates/previews/modern';
-import CreativeTemplate from './templates/previews/creative';
+import ClassicTemplate from './templates/previews/professional/classic';
+import ModernTemplate from './templates/previews/modern/modern';
+import CreativeTemplate from './templates/previews/creative/creative';
 
 const templates = {
     classic: ClassicTemplate,
