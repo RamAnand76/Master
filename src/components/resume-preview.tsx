@@ -17,7 +17,7 @@ export default function ResumePreview({ resumeData, atsAnalysis }: { resumeData:
     const TemplateComponent = templates[resumeData.template as keyof typeof templates] || ClassicTemplate;
 
     return (
-        <div className="min-h-[calc(100vh-112px)]">
+        <div>
             <TemplateComponent resumeData={resumeData} atsAnalysis={atsAnalysis} />
         </div>
     );
