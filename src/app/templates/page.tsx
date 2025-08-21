@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Search } from 'lucide-react';
 import { InputGroup } from '@/components/ui/input-group';
 import type { ResumeData } from '@/lib/types';
+import TemplatePreviewDialog from '@/components/templates/template-preview-dialog';
 
 const templates = [
   {
@@ -76,6 +77,7 @@ export default function TemplatesPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTier, setActiveTier] = useState('All');
   const [activeCategory, setActiveCategory] = useState('All');
+  const [previewingTemplate, setPreviewingTemplate] = useState<typeof templates[0] | null>(null);
   const router = useRouter();
 
   const handleUseTemplate = (templateId: string) => {
@@ -116,6 +118,7 @@ export default function TemplatesPage() {
   });
 
   return (
+    <>
     <div className="min-h-screen bg-background text-foreground pb-24">
       <HomeHeader />
       <main className="max-w-7xl mx-auto p-8">
@@ -166,7 +169,12 @@ export default function TemplatesPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
           {filteredTemplates.length > 0 ? (
             filteredTemplates.map((template, index) => (
-              <TemplateCard key={index} {...template} onUseTemplate={() => handleUseTemplate(template.id)} />
+              <TemplateCard 
+                key={index} 
+                {...template} 
+                onUseTemplate={() => handleUseTemplate(template.id)}
+                onPreview={() => setPreviewingTemplate(template)}
+              />
             ))
           ) : (
             <div className="col-span-full text-center py-12">
@@ -177,5 +185,16 @@ export default function TemplatesPage() {
         </div>
       </main>
     </div>
+    <TemplatePreviewDialog
+        isOpen={!!previewingTemplate}
+        onOpenChange={(isOpen) => !isOpen && setPreviewingTemplate(null)}
+        template={previewingTemplate}
+        onUseTemplate={() => {
+            if (previewingTemplate) {
+                handleUseTemplate(previewingTemplate.id)
+            }
+        }}
+    />
+    </>
   );
 }

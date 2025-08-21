@@ -16,9 +16,10 @@ type TemplateCardProps = {
   dataAiHint: string;
   tier: 'Free' | 'Pro' | 'Premium';
   onUseTemplate: (id: string) => void;
+  onPreview: () => void;
 };
 
-export default function TemplateCard({ id, name, imageUrl, tags, dataAiHint, tier, onUseTemplate }: TemplateCardProps) {
+export default function TemplateCard({ id, name, imageUrl, tags, dataAiHint, tier, onUseTemplate, onPreview }: TemplateCardProps) {
     const tierBadgeColor = {
         Free: 'bg-primary/80',
         Pro: 'bg-orange-500',
@@ -55,7 +56,7 @@ export default function TemplateCard({ id, name, imageUrl, tags, dataAiHint, tie
             </div>
           </div>
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center gap-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <Button variant="outline" size="sm" className="bg-background/80 hover:bg-background">
+            <Button variant="outline" size="sm" className="bg-background/80 hover:bg-background" onClick={onPreview}>
                 <Eye className="mr-2 h-4 w-4"/>
                 Preview
             </Button>
