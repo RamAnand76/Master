@@ -18,13 +18,16 @@ import { ScrollArea } from "./ui/scroll-area";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { CheckCircle2 } from "lucide-react";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 // This should ideally be shared, but copying for simplicity for now.
 const templates = [
-  { id: 'classic', name: 'Classic', imageUrl: 'https://placehold.co/400x565.png', dataAiHint: 'resume professional' },
-  { id: 'modern', name: 'Modern', imageUrl: 'https://placehold.co/400x565.png', dataAiHint: 'resume creative' },
-  { id: 'creative', name: 'Elegant', imageUrl: 'https://placehold.co/400x565.png', dataAiHint: 'resume simple' },
+  { id: 'classic', name: 'Classic', imageUrl: 'https://placehold.co/400x565.png', dataAiHint: 'resume professional', category: 'Professional' },
+  { id: 'modern', name: 'Modern', imageUrl: 'https://placehold.co/400x565.png', dataAiHint: 'resume creative', category: 'Modern' },
+  { id: 'creative', name: 'Elegant', imageUrl: 'https://placehold.co/400x565.png', dataAiHint: 'resume simple', category: 'Creative' },
 ];
+const categories = ['All', 'Creative', 'Professional', 'Modern'];
+
 
 const newProjectSchema = z.object({
   title: z.string().min(1, "Title is required."),
@@ -51,6 +54,7 @@ const loadingStates = [
 export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate }: NewProjectModalProps) {
     const { toast } = useToast();
     const [isGenerating, setIsGenerating] = useState(false);
+    const [activeCategory, setActiveCategory] = useState('All');
     const methods = useForm<NewProjectFormValues>({
         resolver: zodResolver(newProjectSchema),
         defaultValues: {
@@ -64,6 +68,10 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate 
 
   const { handleSubmit, control, watch } = methods;
   const jobDescription = watch('jobDescription');
+
+  const filteredTemplates = templates.filter(template => 
+    activeCategory === 'All' || template.category === activeCategory
+  );
 
   const onSubmit = async (values: NewProjectFormValues) => {
     if (values.jobDescription) {
@@ -196,8 +204,17 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate 
                     render={({ field }) => (
                     <FormItem>
                         <FormLabel>Choose a Template</FormLabel>
+                        <Tabs defaultValue="All" onValueChange={setActiveCategory} className="mb-4">
+                            <TabsList>
+                                {categories.map(category => (
+                                    <TabsTrigger key={category} value={category} className="capitalize">
+                                        {category}
+                                    </TabsTrigger>
+                                ))}
+                            </TabsList>
+                        </Tabs>
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                        {templates.map((template) => (
+                        {filteredTemplates.map((template) => (
                             <div
                             key={template.id}
                             className={cn(
