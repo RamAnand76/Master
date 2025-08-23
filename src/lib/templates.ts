@@ -20,6 +20,15 @@ export const templates = [
   },
   {
     id: 'creative',
+    name: 'Creative',
+    imageUrl: 'https://placehold.co/400x565.png',
+    tags: ['Designer', 'Visual'],
+    dataAiHint: 'resume design',
+    tier: 'Pro',
+    category: 'Creative',
+  },
+  {
+    id: 'elegant',
     name: 'Elegant',
     imageUrl: 'https://placehold.co/400x565.png',
     tags: ['Sophisticated', 'Simple'],
@@ -44,15 +53,6 @@ export const templates = [
     dataAiHint: 'resume tech',
     tier: 'Premium',
     category: 'Modern',
-  },
-  {
-    name: 'Creative',
-    id: 'creative-designer',
-    imageUrl: 'https://placehold.co/400x565.png',
-    tags: ['Designer', 'Visual'],
-    dataAiHint: 'resume design',
-    tier: 'Premium',
-    category: 'Creative',
   },
 ];
 
