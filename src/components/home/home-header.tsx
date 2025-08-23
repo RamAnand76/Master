@@ -12,6 +12,7 @@ import { useUser } from '@/hooks/use-user';
 import ProfileDialog from './profile-dialog';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { Badge } from '../ui/badge';
 
 export default function HomeHeader() {
     const { user, logout, isAuthenticated } = useUser();
@@ -63,8 +64,11 @@ export default function HomeHeader() {
                                     <span>Profile</span>
                                 </DropdownMenuItem>
                                 <DropdownMenuItem disabled>
-                                    <Crown className="mr-2 h-4 w-4" />
-                                    <span>Free Plan</span>
+                                    <Crown className="mr-2 h-4 w-4 text-yellow-500" />
+                                    <div className="flex justify-between w-full items-center">
+                                        <span>Subscription</span>
+                                        <Badge variant="secondary" className="text-xs">Free Plan</Badge>
+                                    </div>
                                 </DropdownMenuItem>
                                 <DropdownMenuItem disabled>
                                     <Database className="mr-2 h-4 w-4" />
