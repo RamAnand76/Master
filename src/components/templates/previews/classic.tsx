@@ -28,7 +28,7 @@ const HighlightedText = ({ text, keywords }: { text: string; keywords: string[] 
 
 const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
     <div className="mb-4">
-        <h2 className="text-xs font-semibold text-primary/80 border-b-2 border-primary/20 pb-1 mb-2 uppercase tracking-widest">{title}</h2>
+        <h2 className="text-xs font-semibold text-[#408080]/80 border-b-2 border-[#408080]/20 pb-1 mb-2 uppercase tracking-widest">{title}</h2>
         {children}
     </div>
 );
@@ -40,22 +40,22 @@ export default function ClassicTemplate({ resumeData, atsAnalysis }: { resumeDat
     const matchingKeywords = atsAnalysis?.matchingKeywords ?? [];
 
     return (
-        <div className="p-6 text-xs text-foreground bg-background font-body">
+        <div className="p-6 text-xs text-gray-800 bg-white font-body">
             <header className="text-center mb-6">
-                {personalDetails?.name && <h1 className="text-2xl font-bold tracking-tight">{personalDetails.name}</h1>}
-                <div className="flex justify-center items-center gap-x-3 gap-y-1 mt-1 text-xs text-muted-foreground flex-wrap">
+                {personalDetails?.name && <h1 className="text-2xl font-bold tracking-tight text-gray-900">{personalDetails.name}</h1>}
+                <div className="flex justify-center items-center gap-x-3 gap-y-1 mt-1 text-xs text-gray-500 flex-wrap">
                     {personalDetails?.location && <span>{personalDetails.location}</span>}
-                    {personalDetails?.email && <a href={`mailto:${personalDetails.email}`} className="flex items-center gap-1 hover:text-primary hover:underline"><Mail size={11} />{personalDetails.email}</a>}
-                    {personalDetails?.phone && <a href={`tel:${personalDetails.phone}`} className="flex items-center gap-1 hover:text-primary hover:underline"><Phone size={11} />{personalDetails.phone}</a>}
-                    {personalDetails?.website && personalDetails.website.startsWith('http') && <a href={personalDetails.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-primary hover:underline"><Globe size={11} />Portfolio</a>}
-                    {personalDetails?.linkedin && personalDetails.linkedin.startsWith('http') && <a href={personalDetails.linkedin} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-primary hover:underline"><Linkedin size={11} />LinkedIn</a>}
-                    {personalDetails?.github && personalDetails.github.startsWith('http') && <a href={personalDetails.github} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-primary hover:underline"><Github size={11} />GitHub</a>}
+                    {personalDetails?.email && <a href={`mailto:${personalDetails.email}`} className="flex items-center gap-1 hover:text-[#408080] hover:underline"><Mail size={11} />{personalDetails.email}</a>}
+                    {personalDetails?.phone && <a href={`tel:${personalDetails.phone}`} className="flex items-center gap-1 hover:text-[#408080] hover:underline"><Phone size={11} />{personalDetails.phone}</a>}
+                    {personalDetails?.website && personalDetails.website.startsWith('http') && <a href={personalDetails.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-[#408080] hover:underline"><Globe size={11} />Portfolio</a>}
+                    {personalDetails?.linkedin && personalDetails.linkedin.startsWith('http') && <a href={personalDetails.linkedin} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-[#408080] hover:underline"><Linkedin size={11} />LinkedIn</a>}
+                    {personalDetails?.github && personalDetails.github.startsWith('http') && <a href={personalDetails.github} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-[#408080] hover:underline"><Github size={11} />GitHub</a>}
                 </div>
             </header>
 
             {summary && (
                 <Section title="Summary">
-                    <p className="text-muted-foreground whitespace-pre-wrap text-xs leading-relaxed">
+                    <p className="text-gray-600 whitespace-pre-wrap text-xs leading-relaxed">
                         <HighlightedText text={summary} keywords={matchingKeywords} />
                     </p>
                 </Section>
@@ -66,11 +66,11 @@ export default function ClassicTemplate({ resumeData, atsAnalysis }: { resumeDat
                     {experience.map(exp => (
                         <div key={exp.id} className="mb-3 last:mb-0">
                             <div className="flex justify-between items-baseline">
-                                <h3 className="font-semibold text-sm">{exp.role}</h3>
-                                <span className="text-xs text-muted-foreground">{exp.startDate} - {exp.endDate}</span>
+                                <h3 className="font-semibold text-sm text-gray-900">{exp.role}</h3>
+                                <span className="text-xs text-gray-500">{exp.startDate} - {exp.endDate}</span>
                             </div>
-                            <p className="text-xs italic text-muted-foreground">{exp.company}</p>
-                            <div className="mt-1.5 text-muted-foreground list-disc pl-4 space-y-0.5 whitespace-pre-wrap text-xs">
+                            <p className="text-xs italic text-gray-600">{exp.company}</p>
+                            <div className="mt-1.5 text-gray-600 list-disc pl-4 space-y-0.5 whitespace-pre-wrap text-xs">
                                 <HighlightedText text={exp.description} keywords={matchingKeywords} />
                             </div>
                         </div>
@@ -83,11 +83,11 @@ export default function ClassicTemplate({ resumeData, atsAnalysis }: { resumeDat
                     {education.map(edu => (
                         <div key={edu.id} className="mb-3 last:mb-0">
                             <div className="flex justify-between items-baseline">
-                                <h3 className="font-semibold text-sm">{edu.degree}</h3>
-                                <span className="text-xs text-muted-foreground">{edu.startDate} - {edu.endDate}</span>
+                                <h3 className="font-semibold text-sm text-gray-900">{edu.degree}</h3>
+                                <span className="text-xs text-gray-500">{edu.startDate} - {edu.endDate}</span>
                             </div>
-                            <p className="text-xs italic text-muted-foreground">{edu.institution}</p>
-                            <div className="mt-1.5 text-muted-foreground list-disc pl-4 space-y-0.5 whitespace-pre-wrap text-xs">
+                            <p className="text-xs italic text-gray-600">{edu.institution}</p>
+                            <div className="mt-1.5 text-gray-600 list-disc pl-4 space-y-0.5 whitespace-pre-wrap text-xs">
                                 <HighlightedText text={edu.description} keywords={matchingKeywords} />
                             </div>
                         </div>
@@ -100,10 +100,10 @@ export default function ClassicTemplate({ resumeData, atsAnalysis }: { resumeDat
                     {projects.map(proj => (
                         <div key={proj.id} className="mb-3 last:mb-0">
                             <div className="flex items-baseline gap-2">
-                                <h3 className="font-semibold text-sm">{proj.name}</h3>
-                                {proj.url && proj.url.startsWith('http') && <a href={proj.url} target="_blank" rel="noopener noreferrer" className="text-primary/80 text-xs hover:underline">(Link)</a>}
+                                <h3 className="font-semibold text-sm text-gray-900">{proj.name}</h3>
+                                {proj.url && proj.url.startsWith('http') && <a href={proj.url} target="_blank" rel="noopener noreferrer" className="text-[#408080]/80 text-xs hover:underline">(Link)</a>}
                             </div>
-                            <div className="mt-1.5 text-muted-foreground list-disc pl-4 space-y-0.5 whitespace-pre-wrap text-xs">
+                            <div className="mt-1.5 text-gray-600 list-disc pl-4 space-y-0.5 whitespace-pre-wrap text-xs">
                                 <HighlightedText text={proj.description} keywords={matchingKeywords} />
                             </div>
                         </div>
@@ -115,7 +115,7 @@ export default function ClassicTemplate({ resumeData, atsAnalysis }: { resumeDat
                 <Section title="Skills">
                     <div className="flex flex-wrap gap-1.5">
                         {skills.filter(s => s.name).map(skill => (
-                            <span key={skill.id} className="bg-secondary text-secondary-foreground rounded-md px-2 py-0.5 text-xs font-medium">
+                            <span key={skill.id} className="bg-gray-200 text-gray-800 rounded-md px-2 py-0.5 text-xs font-medium">
                                 <HighlightedText text={skill.name} keywords={matchingKeywords} />
                             </span>
                         ))}

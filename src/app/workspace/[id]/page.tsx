@@ -236,7 +236,7 @@ export default function WorkspacePage() {
                     isAnalyzing={isAnalyzing}
                     onKeywordClick={(keyword) => setSelectedKeyword(keyword)}
                 />
-                <div className="rounded-lg bg-background shadow-lg">
+                <div className="rounded-lg bg-white text-black shadow-lg">
                   <div ref={resumePreviewRef} className="origin-top scale-[.90] lg:scale-[.85] xl:scale-[.90]">
                     <ResumePreview resumeData={methods.watch()} atsAnalysis={atsAnalysis} />
                   </div>
