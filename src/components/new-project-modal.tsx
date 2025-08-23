@@ -128,7 +128,7 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate 
     <>
     <MultiStepLoader loadingStates={loadingStates} loading={isGenerating} duration={1500} />
     <Dialog open={isOpen && !isGenerating} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl h-[80vh]">
+      <DialogContent className="max-w-4xl h-[80vh] flex flex-col">
         <DialogHeader>
           <DialogTitle>Create a New Resume</DialogTitle>
           <DialogDescription>
@@ -136,8 +136,10 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate 
           </DialogDescription>
         </DialogHeader>
         <FormProvider {...methods}>
-          <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-8 h-full overflow-hidden">
-            <ScrollArea className="pr-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-8 flex-1 overflow-hidden">
+            
+            {/* Left Column: Form */}
+            <ScrollArea className="pr-4 -mr-4">
               <div className="space-y-4">
                 <FormField
                   control={control}
@@ -194,7 +196,8 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate 
               </div>
             </ScrollArea>
 
-            <div className="flex flex-col">
+            {/* Right Column: Template Selector */}
+            <div className="flex flex-col min-h-0">
               <FormLabel>Select a Template</FormLabel>
                 <Tabs defaultValue="All" onValueChange={setActiveCategory} className="mt-3">
                     <TabsList>
@@ -205,8 +208,8 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate 
                         ))}
                     </TabsList>
                 </Tabs>
-              <ScrollArea className="mt-3 flex-1">
-                  <div className="grid grid-cols-2 gap-4 pr-4">
+              <ScrollArea className="mt-3 flex-1 -mr-4 pr-4">
+                  <div className="grid grid-cols-2 gap-4">
                       {filteredTemplates.map((template) => (
                           <div
                               key={template.id}
@@ -241,8 +244,8 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate 
                   </div>
               </ScrollArea>
             </div>
-
-            <DialogFooter className="md:col-span-2 mt-4 pt-4 border-t border-border">
+            
+            <DialogFooter className="md:col-span-2 mt-auto pt-4 border-t border-border">
                 <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>Cancel</Button>
                 <Button type="submit" disabled={isGenerating}>
                     {jobDescription ? 'Create & Enhance with AI' : 'Create Resume'}
