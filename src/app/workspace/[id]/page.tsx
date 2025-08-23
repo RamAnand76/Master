@@ -19,6 +19,7 @@ import AtsPanel from '@/components/workspace/ats-panel';
 import KeywordSuggestionDialog from '@/components/workspace/keyword-suggestion-dialog';
 import { generatePdf } from '@/lib/pdf-generator';
 import JobDetailsCard from '@/components/workspace/job-details-card';
+import { formatDistanceToNow } from 'date-fns';
 
 function debounce<F extends (...args: any[]) => any>(func: F, waitFor: number) {
   let timeout: NodeJS.Timeout;
@@ -44,7 +45,7 @@ export default function WorkspacePage() {
   const id = Array.isArray(params.id) ? params.id[0] : params.id;
   const [isLoaded, setIsLoaded] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const [isSaved, setIsSaved] = useState(true);
+  const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const { toast } = useToast();
   const { user, isLoaded: isUserLoaded } = useUser();
   const [atsAnalysis, setAtsAnalysis] = useState<AtsAnalysis | null>(null);
@@ -114,6 +115,7 @@ export default function WorkspacePage() {
         const currentProject = projects.find(p => p.id === id);
         if (currentProject) {
           methods.reset(currentProject);
+          setLastSaved(new Date()); // Assume it was just saved when loaded
           if (currentProject.jobDescription) {
             performAtsAnalysis(currentProject);
           } else {
@@ -171,11 +173,10 @@ export default function WorkspacePage() {
   useEffect(() => {
     const subscription = methods.watch((value) => {
       setIsSaving(true);
-      setIsSaved(false);
       // @ts-ignore
       debouncedSave(value).then((savedValue) => {
         setIsSaving(false);
-        setIsSaved(true);
+        setLastSaved(new Date());
         if(savedValue) {
             // @ts-ignore
             debouncedAtsAnalysis(savedValue);
@@ -184,6 +185,25 @@ export default function WorkspacePage() {
     });
     return () => subscription.unsubscribe();
   }, [methods, debouncedSave, debouncedAtsAnalysis]);
+  
+  const getSaveStatus = () => {
+      if (isSaving) {
+          return { text: "Saving...", iconColor: "text-primary", isPulsing: true };
+      }
+      if (lastSaved) {
+        const timeAgo = formatDistanceToNow(lastSaved, { addSuffix: true });
+        if (timeAgo === 'less than a minute ago') {
+             return { text: "Saved just now", iconColor: "text-green-400" };
+        }
+        return { 
+            text: `Last saved at ${lastSaved.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`, 
+            iconColor: "text-green-400" 
+        };
+      }
+      return { text: "Unsaved changes", iconColor: "text-yellow-400" };
+  }
+
+  const saveStatus = getSaveStatus();
 
   if (!isLoaded) {
     return (
@@ -209,8 +229,8 @@ export default function WorkspacePage() {
              </div>
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                <Save className={`h-3.5 w-3.5 ${isSaving ? 'animate-pulse text-primary' : (isSaved ? 'text-green-400' : 'text-yellow-400')}`} />
-                {isSaving ? 'Saving...' : (isSaved ? 'Saved' : 'Unsaved')}
+                <Save className={`h-3.5 w-3.5 ${saveStatus.iconColor} ${saveStatus.isPulsing ? 'animate-pulse' : ''}`} />
+                {saveStatus.text}
               </div>
               <Button variant="outline" size="sm" className="h-9 px-4 rounded-lg">
                 <Share2 className="mr-2" /> Share
