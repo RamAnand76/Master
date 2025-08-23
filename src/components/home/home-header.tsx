@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Crown, LogIn, LogOut, Sun, User, UserPlus, Database } from 'lucide-react';
+import { Crown, LogIn, LogOut, Sun, User, UserPlus, Database, CreditCard } from 'lucide-react';
 import { AppLogo } from './app-logo';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -63,9 +63,15 @@ export default function HomeHeader() {
                                     <User className="mr-2 h-4 w-4" />
                                     <span>Profile</span>
                                 </DropdownMenuItem>
-                                <DropdownMenuItem disabled>
+                                <Link href="/billing" passHref>
+                                    <DropdownMenuItem>
+                                            <CreditCard className="mr-2 h-4 w-4" />
+                                            <span>Billing</span>
+                                    </DropdownMenuItem>
+                                </Link>
+                                <DropdownMenuItem>
                                     <Crown className="mr-2 h-4 w-4 text-yellow-500" />
-                                    <Badge variant="default" className="text-xs">Free Plan</Badge>
+                                    <Badge variant="default" className="text-xs bg-primary hover:bg-primary/90">Free Plan</Badge>
                                 </DropdownMenuItem>
                                 <DropdownMenuItem disabled>
                                     <Database className="mr-2 h-4 w-4" />
