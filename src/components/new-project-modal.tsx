@@ -140,7 +140,7 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate 
             
             {/* Left Column: Form */}
             <ScrollArea className="pr-4 -mr-4">
-              <div className="space-y-4">
+              <div className="space-y-3">
                 <FormField
                   control={control}
                   name="title"
