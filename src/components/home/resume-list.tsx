@@ -64,7 +64,7 @@ export default function ResumeList({ projects, deleteProject, hasReachedLimit, o
                     <div className="p-4 pt-2">
                     {projects.length > 0 ? (
                         <div className="space-y-2">
-                            {projects.map((project, i) => (
+                            {projects.map((project) => (
                                 <ShineBorder 
                                     key={project.id} 
                                     className="bg-card/30 border-border/20 shadow-sm"
