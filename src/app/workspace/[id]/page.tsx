@@ -54,6 +54,7 @@ export default function WorkspacePage() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [selectedKeyword, setSelectedKeyword] = useState<string | null>(null);
   const resumePreviewRef = useRef<HTMLDivElement>(null);
+  const [isDownloadingPdf, setIsDownloadingPdf] = useState(false);
 
   const methods = useForm<ResumeData>({
     resolver: zodResolver(resumeDataSchema),
@@ -73,29 +74,47 @@ export default function WorkspacePage() {
       });
       return;
     }
-
+  
     toast({
       title: 'Generating PDF...',
       description: 'Your resume is being prepared for download.',
     });
-
+  
+    setIsDownloadingPdf(true);
+  
+    // Brief delay to allow the preview to re-render without highlights
+    await new Promise(resolve => setTimeout(resolve, 100));
+  
     try {
       const canvas = await html2canvas(input, {
         scale: 2, // Higher scale for better quality
         useCORS: true,
-        backgroundColor: '#141414' // Match your app's background
+        backgroundColor: '#ffffff'
       });
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF('p', 'mm', 'a4');
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = pdf.internal.pageSize.getHeight();
-      const imgWidth = canvas.width;
-      const imgHeight = canvas.height;
-      const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
-      const imgX = (pdfWidth - imgWidth * ratio) / 2;
+      
+      const canvasWidth = canvas.width;
+      const canvasHeight = canvas.height;
+      
+      const ratio = canvasWidth / canvasHeight;
+      const pdfRatio = pdfWidth / pdfHeight;
+      
+      let finalWidth, finalHeight;
+      if (ratio > pdfRatio) {
+          finalWidth = pdfWidth;
+          finalHeight = pdfWidth / ratio;
+      } else {
+          finalHeight = pdfHeight;
+          finalWidth = pdfHeight * ratio;
+      }
+      
+      const imgX = (pdfWidth - finalWidth) / 2;
       const imgY = 0;
       
-      pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
+      pdf.addImage(imgData, 'PNG', imgX, imgY, finalWidth, finalHeight);
       pdf.save(`${resumeName || 'resume'}.pdf`);
     } catch (error) {
       console.error("Error generating PDF:", error);
@@ -104,6 +123,8 @@ export default function WorkspacePage() {
         title: 'PDF Generation Failed',
         description: 'An unexpected error occurred while creating the PDF.',
       });
+    } finally {
+      setIsDownloadingPdf(false);
     }
   };
 
@@ -249,17 +270,31 @@ export default function WorkspacePage() {
                     <ResumeForm />
                 </Accordion>
               </div>
-              <div className="space-y-4 overflow-y-auto h-full pb-32">
+              <div className="space-y-4 overflow-y-auto h-full pb-32 flex flex-col">
                 <AtsPanel 
                     analysis={atsAnalysis} 
                     isAnalyzing={isAnalyzing}
                     onKeywordClick={(keyword) => setSelectedKeyword(keyword)}
                     onDownloadPdf={handleDownloadPdf}
                 />
-                <div className="rounded-lg bg-background shadow-lg">
-                  <div ref={resumePreviewRef} className="origin-top scale-[.90] lg:scale-[.85] xl:scale-[.90]">
-                    <ResumePreview resumeData={methods.watch()} atsAnalysis={atsAnalysis} />
-                  </div>
+                <div className="flex-1 w-full flex items-center justify-center bg-background rounded-lg shadow-lg p-4 lg:p-8">
+                    <div 
+                        className="w-full aspect-[210/297] max-h-full overflow-hidden"
+                    >
+                        <div 
+                           ref={resumePreviewRef} 
+                           className="w-[800px] origin-top-left"
+                           style={{
+                               transform: `scale(${isDownloadingPdf ? 1 : 0.8})`,
+                               transformOrigin: 'top left',
+                           }}
+                        >
+                            <ResumePreview 
+                                resumeData={methods.watch()} 
+                                atsAnalysis={isDownloadingPdf ? null : atsAnalysis} 
+                            />
+                        </div>
+                    </div>
                 </div>
               </div>
             </div>
