@@ -18,6 +18,7 @@ import { templates } from "@/lib/templates";
 import Image from "next/image";
 import { ScrollArea } from "./ui/scroll-area";
 import { cn } from "@/lib/utils";
+import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
 
 const newProjectSchema = z.object({
   title: z.string().min(1, "Title is required."),
@@ -39,11 +40,15 @@ const loadingStates = [
     { text: "Analyzing job description..." },
     { text: "Tailoring your professional summary..." },
     { text: "Building your new resume..." },
-  ];
+];
+
+const categories = ['All', 'Creative', 'Professional', 'Modern'];
 
 export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate }: NewProjectModalProps) {
     const { toast } = useToast();
     const [isGenerating, setIsGenerating] = useState(false);
+    const [activeCategory, setActiveCategory] = useState('All');
+
     const methods = useForm<NewProjectFormValues>({
         resolver: zodResolver(newProjectSchema),
         defaultValues: {
@@ -58,6 +63,10 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate 
   const { handleSubmit, control, watch, setValue } = methods;
   const jobDescription = watch('jobDescription');
   const selectedTemplate = watch('template');
+
+  const filteredTemplates = templates.filter(template => 
+      activeCategory === 'All' || template.category === activeCategory
+  );
 
   const onSubmit = async (values: NewProjectFormValues) => {
     if (values.jobDescription) {
@@ -187,9 +196,18 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate 
 
             <div className="flex flex-col">
               <FormLabel>Select a Template</FormLabel>
+                <Tabs defaultValue="All" onValueChange={setActiveCategory} className="mt-3">
+                    <TabsList>
+                        {categories.map(category => (
+                            <TabsTrigger key={category} value={category} className="capitalize text-xs h-8">
+                                {category}
+                            </TabsTrigger>
+                        ))}
+                    </TabsList>
+                </Tabs>
               <ScrollArea className="mt-3 flex-1">
                   <div className="grid grid-cols-2 gap-4 pr-4">
-                      {templates.map((template) => (
+                      {filteredTemplates.map((template) => (
                           <div
                               key={template.id}
                               className={cn(
@@ -214,7 +232,7 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate 
               </ScrollArea>
             </div>
 
-            <DialogFooter className="md:col-span-2 mt-4">
+            <DialogFooter className="md:col-span-2 mt-4 pt-4 border-t border-border">
                 <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>Cancel</Button>
                 <Button type="submit" disabled={isGenerating}>
                     {jobDescription ? 'Create & Enhance with AI' : 'Create Resume'}
