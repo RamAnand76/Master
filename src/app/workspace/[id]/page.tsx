@@ -9,7 +9,7 @@ import ResumeForm from '@/components/resume-form';
 import ResumePreview from '@/components/resume-preview';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Download } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useParams } from 'next/navigation';
 import { MultiStepLoader } from '@/components/ui/multi-step-loader';
@@ -58,6 +58,7 @@ export default function WorkspacePage() {
   const methods = useForm<ResumeData>({
     resolver: zodResolver(resumeDataSchema),
     mode: 'onChange',
+    defaultValues: resumeDataSchema.parse({ id: '' }),
   });
 
   const resumeName = methods.watch('name');
@@ -225,17 +226,26 @@ export default function WorkspacePage() {
        <div className="h-screen bg-secondary flex flex-col">
         <header className="bg-background/80 backdrop-blur-sm sticky top-0 z-10 border-b border-border">
           <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 py-2 flex items-center justify-between">
-             <Button asChild variant="ghost" size="sm" className="text-sm">
-                <Link href="/">
-                    <ArrowLeft className="mr-2 h-4 w-4"/> Back to Workspaces
-                </Link>
-             </Button>
+             <div className="flex items-center gap-4">
+                <Button asChild variant="ghost" size="sm" className="text-sm">
+                    <Link href="/">
+                        <ArrowLeft className="mr-2 h-4 w-4"/> Back
+                    </Link>
+                </Button>
+                <div>
+                    <h1 className="font-semibold text-lg">{resumeName}</h1>
+                </div>
+             </div>
             <div className="flex items-center gap-3">
               {isSaving ? (
                 <span className="text-xs text-muted-foreground animate-pulse">Saving...</span>
               ) : (
                 <span className="text-xs text-muted-foreground">{isSaved ? 'All changes saved' : 'Unsaved changes'}</span>
               )}
+              <Button onClick={handleDownloadPdf} size="sm">
+                <Download className="mr-2 h-4 w-4" />
+                Download PDF
+              </Button>
             </div>
           </div>
         </header>
@@ -243,7 +253,6 @@ export default function WorkspacePage() {
          <main className="flex-1 overflow-hidden">
              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-screen-2xl mx-auto p-4 sm:p-6 h-full">
               <div className="overflow-y-auto pr-4 space-y-4 h-full pb-32">
-                <h1 className="text-xl font-semibold text-center">{resumeName}</h1>
                 <Accordion type="multiple" defaultValue={['job-details']} className="w-full space-y-4">
                     <JobDetailsCard />
                     <ResumeForm />
@@ -254,7 +263,6 @@ export default function WorkspacePage() {
                     analysis={atsAnalysis} 
                     isAnalyzing={isAnalyzing}
                     onKeywordClick={(keyword) => setSelectedKeyword(keyword)}
-                    onDownloadPdf={handleDownloadPdf}
                 />
                 <div className="rounded-lg bg-background shadow-lg">
                   <div ref={resumePreviewRef} className="origin-top scale-[.90] lg:scale-[.85] xl:scale-[.90]">

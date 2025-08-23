@@ -4,17 +4,16 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { CircularProgress } from "@/components/ui/circular-progress";
-import { Button } from "@/components/ui/button";
-import { Download, LoaderCircle, Lightbulb, CheckCircle2 } from "lucide-react";
+import { LoaderCircle, Lightbulb, CheckCircle2 } from "lucide-react";
 import type { AtsAnalysis } from "@/lib/types";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../ui/accordion";
 import { Badge } from "../ui/badge";
+import { Button } from '../ui/button';
 
 type AtsPanelProps = {
   analysis: AtsAnalysis | null;
   isAnalyzing: boolean;
   onKeywordClick: (keyword: string) => void;
-  onDownloadPdf: () => void;
 };
 
 const FormattedFeedback = ({ feedback }: { feedback: string }) => {
@@ -22,7 +21,7 @@ const FormattedFeedback = ({ feedback }: { feedback: string }) => {
 
     if (feedbackItems.length > 0) {
         return (
-            <ul className="space-y-1.5">
+            <ul className="space-y-1.5 text-xs text-muted-foreground">
                 {feedbackItems.map((item, index) => (
                     <li key={index} className="flex items-start gap-2">
                         <CheckCircle2 className="h-3.5 w-3.5 mt-0.5 text-green-500 flex-shrink-0" />
@@ -33,10 +32,10 @@ const FormattedFeedback = ({ feedback }: { feedback: string }) => {
         );
     }
 
-    return <p>{feedback}</p>;
+    return <p className="text-xs text-muted-foreground">{feedback}</p>;
 };
 
-export default function AtsPanel({ analysis, isAnalyzing, onKeywordClick, onDownloadPdf }: AtsPanelProps) {
+export default function AtsPanel({ analysis, isAnalyzing, onKeywordClick }: AtsPanelProps) {
   const score = analysis?.score ?? 0;
   
   return (
@@ -65,18 +64,14 @@ export default function AtsPanel({ analysis, isAnalyzing, onKeywordClick, onDown
                             exit={{ opacity: 0, y: 10 }}
                             transition={{ duration: 0.3 }}
                         >
-                            <h3 className="font-semibold">Resume Analysis</h3>
-                            <div className="text-xs text-muted-foreground whitespace-pre-wrap">
-                                {isAnalyzing ? "Analyzing your resume..." : analysis?.feedback ? <FormattedFeedback feedback={analysis.feedback} /> : "This score estimates your resume's compatibility with ATS software."}
+                            <h3 className="font-semibold">ATS Score & Feedback</h3>
+                            <div className="whitespace-pre-wrap">
+                                {isAnalyzing ? <p className="text-xs text-muted-foreground">Analyzing your resume...</p> : analysis?.feedback ? <FormattedFeedback feedback={analysis.feedback} /> : <p className="text-xs text-muted-foreground">This score estimates your resume's compatibility with ATS software.</p>}
                             </div>
                         </motion.div>
                     </AnimatePresence>
                 </div>
             </div>
-            <Button onClick={onDownloadPdf}>
-                <Download className="mr-2 h-4 w-4" />
-                Download
-            </Button>
         </CardHeader>
         {analysis && (analysis.missingKeywords.length > 0 || analysis.matchingKeywords.length > 0) && (
             <CardContent className="p-4 pt-0">
