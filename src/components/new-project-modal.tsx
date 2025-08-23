@@ -19,6 +19,7 @@ import Image from "next/image";
 import { ScrollArea } from "./ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
+import { CheckCircle2 } from "lucide-react";
 
 const newProjectSchema = z.object({
   title: z.string().min(1, "Title is required."),
@@ -215,7 +216,7 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate,
 
             {/* Right Column: Template Selector */}
             <div className="flex flex-col min-h-0">
-              <FormLabel>Select a Template</FormLabel>
+                <FormLabel>Select a Template</FormLabel>
                 <Tabs value={activeCategory} onValueChange={setActiveCategory} className="mt-3">
                     <TabsList>
                         {categories.map(category => (
@@ -225,42 +226,50 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate,
                         ))}
                     </TabsList>
                 </Tabs>
-              <ScrollArea className="mt-3 flex-1 -mr-4 pr-4">
-                  <div className="grid grid-cols-2 gap-4">
-                      {filteredTemplates.map((template) => (
-                          <div
-                              key={template.id}
-                              className="cursor-pointer group"
-                              onClick={() => setValue('template', template.id, { shouldValidate: true })}
-                          >
-                              <div
-                                  className={cn(
-                                      "rounded-lg border-2 transition-all duration-200 overflow-hidden",
-                                      selectedTemplate === template.id
-                                          ? "border-primary ring-2 ring-primary/50"
-                                          : "border-border group-hover:border-primary/50"
-                                  )}
-                              >
-                                  <Image
-                                      src={template.imageUrl}
-                                      alt={template.name}
-                                      width={200}
-                                      height={282}
-                                      className="w-full h-auto object-cover"
-                                      data-ai-hint={template.dataAiHint}
-                                  />
-                              </div>
-                              <p className={cn(
-                                "text-sm text-center mt-2",
-                                selectedTemplate === template.id ? "text-primary font-semibold" : "text-muted-foreground"
-                              )}>
-                                {template.name}
-                              </p>
-                          </div>
-                      ))}
-                  </div>
-              </ScrollArea>
-            </div>
+                <ScrollArea className="mt-3 flex-1 -mr-4 pr-4">
+                    <div className="grid grid-cols-2 gap-4">
+                        {filteredTemplates.map((template) => {
+                            const isSelected = selectedTemplate === template.id;
+                            return (
+                                <div
+                                    key={template.id}
+                                    className="cursor-pointer group relative"
+                                    onClick={() => setValue('template', template.id, { shouldValidate: true })}
+                                >
+                                    {isSelected && (
+                                        <div className="absolute top-2 right-2 z-10 bg-background rounded-full">
+                                            <CheckCircle2 className="h-6 w-6 text-primary" />
+                                        </div>
+                                    )}
+                                    <div
+                                        className={cn(
+                                            "rounded-lg border-2 transition-all duration-200 overflow-hidden",
+                                            isSelected
+                                                ? "border-primary/80 ring-2 ring-primary/50 bg-primary/10"
+                                                : "border-border group-hover:border-primary/50"
+                                        )}
+                                    >
+                                        <Image
+                                            src={template.imageUrl}
+                                            alt={template.name}
+                                            width={200}
+                                            height={282}
+                                            className={cn("w-full h-auto object-cover transition-transform duration-300", isSelected ? "scale-95" : "group-hover:scale-105")}
+                                            data-ai-hint={template.dataAiHint}
+                                        />
+                                    </div>
+                                    <p className={cn(
+                                    "text-sm text-center mt-2",
+                                    isSelected ? "text-primary font-semibold" : "text-muted-foreground"
+                                    )}>
+                                    {template.name}
+                                    </p>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </ScrollArea>
+                </div>
             
             <DialogFooter className="md:col-span-2 mt-auto pt-4 border-t border-border">
                 <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>Cancel</Button>
