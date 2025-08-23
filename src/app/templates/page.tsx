@@ -10,8 +10,9 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Search } from 'lucide-react';
 import { InputGroup } from '@/components/ui/input-group';
-import type { ResumeData } from '@/lib/types';
+import type { ResumeData, Template as TemplateType } from '@/lib/types';
 import { templates } from '@/lib/templates';
+import TemplatePreviewModal from '@/components/templates/template-preview-modal';
 
 const categories = ['All', 'Creative', 'Professional', 'Modern'];
 const tiers = ['All', 'Free', 'Pro', 'Premium'];
@@ -20,36 +21,48 @@ export default function TemplatesPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTier, setActiveTier] = useState('All');
   const [activeCategory, setActiveCategory] = useState('All');
+  const [selectedTemplate, setSelectedTemplate] = useState<TemplateType | null>(null);
   const router = useRouter();
 
   const handleUseTemplate = (templateId: string) => {
     const savedProjects = localStorage.getItem('resuMasterProjects');
-    if (savedProjects) {
-        try {
-            const projects: ResumeData[] = JSON.parse(savedProjects);
-            if (projects.length > 0) {
-                // Get the most recent project
-                const sortedProjects = projects.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-                const mostRecentProject = sortedProjects[0];
-                
-                // Update its template
-                mostRecentProject.template = templateId;
-                
-                // Save back to local storage
-                localStorage.setItem('resuMasterProjects', JSON.stringify(projects));
-                
-                // Navigate to the workspace
-                router.push(`/workspace/${mostRecentProject.id}`);
-            } else {
-                 // Handle case where there are no projects
-                 router.push('/');
-            }
-        } catch (error) {
-            console.error("Failed to update template:", error);
-        }
-    } else {
-        router.push('/');
+    let projects: ResumeData[] = savedProjects ? JSON.parse(savedProjects) : [];
+
+    if (projects.length === 0) {
+        // If no projects exist, create a new one. This part can be improved by opening the new project modal.
+        const newProject = {
+            id: `studio-${Math.random().toString(36).substring(2, 12)}`,
+            name: 'Untitled Resume',
+            template: templateId,
+            createdAt: new Date().toISOString(),
+        } as ResumeData;
+        projects.push(newProject);
+        localStorage.setItem('resuMasterProjects', JSON.stringify(projects));
+        router.push(`/workspace/${newProject.id}`);
+        return;
     }
+
+    // Sort to find the most recent project
+    const sortedProjects = projects.sort((a, b) => {
+        const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        return dateB - dateA;
+    });
+    
+    const mostRecentProject = sortedProjects[0];
+    
+    // Update its template
+    const projectIndex = projects.findIndex(p => p.id === mostRecentProject.id);
+    if (projectIndex > -1) {
+        projects[projectIndex].template = templateId;
+    }
+    
+    localStorage.setItem('resuMasterProjects', JSON.stringify(projects));
+    router.push(`/workspace/${mostRecentProject.id}`);
+  };
+
+  const handlePreview = (template: TemplateType) => {
+    setSelectedTemplate(template);
   };
 
   const filteredTemplates = templates.filter(template => {
@@ -60,6 +73,7 @@ export default function TemplatesPage() {
   });
 
   return (
+    <>
     <div className="min-h-screen bg-background text-foreground pb-24">
       <HomeHeader />
       <main className="max-w-7xl mx-auto p-8">
@@ -109,8 +123,13 @@ export default function TemplatesPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
           {filteredTemplates.length > 0 ? (
-            filteredTemplates.map((template, index) => (
-              <TemplateCard key={index} {...template} onUseTemplate={() => handleUseTemplate(template.id)} />
+            filteredTemplates.map((template) => (
+              <TemplateCard 
+                key={template.id} 
+                template={template} 
+                onUseTemplate={() => handleUseTemplate(template.id)}
+                onPreview={() => handlePreview(template)}
+              />
             ))
           ) : (
             <div className="col-span-full text-center py-12">
@@ -121,5 +140,12 @@ export default function TemplatesPage() {
         </div>
       </main>
     </div>
+    <TemplatePreviewModal
+        isOpen={!!selectedTemplate}
+        onOpenChange={() => setSelectedTemplate(null)}
+        template={selectedTemplate}
+        onUseTemplate={handleUseTemplate}
+    />
+    </>
   );
 }

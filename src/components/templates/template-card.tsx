@@ -3,22 +3,21 @@
 
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardFooter, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardFooter, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Eye, Code } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import type { Template } from '@/lib/types';
 
 type TemplateCardProps = {
-  id: string;
-  name: string;
-  imageUrl: string;
-  tags: string[];
-  dataAiHint: string;
-  tier: 'Free' | 'Pro' | 'Premium';
+  template: Template;
   onUseTemplate: (id: string) => void;
+  onPreview: (template: Template) => void;
 };
 
-export default function TemplateCard({ id, name, imageUrl, tags, dataAiHint, tier, onUseTemplate }: TemplateCardProps) {
+export default function TemplateCard({ template, onUseTemplate, onPreview }: TemplateCardProps) {
+    const { id, name, imageUrl, tags, dataAiHint, tier } = template;
+
     const tierBadgeColor = {
         Free: 'bg-primary/80',
         Pro: 'bg-orange-500',
@@ -55,7 +54,7 @@ export default function TemplateCard({ id, name, imageUrl, tags, dataAiHint, tie
             </div>
         </CardContent>
         <CardFooter className="p-4 pt-0 flex items-center gap-2">
-            <Button variant="outline" size="sm" className="w-full">
+            <Button variant="outline" size="sm" className="w-full" onClick={() => onPreview(template)}>
                 <Eye className="mr-2 h-4 w-4"/>
                 Preview
             </Button>
