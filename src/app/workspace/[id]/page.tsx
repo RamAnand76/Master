@@ -9,7 +9,7 @@ import ResumeForm from '@/components/resume-form';
 import ResumePreview from '@/components/resume-preview';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { ArrowLeft, Download } from 'lucide-react';
+import { ArrowLeft, Download, Save, Share2, Sparkles } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useParams } from 'next/navigation';
 import { MultiStepLoader } from '@/components/ui/multi-step-loader';
@@ -19,6 +19,7 @@ import AtsPanel from '@/components/workspace/ats-panel';
 import KeywordSuggestionDialog from '@/components/workspace/keyword-suggestion-dialog';
 import { generatePdf } from '@/lib/pdf-generator';
 import JobDetailsCard from '@/components/workspace/job-details-card';
+import { ShinyButton } from '@/components/magicui/shiny-button';
 
 
 function debounce<F extends (...args: any[]) => any>(func: F, waitFor: number) {
@@ -195,28 +196,31 @@ export default function WorkspacePage() {
   return (
     <FormProvider {...methods}>
        <div className="h-screen bg-secondary flex flex-col">
-        <header className="bg-background/80 backdrop-blur-sm sticky top-0 z-10 border-b border-border">
-          <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 py-2 flex items-center justify-between">
+        <header className="bg-card/60 backdrop-blur-lg sticky top-0 z-20 border-b border-border/30 shadow-sm">
+          <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
              <div className="flex items-center gap-4">
-                <Button asChild variant="ghost" size="sm" className="text-sm">
+                <Button asChild variant="ghost" size="sm" className="text-sm h-9 px-3 rounded-lg group hover:bg-primary/10 transition-colors duration-300">
                     <Link href="/">
-                        <ArrowLeft className="mr-2 h-4 w-4"/> Back
+                        <ArrowLeft className="mr-2 h-4 w-4 transform group-hover:-translate-x-1 transition-transform duration-300"/> Back
                     </Link>
                 </Button>
+                <div className="h-6 w-px bg-border/50"></div>
                 <div>
-                    <h1 className="font-semibold text-lg">{resumeName}</h1>
+                    <h1 className="font-semibold text-lg tracking-tight text-foreground">{resumeName}</h1>
                 </div>
              </div>
-            <div className="flex items-center gap-3">
-              {isSaving ? (
-                <span className="text-xs text-muted-foreground animate-pulse">Saving...</span>
-              ) : (
-                <span className="text-xs text-muted-foreground">{isSaved ? 'All changes saved' : 'Unsaved changes'}</span>
-              )}
-              <Button onClick={handleDownloadPdf} size="sm">
-                <Download className="mr-2 h-4 w-4" />
-                Download PDF
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <Save className={`h-3.5 w-3.5 ${isSaving ? 'animate-pulse text-primary' : (isSaved ? 'text-green-400' : 'text-yellow-400')}`} />
+                {isSaving ? 'Saving...' : (isSaved ? 'Saved' : 'Unsaved')}
+              </div>
+              <Button variant="outline" size="sm" className="h-9 px-4 rounded-lg">
+                <Share2 className="mr-2" /> Share
               </Button>
+              <ShinyButton onClick={handleDownloadPdf} className="h-9 px-4 rounded-lg group">
+                <Download className="mr-2 transform group-hover:translate-y-[-2px] transition-transform duration-300" />
+                Download PDF
+              </ShinyButton>
             </div>
           </div>
         </header>
