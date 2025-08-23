@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { type ResumeData, resumeDataSchema, experienceSchema } from "@/lib/types";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { MultiStepLoader } from "./ui/multi-step-loader";
 import { generateTailoredResumeAction } from "@/lib/actions";
@@ -34,6 +34,7 @@ type NewProjectModalProps = {
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
   onProjectCreate: (newProject: ResumeData) => void;
+  initialTemplate?: string;
 };
 
 const loadingStates = [
@@ -44,7 +45,7 @@ const loadingStates = [
 
 const categories = ['All', 'Creative', 'Professional', 'Modern'];
 
-export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate }: NewProjectModalProps) {
+export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate, initialTemplate = 'classic' }: NewProjectModalProps) {
     const { toast } = useToast();
     const [isGenerating, setIsGenerating] = useState(false);
     const [activeCategory, setActiveCategory] = useState('All');
@@ -56,13 +57,29 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate 
             jobPosition: "",
             company: "",
             jobDescription: "",
-            template: "classic",
+            template: initialTemplate,
         }
     });
 
-  const { handleSubmit, control, watch, setValue } = methods;
+  const { handleSubmit, control, watch, setValue, reset } = methods;
   const jobDescription = watch('jobDescription');
   const selectedTemplate = watch('template');
+
+  useEffect(() => {
+    if (isOpen) {
+        const defaultCategory = templates.find(t => t.id === initialTemplate)?.category || 'All';
+        const defaultValues = {
+            title: "",
+            jobPosition: "",
+            company: "",
+            jobDescription: "",
+            template: initialTemplate,
+        };
+        reset(defaultValues);
+        setActiveCategory(defaultCategory);
+    }
+  }, [isOpen, initialTemplate, reset]);
+
 
   const filteredTemplates = templates.filter(template => 
       activeCategory === 'All' || template.category === activeCategory
@@ -140,7 +157,7 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate 
             
             {/* Left Column: Form */}
             <ScrollArea className="pr-4 -mr-4">
-              <div className="space-y-4">
+              <div className="space-y-3">
                 <FormField
                   control={control}
                   name="title"
@@ -199,7 +216,7 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate 
             {/* Right Column: Template Selector */}
             <div className="flex flex-col min-h-0">
               <FormLabel>Select a Template</FormLabel>
-                <Tabs defaultValue="All" onValueChange={setActiveCategory} className="mt-3">
+                <Tabs value={activeCategory} onValueChange={setActiveCategory} className="mt-3">
                     <TabsList>
                         {categories.map(category => (
                             <TabsTrigger key={category} value={category} className="capitalize text-xs h-8">

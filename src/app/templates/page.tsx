@@ -13,6 +13,7 @@ import { InputGroup } from '@/components/ui/input-group';
 import type { ResumeData, Template as TemplateType } from '@/lib/types';
 import { templates } from '@/lib/templates';
 import TemplatePreviewModal from '@/components/templates/template-preview-modal';
+import NewProjectModal from '@/components/new-project-modal';
 
 const categories = ['All', 'Creative', 'Professional', 'Modern'];
 const tiers = ['All', 'Free', 'Pro', 'Premium'];
@@ -21,49 +22,32 @@ export default function TemplatesPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTier, setActiveTier] = useState('All');
   const [activeCategory, setActiveCategory] = useState('All');
-  const [selectedTemplate, setSelectedTemplate] = useState<TemplateType | null>(null);
+  const [selectedTemplateForPreview, setSelectedTemplateForPreview] = useState<TemplateType | null>(null);
+  const [isNewProjectModalOpen, setIsNewProjectModalOpen] = useState(false);
+  const [selectedTemplateForNewProject, setSelectedTemplateForNewProject] = useState<string | undefined>(undefined);
   const router = useRouter();
 
   const handleUseTemplate = (templateId: string) => {
+    setSelectedTemplateForNewProject(templateId);
+    setIsNewProjectModalOpen(true);
+  };
+  
+  const handlePreview = (template: TemplateType) => {
+    setSelectedTemplateForPreview(template);
+  };
+  
+  const handleProjectCreate = (newProject: ResumeData) => {
     const savedProjects = localStorage.getItem('resuMasterProjects');
     let projects: ResumeData[] = savedProjects ? JSON.parse(savedProjects) : [];
-
-    if (projects.length === 0) {
-        // If no projects exist, create a new one. This part can be improved by opening the new project modal.
-        const newProject = {
-            id: `studio-${Math.random().toString(36).substring(2, 12)}`,
-            name: 'Untitled Resume',
-            template: templateId,
-            createdAt: new Date().toISOString(),
-        } as ResumeData;
-        projects.push(newProject);
-        localStorage.setItem('resuMasterProjects', JSON.stringify(projects));
-        router.push(`/workspace/${newProject.id}`);
-        return;
-    }
-
-    // Sort to find the most recent project
-    const sortedProjects = projects.sort((a, b) => {
+    const updatedProjects = [...projects, newProject].sort((a, b) => {
         const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
         const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
         return dateB - dateA;
     });
-    
-    const mostRecentProject = sortedProjects[0];
-    
-    // Update its template
-    const projectIndex = projects.findIndex(p => p.id === mostRecentProject.id);
-    if (projectIndex > -1) {
-        projects[projectIndex].template = templateId;
-    }
-    
-    localStorage.setItem('resuMasterProjects', JSON.stringify(projects));
-    router.push(`/workspace/${mostRecentProject.id}`);
+    localStorage.setItem('resuMasterProjects', JSON.stringify(updatedProjects));
+    router.push(`/workspace/${newProject.id}`);
   };
 
-  const handlePreview = (template: TemplateType) => {
-    setSelectedTemplate(template);
-  };
 
   const filteredTemplates = templates.filter(template => {
     const tierMatch = activeTier === 'All' || template.tier === activeTier;
@@ -141,10 +125,16 @@ export default function TemplatesPage() {
       </main>
     </div>
     <TemplatePreviewModal
-        isOpen={!!selectedTemplate}
-        onOpenChange={() => setSelectedTemplate(null)}
-        template={selectedTemplate}
+        isOpen={!!selectedTemplateForPreview}
+        onOpenChange={() => setSelectedTemplateForPreview(null)}
+        template={selectedTemplateForPreview}
         onUseTemplate={handleUseTemplate}
+    />
+    <NewProjectModal
+        isOpen={isNewProjectModalOpen}
+        onOpenChange={setIsNewProjectModalOpen}
+        onProjectCreate={handleProjectCreate}
+        initialTemplate={selectedTemplateForNewProject}
     />
     </>
   );
