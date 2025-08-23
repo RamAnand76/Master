@@ -15,7 +15,7 @@ import { CharacterCount } from './resume-form/character-count';
 
 const inputClasses = clsx(
     'block w-full rounded-lg border-none bg-white/5 px-3 py-1.5 text-sm/6 text-foreground',
-    'focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25'
+    'focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25 transition-all duration-200 ease-in-out'
 );
 
 const EmptyState = ({ icon, title, description, buttonText, onAdd }: { icon: React.ReactNode, title: string, description: string, buttonText: string, onAdd: () => void }) => (
