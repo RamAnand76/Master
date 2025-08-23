@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { CircularProgress } from "@/components/ui/circular-progress";
 import { Button } from "@/components/ui/button";
-import { Download, LoaderCircle, Lightbulb } from "lucide-react";
+import { Download, LoaderCircle, Lightbulb, CheckCircle2 } from "lucide-react";
 import type { AtsAnalysis } from "@/lib/types";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../ui/accordion";
 import { Badge } from "../ui/badge";
@@ -15,6 +15,25 @@ type AtsPanelProps = {
   isAnalyzing: boolean;
   onKeywordClick: (keyword: string) => void;
   onDownloadPdf: () => void;
+};
+
+const FormattedFeedback = ({ feedback }: { feedback: string }) => {
+    const feedbackItems = feedback.split('\n').filter(item => item.trim().startsWith('-'));
+
+    if (feedbackItems.length > 0) {
+        return (
+            <ul className="space-y-1.5">
+                {feedbackItems.map((item, index) => (
+                    <li key={index} className="flex items-start gap-2">
+                        <CheckCircle2 className="h-3.5 w-3.5 mt-0.5 text-green-500 flex-shrink-0" />
+                        <span>{item.replace('-', '').trim()}</span>
+                    </li>
+                ))}
+            </ul>
+        );
+    }
+
+    return <p>{feedback}</p>;
 };
 
 export default function AtsPanel({ analysis, isAnalyzing, onKeywordClick, onDownloadPdf }: AtsPanelProps) {
@@ -47,9 +66,9 @@ export default function AtsPanel({ analysis, isAnalyzing, onKeywordClick, onDown
                             transition={{ duration: 0.3 }}
                         >
                             <h3 className="font-semibold">Resume Analysis</h3>
-                            <p className="text-xs text-muted-foreground whitespace-pre-wrap">
-                                {isAnalyzing ? "Analyzing your resume..." : (analysis?.feedback ?? "This score estimates your resume's compatibility with ATS software.")}
-                            </p>
+                            <div className="text-xs text-muted-foreground whitespace-pre-wrap">
+                                {isAnalyzing ? "Analyzing your resume..." : analysis?.feedback ? <FormattedFeedback feedback={analysis.feedback} /> : "This score estimates your resume's compatibility with ATS software."}
+                            </div>
                         </motion.div>
                     </AnimatePresence>
                 </div>
