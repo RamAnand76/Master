@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useForm, FormProvider } from "react-hook-form";
+import { useForm, FormProvider, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
@@ -14,11 +14,28 @@ import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { MultiStepLoader } from "./ui/multi-step-loader";
 import { generateTailoredResumeAction } from "@/lib/actions";
+<<<<<<< HEAD
 import { templates } from "@/lib/templates";
 import Image from "next/image";
 import { ScrollArea } from "./ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
+=======
+import { ScrollArea } from "./ui/scroll-area";
+import Image from "next/image";
+import { cn } from "@/lib/utils";
+import { CheckCircle2 } from "lucide-react";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+// This should ideally be shared, but copying for simplicity for now.
+const templates = [
+  { id: 'classic', name: 'Classic', imageUrl: 'https://placehold.co/400x565.png', dataAiHint: 'resume professional', category: 'Professional' },
+  { id: 'modern', name: 'Modern', imageUrl: 'https://placehold.co/400x565.png', dataAiHint: 'resume creative', category: 'Modern' },
+  { id: 'creative', name: 'Elegant', imageUrl: 'https://placehold.co/400x565.png', dataAiHint: 'resume simple', category: 'Creative' },
+];
+const categories = ['All', 'Creative', 'Professional', 'Modern'];
+
+>>>>>>> 1395b611130e3487acf2df7701c696a74f881e73
 
 const newProjectSchema = z.object({
   title: z.string().min(1, "Title is required."),
@@ -48,7 +65,10 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate 
     const { toast } = useToast();
     const [isGenerating, setIsGenerating] = useState(false);
     const [activeCategory, setActiveCategory] = useState('All');
+<<<<<<< HEAD
 
+=======
+>>>>>>> 1395b611130e3487acf2df7701c696a74f881e73
     const methods = useForm<NewProjectFormValues>({
         resolver: zodResolver(newProjectSchema),
         defaultValues: {
@@ -66,6 +86,10 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate 
 
   const filteredTemplates = templates.filter(template => 
       activeCategory === 'All' || template.category === activeCategory
+  );
+
+  const filteredTemplates = templates.filter(template => 
+    activeCategory === 'All' || template.category === activeCategory
   );
 
   const onSubmit = async (values: NewProjectFormValues) => {
@@ -128,6 +152,7 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate 
     <>
     <MultiStepLoader loadingStates={loadingStates} loading={isGenerating} duration={1500} />
     <Dialog open={isOpen && !isGenerating} onOpenChange={onOpenChange}>
+<<<<<<< HEAD
       <DialogContent className="max-w-4xl h-[80vh] flex flex-col">
         <DialogHeader>
           <DialogTitle>Create a New Resume</DialogTitle>
@@ -141,6 +166,19 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate 
             {/* Left Column: Form */}
             <ScrollArea className="pr-4 -mr-4">
               <div className="space-y-3">
+=======
+      <DialogContent className="max-w-4xl">
+        <DialogHeader>
+          <DialogTitle>Create a New Resume</DialogTitle>
+          <DialogDescription>
+            Fill in the details and choose a template to start.
+          </DialogDescription>
+        </DialogHeader>
+        <FormProvider {...methods}>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <ScrollArea className="h-[60vh]">
+              <div className="space-y-4 p-1">
+>>>>>>> 1395b611130e3487acf2df7701c696a74f881e73
                 <FormField
                   control={control}
                   name="title"
@@ -154,6 +192,7 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate 
                     </FormItem>
                   )}
                 />
+<<<<<<< HEAD
                 <FormField
                   control={control}
                   name="jobPosition"
@@ -180,6 +219,36 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate 
                     </FormItem>
                   )}
                 />
+=======
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                    control={control}
+                    name="jobPosition"
+                    render={({ field }) => (
+                        <FormItem>
+                        <FormLabel>Job Position</FormLabel>
+                        <FormControl>
+                            <Input placeholder="e.g. Senior Product Manager" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                        </FormItem>
+                    )}
+                    />
+                    <FormField
+                    control={control}
+                    name="company"
+                    render={({ field }) => (
+                        <FormItem>
+                        <FormLabel>Company</FormLabel>
+                        <FormControl>
+                            <Input placeholder="e.g. Google" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                        </FormItem>
+                    )}
+                    />
+                 </div>
+>>>>>>> 1395b611130e3487acf2df7701c696a74f881e73
                 <FormField
                   control={control}
                   name="jobDescription"
@@ -193,6 +262,7 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate 
                     </FormItem>
                   )}
                 />
+<<<<<<< HEAD
               </div>
             </ScrollArea>
 
@@ -246,6 +316,57 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate 
             </div>
             
             <DialogFooter className="md:col-span-2 mt-auto pt-4 border-t border-border">
+=======
+                 <Controller
+                    control={control}
+                    name="template"
+                    render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Choose a Template</FormLabel>
+                        <Tabs defaultValue="All" onValueChange={setActiveCategory} className="mb-4">
+                            <TabsList>
+                                {categories.map(category => (
+                                    <TabsTrigger key={category} value={category} className="capitalize">
+                                        {category}
+                                    </TabsTrigger>
+                                ))}
+                            </TabsList>
+                        </Tabs>
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        {filteredTemplates.map((template) => (
+                            <div
+                            key={template.id}
+                            className={cn(
+                                "relative rounded-lg border-2 cursor-pointer transition-all",
+                                field.value === template.id ? "border-primary ring-2 ring-primary" : "border-border"
+                            )}
+                            onClick={() => field.onChange(template.id)}
+                            >
+                            <Image
+                                src={template.imageUrl}
+                                alt={template.name}
+                                width={400}
+                                height={565}
+                                className="w-full h-auto object-cover rounded-md"
+                                data-ai-hint={template.dataAiHint}
+                            />
+                             {field.value === template.id && (
+                                <div className="absolute inset-0 bg-primary/20 flex items-center justify-center">
+                                  <CheckCircle2 className="h-8 w-8 text-primary-foreground bg-primary rounded-full" />
+                                </div>
+                              )}
+                            <p className="text-center py-2 text-sm font-medium">{template.name}</p>
+                            </div>
+                        ))}
+                        </div>
+                    </FormItem>
+                    )}
+                />
+
+              </div>
+            </ScrollArea>
+            <DialogFooter className="pt-4 mt-4 border-t">
+>>>>>>> 1395b611130e3487acf2df7701c696a74f881e73
                 <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>Cancel</Button>
                 <Button type="submit" disabled={isGenerating}>
                     {jobDescription ? 'Create & Enhance with AI' : 'Create Resume'}

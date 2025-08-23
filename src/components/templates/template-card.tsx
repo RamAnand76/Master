@@ -16,9 +16,10 @@ type TemplateCardProps = {
   dataAiHint: string;
   tier: 'Free' | 'Pro' | 'Premium';
   onUseTemplate: (id: string) => void;
+  onPreview: () => void;
 };
 
-export default function TemplateCard({ id, name, imageUrl, tags, dataAiHint, tier, onUseTemplate }: TemplateCardProps) {
+export default function TemplateCard({ id, name, imageUrl, tags, dataAiHint, tier, onUseTemplate, onPreview }: TemplateCardProps) {
     const tierBadgeColor = {
         Free: 'bg-primary/80',
         Pro: 'bg-orange-500',
@@ -43,6 +44,7 @@ export default function TemplateCard({ id, name, imageUrl, tags, dataAiHint, tie
           <Badge className={cn("absolute top-2 right-2 border-none text-white", tierBadgeColor[tier])}>
             {tier}
           </Badge>
+<<<<<<< HEAD
         </CardHeader>
         <CardContent className="p-4 flex-1">
             <CardTitle className="text-base">{name}</CardTitle>
@@ -58,6 +60,20 @@ export default function TemplateCard({ id, name, imageUrl, tags, dataAiHint, tie
         </CardContent>
         <CardFooter className="p-4 pt-0 flex items-center gap-2">
             <Button variant="outline" size="sm" className="w-full">
+=======
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+          <div className="absolute bottom-0 left-0 p-4">
+             <div className="flex flex-wrap gap-2">
+              {tags.map(tag => (
+                <Badge key={tag} variant="secondary" className="text-xs backdrop-blur-sm bg-background/30">
+                  {tag}
+                </Badge>
+              ))}
+            </div>
+          </div>
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center gap-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <Button variant="outline" size="sm" className="bg-background/80 hover:bg-background" onClick={onPreview}>
+>>>>>>> 1395b611130e3487acf2df7701c696a74f881e73
                 <Eye className="mr-2 h-4 w-4"/>
                 Preview
             </Button>
