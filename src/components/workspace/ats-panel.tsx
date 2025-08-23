@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { CircularProgress } from "@/components/ui/circular-progress";
 import { Button } from "@/components/ui/button";
-import { Download, LoaderCircle, Lightbulb } from "lucide-react";
+import { Download, LoaderCircle, Lightbulb, CheckCircle } from "lucide-react";
 import type { AtsAnalysis } from "@/lib/types";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../ui/accordion";
 import { Badge } from "../ui/badge";
@@ -17,13 +17,34 @@ type AtsPanelProps = {
   onDownloadPdf: () => void;
 };
 
+const FormattedFeedback = ({ text }: { text: string }) => {
+    const feedbackPoints = text.split('\n').filter(line => line.trim().startsWith('-')).map(line => line.trim().substring(1).trim());
+
+    if (feedbackPoints.length === 0) {
+        return <p className="text-xs text-muted-foreground whitespace-pre-wrap">{text}</p>;
+    }
+
+    return (
+        <ul className="space-y-1.5 mt-1">
+            {feedbackPoints.map((point, index) => (
+                <li key={index} className="flex items-start gap-2">
+                    <CheckCircle className="w-3.5 h-3.5 mt-0.5 text-green-500/80 flex-shrink-0" />
+                    <span className="text-xs text-muted-foreground">{point}</span>
+                </li>
+            ))}
+        </ul>
+    );
+};
+
+
 export default function AtsPanel({ analysis, isAnalyzing, onKeywordClick, onDownloadPdf }: AtsPanelProps) {
   const score = analysis?.score ?? 0;
+  const feedback = analysis?.feedback ?? "This score estimates your resume's compatibility with ATS software.";
   
   return (
     <Card>
-        <CardHeader className="flex flex-row items-center justify-between p-4">
-            <div className="flex items-center gap-4 flex-1">
+        <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 gap-4">
+            <div className="flex items-start sm:items-center gap-4 flex-1 w-full">
                 {isAnalyzing ? (
                     <LoaderCircle className="h-10 w-10 text-primary animate-spin" />
                 ) : (
@@ -47,14 +68,16 @@ export default function AtsPanel({ analysis, isAnalyzing, onKeywordClick, onDown
                             transition={{ duration: 0.3 }}
                         >
                             <h3 className="font-semibold">Resume Analysis</h3>
-                            <p className="text-xs text-muted-foreground whitespace-pre-wrap">
-                                {isAnalyzing ? "Analyzing your resume..." : (analysis?.feedback ?? "This score estimates your resume's compatibility with ATS software.")}
-                            </p>
+                            {isAnalyzing ? (
+                                <p className="text-xs text-muted-foreground">Analyzing your resume...</p>
+                            ) : (
+                                <FormattedFeedback text={feedback} />
+                            )}
                         </motion.div>
                     </AnimatePresence>
                 </div>
             </div>
-            <Button onClick={onDownloadPdf}>
+            <Button onClick={onDownloadPdf} className="w-full sm:w-auto">
                 <Download className="mr-2 h-4 w-4" />
                 Download
             </Button>
