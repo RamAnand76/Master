@@ -137,60 +137,62 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate 
         </DialogHeader>
         <FormProvider {...methods}>
           <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-8 h-full overflow-hidden">
-            <div className="space-y-4 pr-4">
-              <FormField
-                control={control}
-                name="title"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Resume Title</FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g. Senior Product Manager Resume" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={control}
-                name="jobPosition"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Job Position</FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g. Senior Product Manager" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={control}
-                name="company"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Company</FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g. Google" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={control}
-                name="jobDescription"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Job Description (Optional)</FormLabel>
-                    <FormControl>
-                      <Textarea placeholder="Paste the job description here to get tailored suggestions." {...field} rows={6} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+            <ScrollArea className="pr-4">
+              <div className="space-y-4">
+                <FormField
+                  control={control}
+                  name="title"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Resume Title</FormLabel>
+                      <FormControl>
+                        <Input placeholder="e.g. Senior Product Manager Resume" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={control}
+                  name="jobPosition"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Job Position</FormLabel>
+                      <FormControl>
+                        <Input placeholder="e.g. Senior Product Manager" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={control}
+                  name="company"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Company</FormLabel>
+                      <FormControl>
+                        <Input placeholder="e.g. Google" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={control}
+                  name="jobDescription"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Job Description (Optional)</FormLabel>
+                      <FormControl>
+                        <Textarea placeholder="Paste the job description here to get tailored suggestions." {...field} rows={6} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </ScrollArea>
 
             <div className="flex flex-col">
               <FormLabel>Select a Template</FormLabel>
@@ -208,22 +210,32 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate 
                       {filteredTemplates.map((template) => (
                           <div
                               key={template.id}
-                              className={cn(
-                                  "cursor-pointer rounded-lg border-2 transition-all duration-200",
-                                  selectedTemplate === template.id
-                                      ? "border-primary ring-2 ring-primary/50"
-                                      : "border-border hover:border-primary/50"
-                              )}
+                              className="cursor-pointer group"
                               onClick={() => setValue('template', template.id, { shouldValidate: true })}
                           >
-                              <Image
-                                  src={template.imageUrl}
-                                  alt={template.name}
-                                  width={200}
-                                  height={282}
-                                  className="rounded-md w-full h-auto object-cover"
-                                  data-ai-hint={template.dataAiHint}
-                              />
+                              <div
+                                  className={cn(
+                                      "rounded-lg border-2 transition-all duration-200 overflow-hidden",
+                                      selectedTemplate === template.id
+                                          ? "border-primary ring-2 ring-primary/50"
+                                          : "border-border group-hover:border-primary/50"
+                                  )}
+                              >
+                                  <Image
+                                      src={template.imageUrl}
+                                      alt={template.name}
+                                      width={200}
+                                      height={282}
+                                      className="w-full h-auto object-cover"
+                                      data-ai-hint={template.dataAiHint}
+                                  />
+                              </div>
+                              <p className={cn(
+                                "text-sm text-center mt-2",
+                                selectedTemplate === template.id ? "text-primary font-semibold" : "text-muted-foreground"
+                              )}>
+                                {template.name}
+                              </p>
                           </div>
                       ))}
                   </div>
