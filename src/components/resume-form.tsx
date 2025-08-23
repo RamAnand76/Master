@@ -1,32 +1,25 @@
 
 "use client";
 
-import { useFormContext, useFieldArray } from 'react-hook-form';
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+import { useFormContext, useFieldArray, Controller } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
-import { Trash2, Mail, Phone, Globe, Linkedin, Github } from 'lucide-react';
-import { ResumeData } from '@/lib/types';
+import { Trash2, Sparkles, LoaderCircle, PlusCircle } from 'lucide-react';
+import { ResumeData, educationSchema, experienceSchema, projectSchema, skillSchema, resumeDataSchema } from '@/lib/types';
 import AiSuggestionDialog from './ai-suggestion-dialog';
 import { useState } from 'react';
-import { educationSchema, experienceSchema, projectSchema, skillSchema } from '@/lib/types';
-import SectionCard from './resume-form/section-card';
-import FieldArrayItem from './resume-form/field-array-item';
-import { InputGroup } from './ui/input-group';
-import TextareaWithEnhancer from './resume-form/textarea-with-enhancer';
-import { resumeDataSchema } from '@/lib/types';
 import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
+import { Fieldset, Legend, Label, Input, Textarea } from '@headlessui/react';
+import clsx from 'clsx';
+import { CharacterCount } from './resume-form/character-count';
 
+
+const inputClasses = clsx(
+    'block w-full rounded-lg border-none bg-white/5 px-3 py-1.5 text-sm/6 text-foreground',
+    'focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25'
+);
 
 export default function ResumeForm() {
-    const { control, getValues, setValue } = useFormContext<ResumeData>();
+    const { control, getValues } = useFormContext<ResumeData>();
     const [suggestionField, setSuggestionField] = useState<'summary' | `experience.${number}.description` | `education.${number}.description` | `projects.${number}.description` | null>(null);
     const [isAiLoading, setIsAiLoading] = useState(false);
 
@@ -53,126 +46,161 @@ export default function ResumeForm() {
     
     return (
         <>
-            <SectionCard title="Personal Details" value="personal-details">
+            <Fieldset className="space-y-6 rounded-xl bg-card/80 p-6 sm:p-8 border border-border/20 shadow-lg">
+                <Legend className="text-base/7 font-semibold text-accent">Personal Details</Legend>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FormField control={control} name="personalDetails.name" render={({ field }) => ( <FormItem> <FormLabel>Full Name</FormLabel> <FormControl><Input placeholder="John Doe" {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
-                    <FormField control={control} name="personalDetails.email" render={({ field }) => ( <FormItem> <FormLabel>Email</FormLabel> <FormControl><InputGroup startContent={<Mail />}><Input type="email" placeholder="john.doe@email.com" {...field} /></InputGroup></FormControl> <FormMessage /> </FormItem> )}/>
-                    <FormField control={control} name="personalDetails.phone" render={({ field }) => ( <FormItem> <FormLabel>Phone</FormLabel> <FormControl><InputGroup startContent={<Phone />}><Input placeholder="(123) 456-7890" {...field} /></InputGroup></FormControl> <FormMessage /> </FormItem> )}/>
-                    <FormField control={control} name="personalDetails.location" render={({ field }) => ( <FormItem> <FormLabel>Location</FormLabel> <FormControl><Input placeholder="New York, NY" {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
-                    <FormField control={control} name="personalDetails.website" render={({ field }) => ( <FormItem> <FormLabel>Portfolio/Website</FormLabel> <FormControl><InputGroup startContent={<Globe />}><Input placeholder="https://johndoe.dev" {...field} /></InputGroup></FormControl> <FormMessage /> </FormItem> )}/>
-                    <FormField control={control} name="personalDetails.linkedin" render={({ field }) => ( <FormItem> <FormLabel>LinkedIn</FormLabel> <FormControl><InputGroup startContent={<Linkedin />}><Input placeholder="https://linkedin.com/in/johndoe" {...field} /></InputGroup></FormControl> <FormMessage /> </FormItem> )}/>
-                    <FormField control={control} name="personalDetails.github" render={({ field }) => ( <FormItem> <FormLabel>GitHub</FormLabel> <FormControl><InputGroup startContent={<Github />}><Input placeholder="https://github.com/johndoe" /></InputGroup></FormControl> <FormMessage /> </FormItem> )}/>
+                    <Controller control={control} name="personalDetails.name" render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">Full Name</Label> <Input {...field} className={inputClasses} /> </div> )}/>
+                    <Controller control={control} name="personalDetails.email" render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">Email</Label> <Input {...field} className={inputClasses} /> </div> )}/>
+                    <Controller control={control} name="personalDetails.phone" render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">Phone</Label> <Input {...field} className={inputClasses} /> </div> )}/>
+                    <Controller control={control} name="personalDetails.location" render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">Location</Label> <Input {...field} className={inputClasses} /> </div> )}/>
+                    <Controller control={control} name="personalDetails.website" render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">Portfolio/Website</Label> <Input {...field} className={inputClasses} /> </div> )}/>
+                    <Controller control={control} name="personalDetails.linkedin" render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">LinkedIn</Label> <Input {...field} className={inputClasses} /> </div> )}/>
+                    <Controller control={control} name="personalDetails.github" render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">GitHub</Label> <Input {...field} className={inputClasses} /> </div> )}/>
                 </div>
-            </SectionCard>
+            </Fieldset>
 
-            <SectionCard title="Summary" value="summary">
-                <FormField
+            <Fieldset className="space-y-1 rounded-xl bg-card/80 p-6 sm:p-8 border border-border/20 shadow-lg">
+                <Legend className="text-base/7 font-semibold text-accent">Summary</Legend>
+                <Controller
                     control={control}
                     name="summary"
                     render={({ field }) => (
-                        <FormItem>
-                           <TextareaWithEnhancer
-                             field={field}
-                             placeholder="A brief professional summary..."
-                             max={resumeDataSchema.shape.summary.maxLength!}
-                             onEnhance={() => handleGetSuggestion('summary')}
-                             isLoading={isAiLoading && suggestionField === 'summary'}
-                           />
-                           <FormMessage />
-                        </FormItem>
+                        <div className="relative">
+                           <Textarea {...field} rows={5} className={clsx(inputClasses, 'pr-10 pb-8 resize-none')} />
+                           <div className="absolute bottom-2 right-2 flex items-center gap-2">
+                                <Button type="button" size="icon" variant="ghost" className="h-7 w-7 text-primary hover:text-primary/90" onClick={() => handleGetSuggestion('summary')} disabled={isAiLoading}>
+                                    {isAiLoading && suggestionField === 'summary' ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+                                </Button>
+                            </div>
+                            <div className="absolute bottom-2.5 left-3">
+                                <CharacterCount name={field.name as keyof ResumeData} max={resumeDataSchema.shape.summary.maxLength!} />
+                            </div>
+                        </div>
                     )}
                 />
-            </SectionCard>
+            </Fieldset>
             
-            <SectionCard title="Experience" value="experience" onAdd={() => appendExperience(experienceSchema.parse({}))} addText="Add Experience">
+            <Fieldset className="space-y-4 rounded-xl bg-card/80 p-6 sm:p-8 border border-border/20 shadow-lg">
+                <div className="flex justify-between items-center">
+                    <Legend className="text-base/7 font-semibold text-accent">Experience</Legend>
+                    <Button variant="ghost" size="sm" onClick={() => appendExperience(experienceSchema.parse({}))} type="button">
+                        <PlusCircle className="mr-2 h-4 w-4" /> Add Experience
+                    </Button>
+                </div>
                 {experienceFields.map((field, index) => (
-                    <FieldArrayItem key={field.id} index={index} onRemove={removeExperience}>
+                    <div key={field.id} className="relative p-4 border border-border/50 rounded-lg">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <FormField control={control} name={`experience.${index}.role`} render={({ field }) => ( <FormItem> <FormLabel>Role</FormLabel> <FormControl><Input placeholder="Software Engineer" {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
-                            <FormField control={control} name={`experience.${index}.company`} render={({ field }) => ( <FormItem> <FormLabel>Company</FormLabel> <FormControl><Input placeholder="Tech Corp" {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
-                            <FormField control={control} name={`experience.${index}.startDate`} render={({ field }) => ( <FormItem> <FormLabel>Start Date</FormLabel> <FormControl><Input placeholder="Jan 2022" {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
-                            <FormField control={control} name={`experience.${index}.endDate`} render={({ field }) => ( <FormItem> <FormLabel>End Date</FormLabel> <FormControl><Input placeholder="Present" {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
+                            <Controller control={control} name={`experience.${index}.role`} render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">Role</Label> <Input {...field} className={inputClasses} /> </div> )}/>
+                            <Controller control={control} name={`experience.${index}.company`} render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">Company</Label> <Input {...field} className={inputClasses} /> </div> )}/>
+                            <Controller control={control} name={`experience.${index}.startDate`} render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">Start Date</Label> <Input {...field} className={inputClasses} /> </div> )}/>
+                            <Controller control={control} name={`experience.${index}.endDate`} render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">End Date</Label> <Input {...field} className={inputClasses} /> </div> )}/>
                         </div>
                         <div className="mt-4">
-                            <FormField control={control} name={`experience.${index}.description`} render={({ field }) => ( 
-                                <FormItem> 
-                                    <FormLabel>Description</FormLabel> 
-                                     <TextareaWithEnhancer
-                                        field={field}
-                                        placeholder="- Did this and that..."
-                                        max={experienceSchema.shape.description.maxLength!}
-                                        onEnhance={() => handleGetSuggestion(`experience.${index}.description`)}
-                                        isLoading={isAiLoading && suggestionField === `experience.${index}.description`}
-                                     />
-                                    <FormMessage /> 
-                                </FormItem> 
+                            <Controller control={control} name={`experience.${index}.description`} render={({ field }) => ( 
+                                <div className="relative"> 
+                                    <Label className="text-sm/6 font-medium text-foreground">Description</Label> 
+                                    <Textarea {...field} rows={5} className={clsx(inputClasses, 'mt-1 pr-10 pb-8 resize-none')} />
+                                    <div className="absolute bottom-2 right-2 flex items-center gap-2">
+                                        <Button type="button" size="icon" variant="ghost" className="h-7 w-7 text-primary hover:text-primary/90" onClick={() => handleGetSuggestion(`experience.${index}.description`)} disabled={isAiLoading}>
+                                            {isAiLoading && suggestionField === `experience.${index}.description` ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+                                        </Button>
+                                    </div>
+                                    <div className="absolute bottom-2.5 left-3">
+                                        <CharacterCount name={field.name as keyof ResumeData} max={experienceSchema.shape.description.maxLength!} />
+                                    </div>
+                                </div> 
                             )}/>
                         </div>
-                    </FieldArrayItem>
+                        <Button type="button" variant="ghost" size="icon" className="absolute top-2 right-2 text-muted-foreground hover:text-red-500" onClick={() => removeExperience(index)}>
+                            <Trash2 className="h-4 w-4" />
+                        </Button>
+                    </div>
                 ))}
-            </SectionCard>
+            </Fieldset>
 
-            <SectionCard title="Education" value="education" onAdd={() => appendEducation(educationSchema.parse({}))} addText="Add Education">
+            <Fieldset className="space-y-4 rounded-xl bg-card/80 p-6 sm:p-8 border border-border/20 shadow-lg">
+                 <div className="flex justify-between items-center">
+                    <Legend className="text-base/7 font-semibold text-accent">Education</Legend>
+                    <Button variant="ghost" size="sm" onClick={() => appendEducation(educationSchema.parse({}))} type="button">
+                        <PlusCircle className="mr-2 h-4 w-4" /> Add Education
+                    </Button>
+                </div>
                 {educationFields.map((field, index) => (
-                    <FieldArrayItem key={field.id} index={index} onRemove={removeEducation}>
+                    <div key={field.id} className="relative p-4 border border-border/50 rounded-lg">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <FormField control={control} name={`education.${index}.degree`} render={({ field }) => ( <FormItem> <FormLabel>Degree</FormLabel> <FormControl><Input placeholder="B.S. in Computer Science" {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
-                            <FormField control={control} name={`education.${index}.institution`} render={({ field }) => ( <FormItem> <FormLabel>Institution</FormLabel> <FormControl><Input placeholder="State University" {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
-                            <FormField control={control} name={`education.${index}.startDate`} render={({ field }) => ( <FormItem> <FormLabel>Start Date</FormLabel> <FormControl><Input placeholder="Aug 2018" {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
-                            <FormField control={control} name={`education.${index}.endDate`} render={({ field }) => ( <FormItem> <FormLabel>End Date</FormLabel> <FormControl><Input placeholder="May 2022" {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
+                            <Controller control={control} name={`education.${index}.degree`} render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">Degree</Label> <Input {...field} className={inputClasses} /> </div> )}/>
+                            <Controller control={control} name={`education.${index}.institution`} render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">Institution</Label> <Input {...field} className={inputClasses} /> </div> )}/>
+                            <Controller control={control} name={`education.${index}.startDate`} render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">Start Date</Label> <Input {...field} className={inputClasses} /> </div> )}/>
+                            <Controller control={control} name={`education.${index}.endDate`} render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">End Date</Label> <Input {...field} className={inputClasses} /> </div> )}/>
                         </div>
                          <div className="mt-4">
-                            <FormField control={control} name={`education.${index}.description`} render={({ field }) => ( 
-                                <FormItem> 
-                                    <FormLabel>Description</FormLabel> 
-                                    <TextareaWithEnhancer
-                                        field={field}
-                                        placeholder="- Relevant coursework..."
-                                        max={educationSchema.shape.description.maxLength!}
-                                        onEnhance={() => handleGetSuggestion(`education.${index}.description`)}
-                                        isLoading={isAiLoading && suggestionField === `education.${index}.description`}
-                                    />
-                                    <FormMessage /> 
-                                </FormItem> 
+                            <Controller control={control} name={`education.${index}.description`} render={({ field }) => ( 
+                                <div className="relative"> 
+                                    <Label className="text-sm/6 font-medium text-foreground">Description</Label>
+                                     <Textarea {...field} rows={5} className={clsx(inputClasses, 'mt-1 pr-10 pb-8 resize-none')} />
+                                    <div className="absolute bottom-2 right-2 flex items-center gap-2">
+                                        <Button type="button" size="icon" variant="ghost" className="h-7 w-7 text-primary hover:text-primary/90" onClick={() => handleGetSuggestion(`education.${index}.description`)} disabled={isAiLoading}>
+                                            {isAiLoading && suggestionField === `education.${index}.description` ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+                                        </Button>
+                                    </div>
+                                     <div className="absolute bottom-2.5 left-3">
+                                        <CharacterCount name={field.name as keyof ResumeData} max={educationSchema.shape.description.maxLength!} />
+                                    </div>
+                                </div> 
                             )}/>
                         </div>
-                    </FieldArrayItem>
+                        <Button type="button" variant="ghost" size="icon" className="absolute top-2 right-2 text-muted-foreground hover:text-red-500" onClick={() => removeEducation(index)}>
+                            <Trash2 className="h-4 w-4" />
+                        </Button>
+                    </div>
                 ))}
-            </SectionCard>
+            </Fieldset>
 
-            <SectionCard title="Projects" value="projects" onAdd={() => appendProject(projectSchema.parse({}))} addText="Add Project">
+            <Fieldset className="space-y-4 rounded-xl bg-card/80 p-6 sm:p-8 border border-border/20 shadow-lg">
+                <div className="flex justify-between items-center">
+                    <Legend className="text-base/7 font-semibold text-accent">Projects</Legend>
+                    <Button variant="ghost" size="sm" onClick={() => appendProject(projectSchema.parse({}))} type="button">
+                        <PlusCircle className="mr-2 h-4 w-4" /> Add Project
+                    </Button>
+                </div>
                 {projectFields.map((field, index) => (
-                    <FieldArrayItem key={field.id} index={index} onRemove={removeProject}>
+                     <div key={field.id} className="relative p-4 border border-border/50 rounded-lg">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <FormField control={control} name={`projects.${index}.name`} render={({ field }) => ( <FormItem> <FormLabel>Project Name</FormLabel> <FormControl><Input placeholder="ResuMaster" {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
-                            <FormField control={control} name={`projects.${index}.url`} render={({ field }) => ( <FormItem> <FormLabel>Project URL</FormLabel> <FormControl><Input placeholder="https://resumaster.app" {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
+                            <Controller control={control} name={`projects.${index}.name`} render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">Project Name</Label> <Input {...field} className={inputClasses} /> </div> )}/>
+                            <Controller control={control} name={`projects.${index}.url`} render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">Project URL</Label> <Input {...field} className={inputClasses} /> </div> )}/>
                         </div>
                         <div className="mt-4">
-                            <FormField control={control} name={`projects.${index}.description`} render={({ field }) => ( 
-                                <FormItem> 
-                                    <FormLabel>Description</FormLabel> 
-                                    <TextareaWithEnhancer
-                                        field={field}
-                                        placeholder="- Built this amazing app..."
-                                        max={projectSchema.shape.description.maxLength!}
-                                        onEnhance={() => handleGetSuggestion(`projects.${index}.description`)}
-                                        isLoading={isAiLoading && suggestionField === `projects.${index}.description`}
-                                    />
-                                    <FormMessage /> 
-                                </FormItem> 
+                            <Controller control={control} name={`projects.${index}.description`} render={({ field }) => ( 
+                                <div className="relative"> 
+                                    <Label className="text-sm/6 font-medium text-foreground">Description</Label>
+                                    <Textarea {...field} rows={5} className={clsx(inputClasses, 'mt-1 pr-10 pb-8 resize-none')} />
+                                    <div className="absolute bottom-2 right-2 flex items-center gap-2">
+                                        <Button type="button" size="icon" variant="ghost" className="h-7 w-7 text-primary hover:text-primary/90" onClick={() => handleGetSuggestion(`projects.${index}.description`)} disabled={isAiLoading}>
+                                            {isAiLoading && suggestionField === `projects.${index}.description` ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+                                        </Button>
+                                    </div>
+                                    <div className="absolute bottom-2.5 left-3">
+                                        <CharacterCount name={field.name as keyof ResumeData} max={projectSchema.shape.description.maxLength!} />
+                                    </div>
+                                </div> 
                             )}/>
                         </div>
-                    </FieldArrayItem>
+                         <Button type="button" variant="ghost" size="icon" className="absolute top-2 right-2 text-muted-foreground hover:text-red-500" onClick={() => removeProject(index)}>
+                            <Trash2 className="h-4 w-4" />
+                        </Button>
+                    </div>
                 ))}
-            </SectionCard>
+            </Fieldset>
 
-            <SectionCard title="Skills" value="skills">
+            <Fieldset className="space-y-4 rounded-xl bg-card/80 p-6 sm:p-8 border border-border/20 shadow-lg">
+                <Legend className="text-base/7 font-semibold text-accent">Skills</Legend>
                  <div className="space-y-4">
                     <Input
                         placeholder="Type a skill and press Enter..."
                         value={skillInputValue}
                         onChange={(e) => setSkillInputValue(e.target.value)}
                         onKeyDown={handleSkillInputKeyDown}
+                        className={inputClasses}
                     />
                      {skillFields.length > 0 && (
                         <div className="flex flex-wrap gap-2">
@@ -192,7 +220,7 @@ export default function ResumeForm() {
                         </div>
                     )}
                  </div>
-            </SectionCard>
+            </Fieldset>
 
             <AiSuggestionDialog
                 open={!!suggestionField && !isAiLoading}

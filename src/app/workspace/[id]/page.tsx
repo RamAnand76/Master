@@ -18,7 +18,6 @@ import { analyzeResumeAction } from '@/lib/actions';
 import AtsPanel from '@/components/workspace/ats-panel';
 import KeywordSuggestionDialog from '@/components/workspace/keyword-suggestion-dialog';
 import { generatePdf } from '@/lib/pdf-generator';
-import { Accordion } from '@/components/ui/accordion';
 import JobDetailsCard from '@/components/workspace/job-details-card';
 
 
@@ -225,10 +224,10 @@ export default function WorkspacePage() {
          <main className="flex-1 overflow-hidden">
              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-screen-2xl mx-auto p-4 sm:p-6 h-full">
               <div className="overflow-y-auto pr-4 space-y-4 h-full pb-32">
-                <Accordion type="multiple" defaultValue={['job-details']} className="w-full space-y-4">
+                <div className="w-full space-y-4">
                     <JobDetailsCard />
                     <ResumeForm />
-                </Accordion>
+                </div>
               </div>
               <div className="space-y-4 overflow-y-auto h-full pb-32">
                 <AtsPanel 
@@ -237,7 +236,7 @@ export default function WorkspacePage() {
                     onKeywordClick={(keyword) => setSelectedKeyword(keyword)}
                 />
                 <div className="rounded-lg bg-white text-black shadow-lg">
-                  <div ref={resumePreviewRef} className="origin-top scale-[.90] lg:scale-[.85] xl:scale-[.90]">
+                  <div ref={resumePreviewRef} className="origin-top scale-[.90] lg:scale-[.85] xl:scale-[.90] bg-white text-black">
                     <ResumePreview resumeData={methods.watch()} atsAnalysis={atsAnalysis} />
                   </div>
                 </div>
