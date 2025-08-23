@@ -20,6 +20,7 @@ import KeywordSuggestionDialog from '@/components/workspace/keyword-suggestion-d
 import { generatePdf } from '@/lib/pdf-generator';
 import JobDetailsCard from '@/components/workspace/job-details-card';
 import { formatDistanceToNow } from 'date-fns';
+import { Tooltip, TooltipProvider, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 function debounce<F extends (...args: any[]) => any>(func: F, waitFor: number) {
   let timeout: NodeJS.Timeout;
@@ -232,13 +233,34 @@ export default function WorkspacePage() {
                 <Save className={`h-3.5 w-3.5 ${saveStatus.iconColor} ${saveStatus.isPulsing ? 'animate-pulse' : ''}`} />
                 {saveStatus.text}
               </div>
-              <Button variant="outline" size="sm" className="h-9 px-4 rounded-lg">
-                <Share2 className="mr-2" /> Share
-              </Button>
-              <Button onClick={handleDownloadPdf} className="h-9 px-4 rounded-lg group">
-                <Download className="mr-2 transform group-hover:translate-y-[-2px] transition-transform duration-300" />
-                Download PDF
-              </Button>
+              <TooltipProvider>
+                <div className="flex items-center gap-2 p-1 bg-background/50 border border-border/20 rounded-lg">
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                           <Button variant="ghost" size="icon" className="h-7 w-7">
+                                <Sparkles />
+                            </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>AI Actions</TooltipContent>
+                    </Tooltip>
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <Button variant="ghost" size="icon" className="h-7 w-7">
+                                <Share2 />
+                            </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>Share</TooltipContent>
+                    </Tooltip>
+                     <Tooltip>
+                        <TooltipTrigger asChild>
+                             <Button onClick={handleDownloadPdf} variant="ghost" size="icon" className="h-7 w-7">
+                                <Download />
+                            </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>Download PDF</TooltipContent>
+                    </Tooltip>
+                </div>
+              </TooltipProvider>
             </div>
           </div>
         </header>
@@ -276,3 +298,4 @@ export default function WorkspacePage() {
   );
 }
 
+    
