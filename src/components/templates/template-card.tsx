@@ -46,15 +46,13 @@ export default function TemplateCard({ id, name, imageUrl, tags, dataAiHint, tie
         </CardHeader>
         <CardContent className="p-4 flex-1">
             <CardTitle className="text-base">{name}</CardTitle>
-            <CardDescription className="text-xs mt-1">
-                <div className="flex flex-wrap gap-2 mt-2">
-                {tags.map(tag => (
-                    <Badge key={tag} variant="secondary" className="text-xs">
-                    {tag}
-                    </Badge>
-                ))}
-                </div>
-            </CardDescription>
+            <div className="flex flex-wrap gap-2 mt-2">
+            {tags.map(tag => (
+                <Badge key={tag} variant="secondary" className="text-xs">
+                {tag}
+                </Badge>
+            ))}
+            </div>
         </CardContent>
         <CardFooter className="p-4 pt-0 flex items-center gap-2">
             <Button variant="outline" size="sm" className="w-full">
