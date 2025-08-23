@@ -19,8 +19,6 @@ import AtsPanel from '@/components/workspace/ats-panel';
 import KeywordSuggestionDialog from '@/components/workspace/keyword-suggestion-dialog';
 import { generatePdf } from '@/lib/pdf-generator';
 import JobDetailsCard from '@/components/workspace/job-details-card';
-import { ShinyButton } from '@/components/magicui/shiny-button';
-
 
 function debounce<F extends (...args: any[]) => any>(func: F, waitFor: number) {
   let timeout: NodeJS.Timeout;
@@ -199,14 +197,14 @@ export default function WorkspacePage() {
         <header className="bg-card/60 backdrop-blur-lg sticky top-0 z-20 border-b border-border/30 shadow-sm">
           <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
              <div className="flex items-center gap-4">
-                <Button asChild variant="ghost" size="sm" className="text-sm h-9 px-3 rounded-lg group hover:bg-primary/10 transition-colors duration-300">
+                <Button asChild variant="ghost" size="icon" className="h-8 w-8 rounded-full group hover:bg-primary/10 transition-colors duration-300">
                     <Link href="/">
-                        <ArrowLeft className="mr-2 h-4 w-4 transform group-hover:-translate-x-1 transition-transform duration-300"/> Back
+                        <ArrowLeft className="h-4 w-4 transform transition-transform duration-300"/>
                     </Link>
                 </Button>
                 <div className="h-6 w-px bg-border/50"></div>
                 <div>
-                    <h1 className="font-semibold text-lg tracking-tight text-foreground">{resumeName}</h1>
+                    <h1 className="font-semibold text-lg tracking-tight text-foreground/90">{resumeName}</h1>
                 </div>
              </div>
             <div className="flex items-center gap-4">
@@ -217,10 +215,10 @@ export default function WorkspacePage() {
               <Button variant="outline" size="sm" className="h-9 px-4 rounded-lg">
                 <Share2 className="mr-2" /> Share
               </Button>
-              <ShinyButton onClick={handleDownloadPdf} className="h-9 px-4 rounded-lg group">
+              <Button onClick={handleDownloadPdf} className="h-9 px-4 rounded-lg group">
                 <Download className="mr-2 transform group-hover:translate-y-[-2px] transition-transform duration-300" />
                 Download PDF
-              </ShinyButton>
+              </Button>
             </div>
           </div>
         </header>
