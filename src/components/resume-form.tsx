@@ -3,7 +3,7 @@
 
 import { useFormContext, useFieldArray, Controller } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
-import { Trash2, Sparkles, LoaderCircle, PlusCircle } from 'lucide-react';
+import { Trash2, Sparkles, LoaderCircle, PlusCircle, Briefcase, GraduationCap, FolderKanban, Star } from 'lucide-react';
 import { ResumeData, educationSchema, experienceSchema, projectSchema, skillSchema, resumeDataSchema } from '@/lib/types';
 import AiSuggestionDialog from './ai-suggestion-dialog';
 import { useState } from 'react';
@@ -17,6 +17,19 @@ const inputClasses = clsx(
     'block w-full rounded-lg border-none bg-white/5 px-3 py-1.5 text-sm/6 text-foreground',
     'focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25'
 );
+
+const EmptyState = ({ icon, title, description, buttonText, onAdd }: { icon: React.ReactNode, title: string, description: string, buttonText: string, onAdd: () => void }) => (
+    <div className="text-center py-12 border-2 border-dashed border-border/30 rounded-lg flex flex-col items-center justify-center">
+        {icon}
+        <h3 className="text-lg font-medium text-muted-foreground mt-3">{title}</h3>
+        <p className="text-sm text-muted-foreground mb-4">{description}</p>
+        <Button onClick={onAdd} size="sm" variant="outline" type="button">
+            <PlusCircle className="mr-2 h-4 w-4" />
+            {buttonText}
+        </Button>
+    </div>
+);
+
 
 export default function ResumeForm() {
     const { control, getValues } = useFormContext<ResumeData>();
@@ -87,35 +100,45 @@ export default function ResumeForm() {
                         <PlusCircle className="mr-2 h-4 w-4" /> Add Experience
                     </Button>
                 </div>
-                {experienceFields.map((field, index) => (
-                    <div key={field.id} className="relative p-4 border border-border/50 rounded-lg">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <Controller control={control} name={`experience.${index}.role`} render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">Role</Label> <Input {...field} className={inputClasses} /> </div> )}/>
-                            <Controller control={control} name={`experience.${index}.company`} render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">Company</Label> <Input {...field} className={inputClasses} /> </div> )}/>
-                            <Controller control={control} name={`experience.${index}.startDate`} render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">Start Date</Label> <Input {...field} className={inputClasses} /> </div> )}/>
-                            <Controller control={control} name={`experience.${index}.endDate`} render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">End Date</Label> <Input {...field} className={inputClasses} /> </div> )}/>
+                {experienceFields.length > 0 ? (
+                    experienceFields.map((field, index) => (
+                        <div key={field.id} className="relative p-4 border border-border/50 rounded-lg">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <Controller control={control} name={`experience.${index}.role`} render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">Role</Label> <Input {...field} className={inputClasses} /> </div> )}/>
+                                <Controller control={control} name={`experience.${index}.company`} render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">Company</Label> <Input {...field} className={inputClasses} /> </div> )}/>
+                                <Controller control={control} name={`experience.${index}.startDate`} render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">Start Date</Label> <Input {...field} className={inputClasses} /> </div> )}/>
+                                <Controller control={control} name={`experience.${index}.endDate`} render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">End Date</Label> <Input {...field} className={inputClasses} /> </div> )}/>
+                            </div>
+                            <div className="mt-4">
+                                <Controller control={control} name={`experience.${index}.description`} render={({ field }) => ( 
+                                    <div className="relative"> 
+                                        <Label className="text-sm/6 font-medium text-foreground">Description</Label> 
+                                        <Textarea {...field} rows={5} className={clsx(inputClasses, 'mt-1 pr-10 pb-8 resize-none')} />
+                                        <div className="absolute bottom-2 right-2 flex items-center gap-2">
+                                            <Button type="button" size="icon" variant="ghost" className="h-7 w-7 text-primary hover:text-primary/90" onClick={() => handleGetSuggestion(`experience.${index}.description`)} disabled={isAiLoading}>
+                                                {isAiLoading && suggestionField === `experience.${index}.description` ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+                                            </Button>
+                                        </div>
+                                        <div className="absolute bottom-2.5 left-3">
+                                            <CharacterCount name={field.name as keyof ResumeData} max={experienceSchema.shape.description.maxLength!} />
+                                        </div>
+                                    </div> 
+                                )}/>
+                            </div>
+                            <Button type="button" variant="ghost" size="icon" className="absolute top-2 right-2 text-muted-foreground hover:text-red-500" onClick={() => removeExperience(index)}>
+                                <Trash2 className="h-4 w-4" />
+                            </Button>
                         </div>
-                        <div className="mt-4">
-                            <Controller control={control} name={`experience.${index}.description`} render={({ field }) => ( 
-                                <div className="relative"> 
-                                    <Label className="text-sm/6 font-medium text-foreground">Description</Label> 
-                                    <Textarea {...field} rows={5} className={clsx(inputClasses, 'mt-1 pr-10 pb-8 resize-none')} />
-                                    <div className="absolute bottom-2 right-2 flex items-center gap-2">
-                                        <Button type="button" size="icon" variant="ghost" className="h-7 w-7 text-primary hover:text-primary/90" onClick={() => handleGetSuggestion(`experience.${index}.description`)} disabled={isAiLoading}>
-                                            {isAiLoading && suggestionField === `experience.${index}.description` ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
-                                        </Button>
-                                    </div>
-                                    <div className="absolute bottom-2.5 left-3">
-                                        <CharacterCount name={field.name as keyof ResumeData} max={experienceSchema.shape.description.maxLength!} />
-                                    </div>
-                                </div> 
-                            )}/>
-                        </div>
-                        <Button type="button" variant="ghost" size="icon" className="absolute top-2 right-2 text-muted-foreground hover:text-red-500" onClick={() => removeExperience(index)}>
-                            <Trash2 className="h-4 w-4" />
-                        </Button>
-                    </div>
-                ))}
+                    ))
+                ) : (
+                    <EmptyState
+                        icon={<Briefcase className="w-12 h-12 text-muted-foreground/50" />}
+                        title="No experience added"
+                        description="Add your work experience to show your professional history."
+                        buttonText="Add Experience"
+                        onAdd={() => appendExperience(experienceSchema.parse({}))}
+                    />
+                )}
             </Fieldset>
 
             <Fieldset className="space-y-4 rounded-xl bg-card/80 p-6 sm:p-8 border border-border/20 shadow-lg">
@@ -125,35 +148,45 @@ export default function ResumeForm() {
                         <PlusCircle className="mr-2 h-4 w-4" /> Add Education
                     </Button>
                 </div>
-                {educationFields.map((field, index) => (
-                    <div key={field.id} className="relative p-4 border border-border/50 rounded-lg">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <Controller control={control} name={`education.${index}.degree`} render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">Degree</Label> <Input {...field} className={inputClasses} /> </div> )}/>
-                            <Controller control={control} name={`education.${index}.institution`} render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">Institution</Label> <Input {...field} className={inputClasses} /> </div> )}/>
-                            <Controller control={control} name={`education.${index}.startDate`} render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">Start Date</Label> <Input {...field} className={inputClasses} /> </div> )}/>
-                            <Controller control={control} name={`education.${index}.endDate`} render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">End Date</Label> <Input {...field} className={inputClasses} /> </div> )}/>
+                {educationFields.length > 0 ? (
+                    educationFields.map((field, index) => (
+                        <div key={field.id} className="relative p-4 border border-border/50 rounded-lg">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <Controller control={control} name={`education.${index}.degree`} render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">Degree</Label> <Input {...field} className={inputClasses} /> </div> )}/>
+                                <Controller control={control} name={`education.${index}.institution`} render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">Institution</Label> <Input {...field} className={inputClasses} /> </div> )}/>
+                                <Controller control={control} name={`education.${index}.startDate`} render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">Start Date</Label> <Input {...field} className={inputClasses} /> </div> )}/>
+                                <Controller control={control} name={`education.${index}.endDate`} render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">End Date</Label> <Input {...field} className={inputClasses} /> </div> )}/>
+                            </div>
+                             <div className="mt-4">
+                                <Controller control={control} name={`education.${index}.description`} render={({ field }) => ( 
+                                    <div className="relative"> 
+                                        <Label className="text-sm/6 font-medium text-foreground">Description</Label>
+                                         <Textarea {...field} rows={5} className={clsx(inputClasses, 'mt-1 pr-10 pb-8 resize-none')} />
+                                        <div className="absolute bottom-2 right-2 flex items-center gap-2">
+                                            <Button type="button" size="icon" variant="ghost" className="h-7 w-7 text-primary hover:text-primary/90" onClick={() => handleGetSuggestion(`education.${index}.description`)} disabled={isAiLoading}>
+                                                {isAiLoading && suggestionField === `education.${index}.description` ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+                                            </Button>
+                                        </div>
+                                         <div className="absolute bottom-2.5 left-3">
+                                            <CharacterCount name={field.name as keyof ResumeData} max={educationSchema.shape.description.maxLength!} />
+                                        </div>
+                                    </div> 
+                                )}/>
+                            </div>
+                            <Button type="button" variant="ghost" size="icon" className="absolute top-2 right-2 text-muted-foreground hover:text-red-500" onClick={() => removeEducation(index)}>
+                                <Trash2 className="h-4 w-4" />
+                            </Button>
                         </div>
-                         <div className="mt-4">
-                            <Controller control={control} name={`education.${index}.description`} render={({ field }) => ( 
-                                <div className="relative"> 
-                                    <Label className="text-sm/6 font-medium text-foreground">Description</Label>
-                                     <Textarea {...field} rows={5} className={clsx(inputClasses, 'mt-1 pr-10 pb-8 resize-none')} />
-                                    <div className="absolute bottom-2 right-2 flex items-center gap-2">
-                                        <Button type="button" size="icon" variant="ghost" className="h-7 w-7 text-primary hover:text-primary/90" onClick={() => handleGetSuggestion(`education.${index}.description`)} disabled={isAiLoading}>
-                                            {isAiLoading && suggestionField === `education.${index}.description` ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
-                                        </Button>
-                                    </div>
-                                     <div className="absolute bottom-2.5 left-3">
-                                        <CharacterCount name={field.name as keyof ResumeData} max={educationSchema.shape.description.maxLength!} />
-                                    </div>
-                                </div> 
-                            )}/>
-                        </div>
-                        <Button type="button" variant="ghost" size="icon" className="absolute top-2 right-2 text-muted-foreground hover:text-red-500" onClick={() => removeEducation(index)}>
-                            <Trash2 className="h-4 w-4" />
-                        </Button>
-                    </div>
-                ))}
+                    ))
+                ) : (
+                    <EmptyState
+                        icon={<GraduationCap className="w-12 h-12 text-muted-foreground/50" />}
+                        title="No education added"
+                        description="List your degrees and academic achievements."
+                        buttonText="Add Education"
+                        onAdd={() => appendEducation(educationSchema.parse({}))}
+                    />
+                )}
             </Fieldset>
 
             <Fieldset className="space-y-4 rounded-xl bg-card/80 p-6 sm:p-8 border border-border/20 shadow-lg">
@@ -163,33 +196,43 @@ export default function ResumeForm() {
                         <PlusCircle className="mr-2 h-4 w-4" /> Add Project
                     </Button>
                 </div>
-                {projectFields.map((field, index) => (
-                     <div key={field.id} className="relative p-4 border border-border/50 rounded-lg">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <Controller control={control} name={`projects.${index}.name`} render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">Project Name</Label> <Input {...field} className={inputClasses} /> </div> )}/>
-                            <Controller control={control} name={`projects.${index}.url`} render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">Project URL</Label> <Input {...field} className={inputClasses} /> </div> )}/>
+                {projectFields.length > 0 ? (
+                    projectFields.map((field, index) => (
+                         <div key={field.id} className="relative p-4 border border-border/50 rounded-lg">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <Controller control={control} name={`projects.${index}.name`} render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">Project Name</Label> <Input {...field} className={inputClasses} /> </div> )}/>
+                                <Controller control={control} name={`projects.${index}.url`} render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">Project URL</Label> <Input {...field} className={inputClasses} /> </div> )}/>
+                            </div>
+                            <div className="mt-4">
+                                <Controller control={control} name={`projects.${index}.description`} render={({ field }) => ( 
+                                    <div className="relative"> 
+                                        <Label className="text-sm/6 font-medium text-foreground">Description</Label>
+                                        <Textarea {...field} rows={5} className={clsx(inputClasses, 'mt-1 pr-10 pb-8 resize-none')} />
+                                        <div className="absolute bottom-2 right-2 flex items-center gap-2">
+                                            <Button type="button" size="icon" variant="ghost" className="h-7 w-7 text-primary hover:text-primary/90" onClick={() => handleGetSuggestion(`projects.${index}.description`)} disabled={isAiLoading}>
+                                                {isAiLoading && suggestionField === `projects.${index}.description` ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+                                            </Button>
+                                        </div>
+                                        <div className="absolute bottom-2.5 left-3">
+                                            <CharacterCount name={field.name as keyof ResumeData} max={projectSchema.shape.description.maxLength!} />
+                                        </div>
+                                    </div> 
+                                )}/>
+                            </div>
+                             <Button type="button" variant="ghost" size="icon" className="absolute top-2 right-2 text-muted-foreground hover:text-red-500" onClick={() => removeProject(index)}>
+                                <Trash2 className="h-4 w-4" />
+                            </Button>
                         </div>
-                        <div className="mt-4">
-                            <Controller control={control} name={`projects.${index}.description`} render={({ field }) => ( 
-                                <div className="relative"> 
-                                    <Label className="text-sm/6 font-medium text-foreground">Description</Label>
-                                    <Textarea {...field} rows={5} className={clsx(inputClasses, 'mt-1 pr-10 pb-8 resize-none')} />
-                                    <div className="absolute bottom-2 right-2 flex items-center gap-2">
-                                        <Button type="button" size="icon" variant="ghost" className="h-7 w-7 text-primary hover:text-primary/90" onClick={() => handleGetSuggestion(`projects.${index}.description`)} disabled={isAiLoading}>
-                                            {isAiLoading && suggestionField === `projects.${index}.description` ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
-                                        </Button>
-                                    </div>
-                                    <div className="absolute bottom-2.5 left-3">
-                                        <CharacterCount name={field.name as keyof ResumeData} max={projectSchema.shape.description.maxLength!} />
-                                    </div>
-                                </div> 
-                            )}/>
-                        </div>
-                         <Button type="button" variant="ghost" size="icon" className="absolute top-2 right-2 text-muted-foreground hover:text-red-500" onClick={() => removeProject(index)}>
-                            <Trash2 className="h-4 w-4" />
-                        </Button>
-                    </div>
-                ))}
+                    ))
+                ) : (
+                    <EmptyState
+                        icon={<FolderKanban className="w-12 h-12 text-muted-foreground/50" />}
+                        title="No projects added"
+                        description="Showcase your work by adding personal or professional projects."
+                        buttonText="Add Project"
+                        onAdd={() => appendProject(projectSchema.parse({}))}
+                    />
+                )}
             </Fieldset>
 
             <Fieldset className="space-y-4 rounded-xl bg-card/80 p-6 sm:p-8 border border-border/20 shadow-lg">
@@ -202,7 +245,7 @@ export default function ResumeForm() {
                         onKeyDown={handleSkillInputKeyDown}
                         className={inputClasses}
                     />
-                     {skillFields.length > 0 && (
+                     {skillFields.length > 0 ? (
                         <div className="flex flex-wrap gap-2">
                         {skillFields.map((field, index) => (
                             <Badge key={field.id} variant="secondary" className="flex items-center gap-1.5 pl-3 pr-1.5 py-1 text-sm">
@@ -218,6 +261,14 @@ export default function ResumeForm() {
                             </Badge>
                         ))}
                         </div>
+                    ) : (
+                         <EmptyState
+                            icon={<Star className="w-12 h-12 text-muted-foreground/50" />}
+                            title="No skills added"
+                            description="Add relevant skills to showcase your expertise."
+                            buttonText="Add a skill in the input above"
+                            onAdd={() => document.querySelector<HTMLInputElement>('input[placeholder="Type a skill and press Enter..."]')?.focus()}
+                        />
                     )}
                  </div>
             </Fieldset>
