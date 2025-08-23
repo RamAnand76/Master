@@ -17,8 +17,7 @@ import { useUser } from '@/hooks/use-user';
 import { analyzeResumeAction } from '@/lib/actions';
 import AtsPanel from '@/components/workspace/ats-panel';
 import KeywordSuggestionDialog from '@/components/workspace/keyword-suggestion-dialog';
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
+import { generatePdf } from '@/lib/pdf-generator';
 import { Accordion } from '@/components/ui/accordion';
 import JobDetailsCard from '@/components/workspace/job-details-card';
 
@@ -65,39 +64,12 @@ export default function WorkspacePage() {
   const resumeData = methods.watch();
 
   const handleDownloadPdf = async () => {
-    const input = resumePreviewRef.current;
-    if (!input) {
-      toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: 'Could not find resume content to download.',
-      });
-      return;
-    }
-
     toast({
       title: 'Generating PDF...',
       description: 'Your resume is being prepared for download.',
     });
-
     try {
-      const canvas = await html2canvas(input, {
-        scale: 2, // Higher scale for better quality
-        useCORS: true,
-        backgroundColor: '#141414' // Match your app's background
-      });
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = pdf.internal.pageSize.getHeight();
-      const imgWidth = canvas.width;
-      const imgHeight = canvas.height;
-      const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
-      const imgX = (pdfWidth - imgWidth * ratio) / 2;
-      const imgY = 0;
-      
-      pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
-      pdf.save(`${resumeName || 'resume'}.pdf`);
+      generatePdf(resumeData);
     } catch (error) {
       console.error("Error generating PDF:", error);
       toast({
