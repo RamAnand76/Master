@@ -65,9 +65,13 @@ export default function ResumeList({ projects, deleteProject, hasReachedLimit, o
                     {projects.length > 0 ? (
                         <div className="space-y-2">
                             {projects.map((project, i) => (
-                                <div 
+                                <ShineBorder 
                                     key={project.id} 
-                                    className="p-2.5 flex items-center gap-3 transition-all duration-200 rounded-md border border-border/30 bg-background/50 hover:bg-background/80 hover:shadow-md hover:border-primary/20"
+                                    className="bg-card/30 border-border/20 shadow-sm"
+                                    color={["#408080", "#00FFFF", "#408080"]}
+                                >
+                                <div 
+                                    className="p-2.5 flex items-center gap-3 transition-all duration-200 rounded-md bg-background/50 hover:bg-background/80 hover:shadow-md hover:border-primary/20"
                                 >
                                     <FileText className="w-5 h-5 text-primary" />
                                     <div className="flex-1">
@@ -112,6 +116,7 @@ export default function ResumeList({ projects, deleteProject, hasReachedLimit, o
                                         </AlertDialogContent>
                                     </AlertDialog>
                                 </div>
+                                </ShineBorder>
                             ))}
                         </div>
                     ) : (
