@@ -65,10 +65,7 @@ export default function HomeHeader() {
                                 </DropdownMenuItem>
                                 <DropdownMenuItem disabled>
                                     <Crown className="mr-2 h-4 w-4 text-yellow-500" />
-                                    <div className="flex justify-between w-full items-center">
-                                        <span>Subscription</span>
-                                        <Badge variant="secondary" className="text-xs">Free Plan</Badge>
-                                    </div>
+                                    <Badge variant="default" className="text-xs">Free Plan</Badge>
                                 </DropdownMenuItem>
                                 <DropdownMenuItem disabled>
                                     <Database className="mr-2 h-4 w-4" />
