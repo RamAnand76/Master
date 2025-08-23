@@ -11,63 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Search } from 'lucide-react';
 import { InputGroup } from '@/components/ui/input-group';
 import type { ResumeData } from '@/lib/types';
-
-const templates = [
-  {
-    id: 'classic',
-    name: 'Classic',
-    imageUrl: 'https://placehold.co/400x565.png',
-    tags: ['Traditional', 'Professional'],
-    dataAiHint: 'resume professional',
-    tier: 'Free',
-    category: 'Professional',
-  },
-  {
-    id: 'modern',
-    name: 'Modern',
-    imageUrl: 'https://placehold.co/400x565.png',
-    tags: ['Creative', 'Minimalist'],
-    dataAiHint: 'resume creative',
-    tier: 'Free',
-    category: 'Modern',
-  },
-  {
-    id: 'creative',
-    name: 'Elegant',
-    imageUrl: 'https://placehold.co/400x565.png',
-    tags: ['Sophisticated', 'Simple'],
-    dataAiHint: 'resume simple',
-    tier: 'Pro',
-    category: 'Creative',
-  },
-  {
-    name: 'Corporate',
-    id: 'classic',
-    imageUrl: 'https://placehold.co/400x565.png',
-    tags: ['ATS-Friendly', 'Formal'],
-    dataAiHint: 'resume formal',
-    tier: 'Pro',
-    category: 'Professional',
-  },
-  {
-    name: 'Tech',
-    id: 'modern',
-    imageUrl: 'https://placehold.co/400x565.png',
-    tags: ['Developer', 'Modern'],
-    dataAiHint: 'resume tech',
-    tier: 'Premium',
-    category: 'Modern',
-  },
-  {
-    name: 'Creative',
-    id: 'creative',
-    imageUrl: 'https://placehold.co/400x565.png',
-    tags: ['Designer', 'Visual'],
-    dataAiHint: 'resume design',
-    tier: 'Premium',
-    category: 'Creative',
-  },
-];
+import { templates } from '@/lib/templates';
 
 const categories = ['All', 'Creative', 'Professional', 'Modern'];
 const tiers = ['All', 'Free', 'Pro', 'Premium'];
