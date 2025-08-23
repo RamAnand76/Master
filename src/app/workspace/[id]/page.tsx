@@ -199,7 +199,7 @@ export default function WorkspacePage() {
              <div className="flex items-center gap-4">
                 <Button asChild variant="ghost" size="icon" className="h-8 w-8 rounded-full group hover:bg-primary/10 transition-colors duration-300">
                     <Link href="/">
-                        <ArrowLeft className="h-4 w-4 transform transition-transform duration-300"/>
+                        <ArrowLeft className="h-4 w-4 transform transition-transform duration-300 group-hover:text-primary"/>
                     </Link>
                 </Button>
                 <div className="h-6 w-px bg-border/50"></div>
@@ -255,3 +255,4 @@ export default function WorkspacePage() {
     </FormProvider>
   );
 }
+
