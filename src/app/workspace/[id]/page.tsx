@@ -231,10 +231,15 @@ export default function WorkspacePage() {
             isAnalyzing={isAnalyzing}
             onKeywordClick={(keyword) => setSelectedKeyword(keyword)}
         />
-        <div className="rounded-lg bg-white text-black shadow-lg">
-          <div ref={resumePreviewRef} className="origin-top scale-[.90] lg:scale-[.85] xl:scale-[.90] bg-white text-black">
-            <ResumePreview resumeData={methods.watch()} atsAnalysis={atsAnalysis} />
-          </div>
+        <div className="rounded-lg bg-card shadow-lg p-2">
+            <div 
+              ref={resumePreviewRef} 
+              className="aspect-[8.5/11] w-full overflow-y-auto bg-white rounded-sm"
+            >
+                <div className="origin-top scale-[.6] sm:scale-75 md:scale-[.8] lg:scale-[.75] xl:scale-[.85]">
+                     <ResumePreview resumeData={methods.watch()} atsAnalysis={atsAnalysis} />
+                </div>
+            </div>
         </div>
     </div>
   );
