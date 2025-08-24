@@ -10,10 +10,76 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Search } from 'lucide-react';
 import { InputGroup } from '@/components/ui/input-group';
+<<<<<<< HEAD
 import type { ResumeData, Template as TemplateType } from '@/lib/types';
 import { templates } from '@/lib/templates';
 import TemplatePreviewModal from '@/components/templates/template-preview-modal';
 import NewProjectModal from '@/components/new-project-modal';
+=======
+import type { ResumeData } from '@/lib/types';
+<<<<<<< HEAD
+import { templates } from '@/lib/templates';
+=======
+import TemplatePreviewDialog from '@/components/templates/template-preview-dialog';
+
+const templates = [
+  {
+    id: 'classic',
+    name: 'Classic',
+    imageUrl: 'https://placehold.co/400x565.png',
+    tags: ['Traditional', 'Professional'],
+    dataAiHint: 'resume professional',
+    tier: 'Free',
+    category: 'Professional',
+  },
+  {
+    id: 'modern',
+    name: 'Modern',
+    imageUrl: 'https://placehold.co/400x565.png',
+    tags: ['Creative', 'Minimalist'],
+    dataAiHint: 'resume creative',
+    tier: 'Free',
+    category: 'Modern',
+  },
+  {
+    id: 'creative',
+    name: 'Elegant',
+    imageUrl: 'https://placehold.co/400x565.png',
+    tags: ['Sophisticated', 'Simple'],
+    dataAiHint: 'resume simple',
+    tier: 'Pro',
+    category: 'Creative',
+  },
+  {
+    name: 'Corporate',
+    id: 'classic',
+    imageUrl: 'https://placehold.co/400x565.png',
+    tags: ['ATS-Friendly', 'Formal'],
+    dataAiHint: 'resume formal',
+    tier: 'Pro',
+    category: 'Professional',
+  },
+  {
+    name: 'Tech',
+    id: 'modern',
+    imageUrl: 'https://placehold.co/400x565.png',
+    tags: ['Developer', 'Modern'],
+    dataAiHint: 'resume tech',
+    tier: 'Premium',
+    category: 'Modern',
+  },
+  {
+    name: 'Creative',
+    id: 'creative',
+    imageUrl: 'https://placehold.co/400x565.png',
+    tags: ['Designer', 'Visual'],
+    dataAiHint: 'resume design',
+    tier: 'Premium',
+    category: 'Creative',
+  },
+];
+>>>>>>> 1395b611130e3487acf2df7701c696a74f881e73
+>>>>>>> 6121b74a068eff449b5f42d302190bd0c409e7eb
 
 const categories = ['All', 'Creative', 'Professional', 'Modern'];
 const tiers = ['All', 'Free', 'Pro', 'Premium'];
@@ -22,9 +88,13 @@ export default function TemplatesPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTier, setActiveTier] = useState('All');
   const [activeCategory, setActiveCategory] = useState('All');
+<<<<<<< HEAD
   const [selectedTemplateForPreview, setSelectedTemplateForPreview] = useState<TemplateType | null>(null);
   const [isNewProjectModalOpen, setIsNewProjectModalOpen] = useState(false);
   const [selectedTemplateForNewProject, setSelectedTemplateForNewProject] = useState<string | undefined>(undefined);
+=======
+  const [previewingTemplate, setPreviewingTemplate] = useState<typeof templates[0] | null>(null);
+>>>>>>> 6121b74a068eff449b5f42d302190bd0c409e7eb
   const router = useRouter();
 
   const handleUseTemplate = (templateId: string) => {
@@ -107,12 +177,21 @@ export default function TemplatesPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
           {filteredTemplates.length > 0 ? (
+<<<<<<< HEAD
             filteredTemplates.map((template) => (
               <TemplateCard 
                 key={template.id} 
                 template={template} 
                 onUseTemplate={() => handleUseTemplate(template.id)}
                 onPreview={() => handlePreview(template)}
+=======
+            filteredTemplates.map((template, index) => (
+              <TemplateCard 
+                key={index} 
+                {...template} 
+                onUseTemplate={() => handleUseTemplate(template.id)}
+                onPreview={() => setPreviewingTemplate(template)}
+>>>>>>> 6121b74a068eff449b5f42d302190bd0c409e7eb
               />
             ))
           ) : (
@@ -124,6 +203,7 @@ export default function TemplatesPage() {
         </div>
       </main>
     </div>
+<<<<<<< HEAD
     <TemplatePreviewModal
         isOpen={!!selectedTemplateForPreview}
         onOpenChange={() => setSelectedTemplateForPreview(null)}
@@ -135,6 +215,17 @@ export default function TemplatesPage() {
         onOpenChange={setIsNewProjectModalOpen}
         onProjectCreate={handleProjectCreate}
         initialTemplate={selectedTemplateForNewProject}
+=======
+    <TemplatePreviewDialog
+        isOpen={!!previewingTemplate}
+        onOpenChange={(isOpen) => !isOpen && setPreviewingTemplate(null)}
+        template={previewingTemplate}
+        onUseTemplate={() => {
+            if (previewingTemplate) {
+                handleUseTemplate(previewingTemplate.id)
+            }
+        }}
+>>>>>>> 6121b74a068eff449b5f42d302190bd0c409e7eb
     />
     </>
   );
