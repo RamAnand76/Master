@@ -21,6 +21,8 @@ import { generatePdf } from '@/lib/pdf-generator';
 import JobDetailsCard from '@/components/workspace/job-details-card';
 import { formatDistanceToNow } from 'date-fns';
 import { Tooltip, TooltipProvider, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { cn } from '@/lib/utils';
+import MobileTabs, { type MobileTab } from '@/components/workspace/mobile-tabs';
 
 function debounce<F extends (...args: any[]) => any>(func: F, waitFor: number) {
   let timeout: NodeJS.Timeout;
@@ -53,6 +55,7 @@ export default function WorkspacePage() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [selectedKeyword, setSelectedKeyword] = useState<string | null>(null);
   const resumePreviewRef = useRef<HTMLDivElement>(null);
+  const [activeMobileTab, setActiveMobileTab] = useState<MobileTab>('editor');
 
   const methods = useForm<ResumeData>({
     resolver: zodResolver(resumeDataSchema),
@@ -212,6 +215,30 @@ export default function WorkspacePage() {
     );
   }
 
+  const editorPanel = (
+    <div className="overflow-y-auto pr-4 space-y-4 h-full pb-32">
+        <div className="w-full space-y-4">
+            <JobDetailsCard />
+            <ResumeForm />
+        </div>
+    </div>
+  );
+
+  const previewPanel = (
+    <div className="space-y-4 overflow-y-auto h-full pb-32">
+        <AtsPanel 
+            analysis={atsAnalysis} 
+            isAnalyzing={isAnalyzing}
+            onKeywordClick={(keyword) => setSelectedKeyword(keyword)}
+        />
+        <div className="rounded-lg bg-white text-black shadow-lg">
+          <div ref={resumePreviewRef} className="origin-top scale-[.90] lg:scale-[.85] xl:scale-[.90] bg-white text-black">
+            <ResumePreview resumeData={methods.watch()} atsAnalysis={atsAnalysis} />
+          </div>
+        </div>
+    </div>
+  );
+
   return (
     <FormProvider {...methods}>
        <div className="h-screen bg-secondary flex flex-col">
@@ -229,7 +256,7 @@ export default function WorkspacePage() {
                 </div>
              </div>
             <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <div className="hidden sm:flex items-center gap-2 text-xs text-muted-foreground">
                 <Save className={`h-3.5 w-3.5 ${saveStatus.iconColor} ${saveStatus.isPulsing ? 'animate-pulse' : ''}`} />
                 {saveStatus.text}
               </div>
@@ -266,27 +293,23 @@ export default function WorkspacePage() {
         </header>
 
          <main className="flex-1 overflow-hidden">
-             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-screen-2xl mx-auto p-4 sm:p-6 h-full">
-              <div className="overflow-y-auto pr-4 space-y-4 h-full pb-32">
-                <div className="w-full space-y-4">
-                    <JobDetailsCard />
-                    <ResumeForm />
-                </div>
-              </div>
-              <div className="space-y-4 overflow-y-auto h-full pb-32">
-                <AtsPanel 
-                    analysis={atsAnalysis} 
-                    isAnalyzing={isAnalyzing}
-                    onKeywordClick={(keyword) => setSelectedKeyword(keyword)}
-                />
-                <div className="rounded-lg bg-white text-black shadow-lg">
-                  <div ref={resumePreviewRef} className="origin-top scale-[.90] lg:scale-[.85] xl:scale-[.90] bg-white text-black">
-                    <ResumePreview resumeData={methods.watch()} atsAnalysis={atsAnalysis} />
-                  </div>
-                </div>
-              </div>
+             {/* Desktop View */}
+             <div className="hidden lg:grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-screen-2xl mx-auto p-4 sm:p-6 h-full">
+                {editorPanel}
+                {previewPanel}
+            </div>
+            
+            {/* Mobile View */}
+            <div className="lg:hidden h-full p-4 sm:p-6">
+                {activeMobileTab === 'editor' && editorPanel}
+                {activeMobileTab === 'preview' && previewPanel}
             </div>
          </main>
+
+         <MobileTabs 
+            activeTab={activeMobileTab} 
+            setActiveTab={setActiveMobileTab} 
+         />
       </div>
       <KeywordSuggestionDialog 
         open={!!selectedKeyword}
@@ -297,5 +320,3 @@ export default function WorkspacePage() {
     </FormProvider>
   );
 }
-
-    
