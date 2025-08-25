@@ -9,15 +9,17 @@ import { Eye, Code } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { Template } from '@/lib/types';
 
+type Tier = 'Free' | 'Pro' | 'Premium';
+
 type TemplateCardProps = {
   template: Template;
   onUseTemplate: (id: string) => void;
   onPreview: (template: Template) => void;
 };
 
-export default function TemplateCard({ template, onUseTemplate, onPreview }: TemplateCardProps) {
-    const { id, name, imageUrl, tags, dataAiHint, tier } = template;
-
+export default function TemplateCard({ template, onUseTemplate, onPreview }: TemplateCardProps) { 
+    const { id, name, imageUrl, tags, dataAiHint, tier } = template as Template & { tier: Tier };
+    
     const tierBadgeColor = {
         Free: 'bg-primary/80',
         Pro: 'bg-orange-500',
