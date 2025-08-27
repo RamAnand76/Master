@@ -45,7 +45,7 @@ const Step1 = ({ onNext }: { onNext: (step: string) => void }) => {
 
 const Step2 = ({ onNext, onBack }: { onNext: (step: string) => void, onBack: (step: string) => void; }) => {
     return (
-        <div className="w-full max-w-md space-y-8 px-4 sm:px-0">
+        <div className="w-full max-w-md space-y-8 px-4 sm:px-0 -mt-12">
             <div className="text-center">
                 <p className="text-base font-semibold text-primary">Step 2 of 3</p>
                 <h2 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">Add Credits</h2>
@@ -95,7 +95,7 @@ const Step2 = ({ onNext, onBack }: { onNext: (step: string) => void, onBack: (st
 
 const Step3 = ({ onNext, onBack }: { onNext: (step: string) => void; onBack: (step: string) => void }) => {
     return (
-        <div className="mx-auto w-full max-w-lg space-y-8 px-4 sm:px-0">
+        <div className="mx-auto w-full max-w-lg space-y-8 px-4 sm:px-0 -mt-12">
             <div className="text-center">
                 <p className="text-base font-semibold text-primary">Step 3 of 3</p>
                 <h2 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">Review Your Purchase</h2>
