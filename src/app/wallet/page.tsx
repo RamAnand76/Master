@@ -3,9 +3,10 @@
 
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Bell, CreditCard } from "lucide-react";
+import { CreditCard } from "lucide-react";
 import Image from "next/image";
 import Link from 'next/link';
+import { AppLogo } from "@/components/home/app-logo";
 
 const NovaLogo = () => (
     <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
@@ -19,26 +20,10 @@ const VisaLogo = () => (
 
 const WalletHeader = () => (
     <header className="flex items-center justify-between whitespace-nowrap border-b border-solid border-[rgba(34,54,73,0.6)] px-10 py-4 backdrop-blur-sm bg-black/20 text-white">
-        <div className="flex items-center gap-4">
-            <div className="size-6 text-[#5ea5ff]">
-                <NovaLogo />
-            </div>
-            <h2 className="text-xl font-bold">Nova</h2>
-        </div>
-        <nav className="hidden md:flex items-center gap-8">
-            <Link href="/" className="text-sm font-medium hover:text-[#5ea5ff] transition-colors">Home</Link>
-            <a className="text-sm font-medium hover:text-[#5ea5ff] transition-colors" href="#">Explore</a>
-            <a className="text-sm font-medium hover:text-[#5ea5ff] transition-colors" href="#">Create</a>
-        </nav>
-        <div className="flex items-center gap-4">
-            <button className="p-2 rounded-full hover:bg-[rgba(26,38,49,0.5)] transition-colors">
-                <Bell className="text-[#c0d1e5] hover:text-white"/>
-            </button>
-            <Avatar className="h-10 w-10">
-                <AvatarImage src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlQ2gZ3442ucOxT50rmo218kMzf8KYflEs6Y2qBvqD4GNIFp4vCv-LSUGwDOsX37ejy0MkF_7FDRNp2nUoRDpcnxfz64FkVn29qPDQqJ1kJ_pOyuxBvzyPZsV6vpdDkf-lRm2lbrqdTYlQsG5esdeB6oshTHF_z3dJ8ZKsjy1vbsGjW48yoVmJzFRw8YFot5icUr6eFS0af3h-duvpcMFwLzTZ4kDFP10pPo1WP1WuDoYpsAInfqLedeiw-MjeDZPQWNeSLE1B9l0" data-ai-hint="user avatar" />
-                <AvatarFallback>U</AvatarFallback>
-            </Avatar>
-        </div>
+        <Link href="/" className="flex items-center gap-2">
+            <AppLogo />
+            <span className="font-semibold text-lg tracking-tight">ResuMaster</span>
+        </Link>
     </header>
 );
 
