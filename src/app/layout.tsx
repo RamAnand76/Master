@@ -21,6 +21,8 @@ export default function RootLayout({
 }>) {
   const pathname = usePathname();
   const showDock = !['/login', '/signup'].includes(pathname);
+  const isWalletFlow = ['/wallet', '/billing'].includes(pathname);
+
 
   const navItems = [
     {
@@ -61,7 +63,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className={cn("font-body antialiased", pathname === '/wallet' && "wallet-bg")}>
+      <body className={cn("font-body antialiased", isWalletFlow && "wallet-bg")}>
         {showDock && <FloatingDock items={navItems} />}
         {children}
         <Toaster />
@@ -69,3 +71,5 @@ export default function RootLayout({
     </html>
   );
 }
+
+    
