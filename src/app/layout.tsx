@@ -7,6 +7,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { FloatingDock } from "@/components/ui/floating-dock";
 import { Home, FileText, Settings, User } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 // export const metadata: Metadata = {
 //   title: "ResuMaster | ATS-Friendly Resume Builder",
@@ -56,11 +57,11 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
         <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@400;500;700;800&display=swap"
           rel="stylesheet"
         />
       </head>
-      <body className="font-body antialiased">
+      <body className={cn("font-body antialiased", pathname === '/wallet' && "wallet-bg")}>
         {showDock && <FloatingDock items={navItems} />}
         {children}
         <Toaster />
