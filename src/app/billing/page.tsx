@@ -51,9 +51,9 @@ const Step2 = ({ onNext }: { onNext: (step: string) => void }) => {
     return (
         <div className="w-full max-w-md space-y-8 px-4 sm:px-0">
             <div className="text-center">
-                <p className="text-base font-semibold text-[var(--brand-primary)]">Step 2 of 3</p>
+                <p className="text-base font-semibold text-[var(--brand-primary)]">Step 1 of 3</p>
                 <h2 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">Add Credits</h2>
-                <p className="mt-4 text-lg text-gray-400">Choose an amount or link a payment method.</p>
+                <p className="mt-4 text-lg text-gray-400">Choose an amount and payment method.</p>
             </div>
             <div className="glassmorphic rounded-2xl p-8 shadow-2xl">
                 <div className="space-y-6">
