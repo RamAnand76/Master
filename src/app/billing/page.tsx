@@ -2,9 +2,12 @@
 "use client";
 
 import { useSearchParams, useRouter } from 'next/navigation';
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { AppLogo } from '@/components/home/app-logo';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 const BillingHeader = () => (
     <header className="sticky top-0 z-10 w-full border-b border-solid border-border/60 px-10 py-4 backdrop-blur-sm bg-black/20 text-white">
@@ -15,11 +18,36 @@ const BillingHeader = () => (
     </header>
 );
 
-const Step2 = ({ onNext }: { onNext: (step: string) => void }) => {
+const Step1 = ({ onNext }: { onNext: (step: string) => void }) => {
     return (
         <div className="w-full max-w-md space-y-8 px-4 sm:px-0">
             <div className="text-center">
-                <p className="text-base font-semibold text-primary">Step 1 of 3</p>
+                <p className="text-base font-semibold text-primary">Step 1 of 4</p>
+                <h2 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">Verify Your Account</h2>
+                <p className="mt-4 text-lg text-muted-foreground">Enter your phone number to proceed.</p>
+            </div>
+            <div className="glassmorphic rounded-2xl p-8 shadow-2xl">
+                 <div className="text-left mb-6">
+                    <Label className="block text-sm font-medium text-muted-foreground mb-2" htmlFor="phone-number">Phone Number</Label>
+                    <div className="relative">
+                        <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-muted-foreground">+1</span>
+                        <Input className="w-full pl-10 pr-4 py-3 h-12 rounded-lg border-border bg-secondary/50 text-foreground placeholder:text-muted-foreground/70 focus:ring-2 focus:ring-primary focus:border-primary transition-shadow duration-300" id="phone-number" name="phone-number" placeholder="(555) 000-0000" type="tel"/>
+                    </div>
+                </div>
+                <div className="mt-8 flex flex-col-reverse gap-4 sm:flex-row">
+                    <Link href="/wallet" className="flex w-full items-center justify-center rounded-xl bg-secondary px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-secondary/80">Cancel</Link>
+                    <button onClick={() => onNext('add')} className="flex w-full items-center justify-center rounded-xl bg-primary px-4 py-3 text-sm font-bold text-primary-foreground transition-colors hover:bg-primary/90">Submit</button>
+                </div>
+            </div>
+        </div>
+    )
+}
+
+const Step2 = ({ onNext, onBack }: { onNext: (step: string) => void, onBack: (step: string) => void; }) => {
+    return (
+        <div className="w-full max-w-md space-y-8 px-4 sm:px-0">
+            <div className="text-center">
+                <p className="text-base font-semibold text-primary">Step 2 of 4</p>
                 <h2 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">Add Credits</h2>
                 <p className="mt-4 text-lg text-muted-foreground">Choose an amount and payment method.</p>
             </div>
@@ -49,7 +77,7 @@ const Step2 = ({ onNext }: { onNext: (step: string) => void }) => {
                             <label className="group relative flex cursor-pointer items-center justify-start gap-3 rounded-xl border border-border p-4 text-sm font-medium transition-all hover:bg-secondary has-[:checked]:border-2 has-[:checked]:border-primary has-[:checked]:bg-secondary/80 has-[:checked]:ring-2 has-[:checked]:ring-primary has-[:checked]:ring-offset-2 has-[:checked]:ring-offset-background">
                                 <input defaultChecked className="peer sr-only" name="payment_method" type="radio" value="paypal"/>
                                 <svg className="h-6 w-6 text-muted-foreground group-has-[:checked]:text-primary" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M3.454 4.223a.25.25 0 0 0-.236.32l2.674 15.368c.071.408.43.704.845.704h3.332c.416 0 .774-.296.845-.704l1.337-7.695c.07-.408.43-.704.845-.704h2.98c3.834 0 6.43-2.115 6.43-5.234C22.5 2.85 19.98 1 15.656 1H7.835c-.416 0-.774.296-.845.704L3.454 4.223Z M9.645 4.223h5.926c2.338 0 3.738 1.157 3.738 3.321 0 1.956-1.154 3.033-2.88 3.033h-2.14c-.416 0-.774.296-.845.704l-1.337 7.695a.25.25 0 0 1-.253.211H8.524a.25.25 0 0 1-.253-.211L6.934 4.544a.25.25 0 0 1 .253-.29h2.458Z"></path>
+                                    <path d="M3.454 4.223a.25.25 0 0 0-.236.32l2.674 15.368c.071.408.43.704.845.704h3.332c.416 0 .774-.296.845-.704l1.337-7.695c.07-.408.43-.704.845-.704h2.98c3.834 0 6.43-2.115 6.43-5.234C22.5 2.85 19.98 1 15.656 1H7.835c-.416 0-.774.296-.845-.704L3.454 4.223Z M9.645 4.223h5.926c2.338 0 3.738 1.157 3.738 3.321 0 1.956-1.154 3.033-2.88 3.033h-2.14c-.416 0-.774.296-.845.704l-1.337 7.695a.25.25 0 0 1-.253.211H8.524a.25.25 0 0 1-.253-.211L6.934 4.544a.25.25 0 0 1 .253-.29h2.458Z"></path>
                                 </svg>
                                 <span>PayPal</span>
                             </label>
@@ -57,7 +85,7 @@ const Step2 = ({ onNext }: { onNext: (step: string) => void }) => {
                     </div>
                 </div>
                 <div className="mt-8 flex flex-col-reverse gap-4 sm:flex-row">
-                    <Link href="/wallet" className="flex w-full items-center justify-center rounded-xl bg-secondary px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-secondary/80">Back</Link>
+                    <button onClick={() => onBack('phone')} className="flex w-full items-center justify-center rounded-xl bg-secondary px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-secondary/80">Back</button>
                     <button onClick={() => onNext('review')} className="flex w-full items-center justify-center rounded-xl bg-primary px-4 py-3 text-sm font-bold text-primary-foreground transition-colors hover:bg-primary/90">Add credits</button>
                 </div>
             </div>
@@ -69,7 +97,7 @@ const Step3 = ({ onNext, onBack }: { onNext: (step: string) => void; onBack: (st
     return (
         <div className="mx-auto w-full max-w-lg space-y-8 px-4 sm:px-0">
             <div className="text-center">
-                <p className="text-base font-semibold text-primary">Step 2 of 3</p>
+                <p className="text-base font-semibold text-primary">Step 3 of 4</p>
                 <h2 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">Review Your Purchase</h2>
                 <p className="mt-4 text-lg text-muted-foreground">Please review your transaction details below.</p>
             </div>
@@ -152,7 +180,7 @@ const Step4 = () => {
 export default function BillingPage() {
     const searchParams = useSearchParams();
     const router = useRouter();
-    const currentStep = searchParams.get('step') || 'add';
+    const currentStep = searchParams.get('step') || 'phone';
 
     const handleNext = (step: string) => {
         router.push(`/billing?step=${step}`);
@@ -160,20 +188,22 @@ export default function BillingPage() {
     
     const renderStep = () => {
         switch (currentStep) {
+            case 'add':
+                return <Step2 onNext={handleNext} onBack={handleNext} />;
             case 'review':
                 return <Step3 onNext={handleNext} onBack={handleNext} />;
             case 'success':
                 return <Step4 />;
-            case 'add':
+            case 'phone':
             default:
-                return <Step2 onNext={handleNext} />;
+                return <Step1 onNext={handleNext} />;
         }
     }
 
     return (
         <div className="relative flex min-h-screen flex-col overflow-x-hidden wallet-bg text-foreground">
             <BillingHeader />
-            <main className="flex flex-1 items-center justify-center py-16 sm:py-24 lg:py-32">
+            <main className="flex flex-1 items-center justify-center py-16 sm:py-24 lg:py-32 pb-24 sm:pb-32 lg:pb-40">
                 {renderStep()}
             </main>
         </div>

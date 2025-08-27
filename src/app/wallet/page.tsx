@@ -26,10 +26,11 @@ const WalletHeader = () => (
 );
 
 export default function WalletPage() {
+
     return (
         <div className="flex flex-col min-h-screen bg-black/30 text-white">
             <WalletHeader />
-            <main className="flex-grow px-4 sm:px-6 lg:px-40 py-10">
+            <main className="flex-grow px-4 sm:px-6 lg:px-40 py-10 pb-24">
                 <div className="max-w-5xl mx-auto">
                     <div className="mb-10">
                         <h1 className="text-4xl font-bold tracking-tight">Wallet</h1>
@@ -40,7 +41,7 @@ export default function WalletPage() {
                         {/* Left Column */}
                         <div className="lg:col-span-2 space-y-8">
                             {/* Current Balance Card */}
-                            <Card className="bg-secondary/50 backdrop-blur-xl border-border/60 shadow-2xl transition-all duration-300 ease-in-out hover:transform hover:scale-[1.02] hover:shadow-primary/20 overflow-hidden">
+                            <Card className="glassmorphic glass-interactive overflow-hidden">
                                 <CardHeader>
                                     <CardTitle className="text-lg font-bold mb-1 text-white">Current Balance</CardTitle>
                                 </CardHeader>
@@ -54,13 +55,13 @@ export default function WalletPage() {
                                         asChild
                                         className="mt-6 w-full sm:w-auto bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-3 px-6 rounded-lg text-base leading-normal tracking-wide shadow-lg transition-all duration-300 ease-in-out hover:transform hover:scale-105 hover:shadow-primary/40"
                                     >
-                                        <Link href="/billing?step=add">Add More Credits</Link>
+                                        <Link href="/billing?step=phone">Add More Credits</Link>
                                     </Button>
                                 </CardContent>
                             </Card>
                             
                             {/* Current Plan Card */}
-                            <Card className="bg-secondary/50 backdrop-blur-xl border-border/60 shadow-2xl transition-all duration-300 ease-in-out hover:transform hover:scale-[1.02] hover:shadow-primary/20 overflow-hidden">
+                            <Card className="glassmorphic glass-interactive overflow-hidden">
                                 <CardHeader>
                                     <CardTitle className="text-lg font-bold text-white">Current Plan</CardTitle>
                                 </CardHeader>
@@ -84,7 +85,7 @@ export default function WalletPage() {
 
                         {/* Right Column */}
                         <div className="lg:col-span-1">
-                            <Card className="bg-secondary/50 backdrop-blur-xl border-border/60 shadow-2xl p-8 sticky top-10">
+                            <Card className="glassmorphic p-8 sticky top-10 card-interactive">
                                 <h3 className="text-lg font-bold mb-4 text-white">Credit Card</h3>
                                 <div className="relative aspect-[1.58/1] w-full rounded-lg bg-gradient-to-br from-gray-700/50 to-gray-800/50 p-4 flex flex-col justify-between shadow-inner backdrop-blur-sm border border-white/10 transition-transform duration-300 hover:scale-105">
                                     <div className="flex justify-between items-start">
@@ -110,3 +111,5 @@ export default function WalletPage() {
         </div>
     );
 }
+
+    
