@@ -17,7 +17,7 @@ const VisaLogo = () => (
 );
 
 const WalletHeader = () => (
-    <header className="flex items-center justify-between whitespace-nowrap border-b border-solid border-border/60 px-10 py-4 backdrop-blur-sm bg-black/20 text-white">
+    <header className="sticky top-0 z-10 flex items-center justify-between whitespace-nowrap border-b border-solid border-border/60 px-10 py-4 backdrop-blur-sm bg-black/20 text-white">
         <Link href="/" className="flex items-center gap-2">
             <AppLogo />
             <span className="font-semibold text-lg tracking-tight">ResuMaster</span>
