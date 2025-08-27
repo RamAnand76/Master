@@ -22,7 +22,7 @@ const Step1 = ({ onNext }: { onNext: (step: string) => void }) => {
     return (
         <div className="w-full max-w-md space-y-8 px-4 sm:px-0">
             <div className="text-center">
-                <p className="text-base font-semibold text-primary">Step 1 of 4</p>
+                <p className="text-base font-semibold text-primary">Step 1 of 3</p>
                 <h2 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">Verify Your Account</h2>
                 <p className="mt-4 text-lg text-muted-foreground">Enter your phone number to proceed.</p>
             </div>
@@ -36,7 +36,7 @@ const Step1 = ({ onNext }: { onNext: (step: string) => void }) => {
                 </div>
                 <div className="mt-8 flex flex-col-reverse gap-4 sm:flex-row">
                     <Link href="/wallet" className="flex w-full items-center justify-center rounded-xl bg-secondary px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-secondary/80">Cancel</Link>
-                    <button onClick={() => onNext('add')} className="flex w-full items-center justify-center rounded-xl bg-primary px-4 py-3 text-sm font-bold text-primary-foreground transition-colors hover:bg-primary/90">Submit</button>
+                    <button onClick={() => onNext('add')} className="flex w-full items-center justify-center rounded-xl bg-primary px-4 py-3 text-sm font-bold text-primary-foreground transition-colors hover:bg-primary/90">Next</button>
                 </div>
             </div>
         </div>
@@ -47,7 +47,7 @@ const Step2 = ({ onNext, onBack }: { onNext: (step: string) => void, onBack: (st
     return (
         <div className="w-full max-w-md space-y-8 px-4 sm:px-0">
             <div className="text-center">
-                <p className="text-base font-semibold text-primary">Step 2 of 4</p>
+                <p className="text-base font-semibold text-primary">Step 2 of 3</p>
                 <h2 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">Add Credits</h2>
                 <p className="mt-4 text-lg text-muted-foreground">Choose an amount and payment method.</p>
             </div>
@@ -97,7 +97,7 @@ const Step3 = ({ onNext, onBack }: { onNext: (step: string) => void; onBack: (st
     return (
         <div className="mx-auto w-full max-w-lg space-y-8 px-4 sm:px-0">
             <div className="text-center">
-                <p className="text-base font-semibold text-primary">Step 3 of 4</p>
+                <p className="text-base font-semibold text-primary">Step 3 of 3</p>
                 <h2 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">Review Your Purchase</h2>
                 <p className="mt-4 text-lg text-muted-foreground">Please review your transaction details below.</p>
             </div>
@@ -114,7 +114,7 @@ const Step3 = ({ onNext, onBack }: { onNext: (step: string) => void; onBack: (st
                                 <span className="text-muted-foreground">Payment Method:</span>
                                 <div className="flex items-center gap-2">
                                     <svg className="h-5 w-5 text-primary" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M3.454 4.223a.25.25 0 0 0-.236.32l2.674 15.368c.071.408.43.704.845.704h3.332c.416 0 .774-.296.845-.704l1.337-7.695c.07-.408.43-.704.845-.704h2.98c3.834 0 6.43-2.115 6.43-5.234C22.5 2.85 19.98 1 15.656 1H7.835c-.416 0-.774.296-.845.704L3.454 4.223Z M9.645 4.223h5.926c2.338 0 3.738 1.157 3.738 3.321 0 1.956-1.154 3.033-2.88 3.033h-2.14c-.416 0-.774.296-.845.704l-1.337 7.695a.25.25 0 0 1-.253.211H8.524a.25.25 0 0 1-.253-.211L6.934 4.544a.25.25 0 0 1 .253-.29h2.458Z"></path>
+                                        <path d="M3.454 4.223a.25.25 0 0 0-.236.32l2.674 15.368c.071.408.43.704.845.704h3.332c.416 0 .774-.296.845-.704l1.337-7.695c.07-.408.43-.704.845-.704h2.98c3.834 0 6.43-2.115 6.43-5.234C22.5 2.85 19.98 1 15.656 1H7.835c-.416 0-.774.296-.845-.704L3.454 4.223Z M9.645 4.223h5.926c2.338 0 3.738 1.157 3.738 3.321 0 1.956-1.154 3.033-2.88 3.033h-2.14c-.416 0-.774.296-.845.704l-1.337 7.695a.25.25 0 0 1-.253.211H8.524a.25.25 0 0 1-.253-.211L6.934 4.544a.25.25 0 0 1 .253-.29h2.458Z"></path>
                                     </svg>
                                     <span className="font-semibold">PayPal</span>
                                 </div>
@@ -209,5 +209,3 @@ export default function BillingPage() {
         </div>
     )
 }
-
-    
