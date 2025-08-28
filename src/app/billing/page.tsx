@@ -8,6 +8,8 @@ import { AppLogo } from '@/components/home/app-logo';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { LoaderCircle } from 'lucide-react';
 
 const BillingHeader = () => (
     <header className="sticky top-0 z-10 w-full border-b border-solid border-border/60 px-10 py-4 backdrop-blur-sm bg-black/20 text-white">
@@ -45,7 +47,7 @@ const Step1 = ({ onNext }: { onNext: (step: string) => void }) => {
 
 const Step2 = ({ onNext, onBack }: { onNext: (step: string) => void, onBack: (step: string) => void; }) => {
     return (
-        <div className="w-full max-w-md space-y-8 px-4 sm:px-0">
+        <div className="w-full max-w-md space-y-8 px-4 sm:px-0 -mt-8">
             <div className="text-center">
                 <p className="text-base font-semibold text-primary">Step 2 of 3</p>
                 <h2 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">Add Credits</h2>
@@ -93,9 +95,9 @@ const Step2 = ({ onNext, onBack }: { onNext: (step: string) => void, onBack: (st
     );
 };
 
-const Step3 = ({ onNext, onBack }: { onNext: (step: string) => void; onBack: (step: string) => void }) => {
+const Step3 = ({ onConfirm, onBack, isProcessing }: { onConfirm: () => void; onBack: (step: string) => void; isProcessing: boolean }) => {
     return (
-        <div className="mx-auto w-full max-w-lg space-y-8 px-4 sm:px-0">
+        <div className="mx-auto w-full max-w-lg space-y-8 px-4 sm:px-0 -mt-8">
             <div className="text-center">
                 <p className="text-base font-semibold text-primary">Step 3 of 3</p>
                 <h2 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">Review Your Purchase</h2>
@@ -134,45 +136,59 @@ const Step3 = ({ onNext, onBack }: { onNext: (step: string) => void; onBack: (st
                 </div>
                 <div className="mt-8 flex flex-col-reverse gap-4 sm:flex-row">
                     <button onClick={() => onBack('add')} className="flex w-full items-center justify-center rounded-xl bg-secondary px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-secondary/80">Edit</button>
-                    <button onClick={() => onNext('success')} className="flex w-full items-center justify-center rounded-xl bg-primary px-4 py-3 text-sm font-bold text-primary-foreground transition-colors hover:bg-primary/90">Confirm</button>
+                    <button onClick={onConfirm} className="flex w-full items-center justify-center rounded-xl bg-primary px-4 py-3 text-sm font-bold text-primary-foreground transition-colors hover:bg-primary/90" disabled={isProcessing}>
+                         {isProcessing && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
+                        {isProcessing ? 'Processing...' : 'Confirm'}
+                    </button>
                 </div>
             </div>
         </div>
     );
 };
 
-const Step4 = () => {
+const SuccessModal = ({ isOpen, onOpenChange }: { isOpen: boolean, onOpenChange: () => void }) => {
+    const router = useRouter();
+
+    const handleBackToWallet = () => {
+        onOpenChange();
+        router.push('/wallet');
+    };
+
     return (
-        <div className="w-full max-w-md text-center">
-            <div className="relative mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-secondary/50">
-                <div className="absolute inset-0 animate-pulse rounded-full bg-primary/20"></div>
-                <svg className="h-12 w-12 text-primary" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M4.5 12.75l6 6 9-13.5" strokeLinecap="round" strokeLinejoin="round"></path>
-                </svg>
-            </div>
-            <h1 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">Credits Added Successfully!</h1>
-            <p className="mt-4 text-lg text-muted-foreground">
-                Your transaction was successful and the credits have been added to your account.
-            </p>
-            <div className="mt-8 rounded-lg bg-secondary/50 p-6">
-                <div className="space-y-4">
-                    <div className="flex justify-between items-center">
-                        <p className="text-sm text-muted-foreground">Amount Added</p>
-                        <p className="text-lg font-bold text-white">$25.00</p>
+        <Dialog open={isOpen} onOpenChange={onOpenChange}>
+            <DialogContent className="sm:max-w-md bg-background text-foreground border-border">
+                <DialogHeader>
+                    <div className="relative mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-secondary/50">
+                        <div className="absolute inset-0 animate-pulse rounded-full bg-primary/20"></div>
+                        <svg className="h-8 w-8 text-primary" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4.5 12.75l6 6 9-13.5" strokeLinecap="round" strokeLinejoin="round"></path>
+                        </svg>
                     </div>
-                    <div className="h-px bg-border"></div>
-                    <div className="flex justify-between items-center">
-                        <p className="text-sm text-muted-foreground">New Credit Balance</p>
-                        <p className="text-2xl font-extrabold text-primary">$125.00</p>
+                    <DialogTitle className="text-center text-xl font-bold tracking-tight text-white">Credits Added Successfully!</DialogTitle>
+                    <DialogDescription className="text-center text-muted-foreground">
+                        Your transaction was successful.
+                    </DialogDescription>
+                </DialogHeader>
+                <div className="my-4 rounded-lg bg-secondary/50 p-4">
+                    <div className="space-y-3">
+                        <div className="flex justify-between items-center">
+                            <p className="text-sm text-muted-foreground">Amount Added</p>
+                            <p className="text-base font-bold text-white">$25.00</p>
+                        </div>
+                        <div className="h-px bg-border"></div>
+                        <div className="flex justify-between items-center">
+                            <p className="text-sm text-muted-foreground">New Credit Balance</p>
+                            <p className="text-xl font-extrabold text-primary">$125.00</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div className="mt-10">
-                <Link href="/wallet" className="inline-block w-full max-w-xs rounded-lg bg-primary px-6 py-3 text-base font-semibold text-white shadow-lg transition-transform hover:scale-105 hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background">
-                    Back to Wallet
-                </Link>
-            </div>
-        </div>
+                <DialogFooter className="sm:justify-center">
+                    <Button onClick={handleBackToWallet} className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
+                        Back to Wallet
+                    </Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
     );
 };
 
@@ -181,19 +197,27 @@ export default function BillingPage() {
     const searchParams = useSearchParams();
     const router = useRouter();
     const currentStep = searchParams.get('step') || 'phone';
+    const [isProcessing, setIsProcessing] = useState(false);
+    const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
 
     const handleNext = (step: string) => {
         router.push(`/billing?step=${step}`);
     };
     
+    const handleConfirm = () => {
+        setIsProcessing(true);
+        setTimeout(() => {
+            setIsProcessing(false);
+            setIsSuccessModalOpen(true);
+        }, 2000); // Simulate network request
+    };
+
     const renderStep = () => {
         switch (currentStep) {
             case 'add':
                 return <Step2 onNext={handleNext} onBack={handleNext} />;
             case 'review':
-                return <Step3 onNext={handleNext} onBack={handleNext} />;
-            case 'success':
-                return <Step4 />;
+                return <Step3 onConfirm={handleConfirm} onBack={handleNext} isProcessing={isProcessing} />;
             case 'phone':
             default:
                 return <Step1 onNext={handleNext} />;
@@ -206,6 +230,12 @@ export default function BillingPage() {
             <main className="flex flex-1 items-center justify-center py-16 sm:py-24 lg:py-32 pb-24 sm:pb-32 lg:pb-40">
                 {renderStep()}
             </main>
+            <SuccessModal 
+                isOpen={isSuccessModalOpen} 
+                onOpenChange={() => setIsSuccessModalOpen(false)} 
+            />
         </div>
     )
 }
+
+    
