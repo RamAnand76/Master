@@ -59,7 +59,7 @@ const Step2 = ({ onNext, onBack }: { onNext: (step: string) => void, onBack: (st
                         <h3 className="text-lg font-semibold leading-6">Select amount</h3>
                         <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-4">
                             {['10', '25', '50', '100'].map((amount, idx) => (
-                                <label key={amount} className="group relative flex cursor-pointer items-center justify-center rounded-xl border border-border p-4 text-center text-sm font-medium transition-all hover:bg-secondary has-[:checked]:border-2 has-[:checked]:border-primary has-[:checked]:bg-secondary/80 has-[:checked]:ring-2 has-[:checked]:ring-primary has-[:checked]:ring-offset-2 has-[:checked]:ring-offset-background">
+                                <label key={`label-${amount}`} className="group relative flex cursor-pointer items-center justify-center rounded-xl border border-border p-4 text-center text-sm font-medium transition-all hover:bg-secondary has-[:checked]:border-2 has-[:checked]:border-primary has-[:checked]:bg-secondary/80 has-[:checked]:ring-2 has-[:checked]:ring-primary has-[:checked]:ring-offset-2 has-[:checked]:ring-offset-background">
                                     <input className="peer sr-only" name="credit_amount" type="radio" value={amount} defaultChecked={idx === 1}/>
                                     <span className="text-lg font-bold">${amount}</span>
                                 </label>
@@ -69,14 +69,14 @@ const Step2 = ({ onNext, onBack }: { onNext: (step: string) => void, onBack: (st
                     <div>
                         <h3 className="text-lg font-semibold leading-6">Payment method</h3>
                         <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                             <label className="group relative flex cursor-pointer items-center justify-start gap-3 rounded-xl border border-border p-4 text-sm font-medium transition-all hover:bg-secondary has-[:checked]:border-2 has-[:checked]:border-primary has-[:checked]:bg-secondary/80 has-[:checked]:ring-2 has-[:checked]:ring-primary has-[:checked]:ring-offset-2 has-[:checked]:ring-offset-background">
+                             <label key="radio-credit_card" className="group relative flex cursor-pointer items-center justify-start gap-3 rounded-xl border border-border p-4 text-sm font-medium transition-all hover:bg-secondary has-[:checked]:border-2 has-[:checked]:border-primary has-[:checked]:bg-secondary/80 has-[:checked]:ring-2 has-[:checked]:ring-primary has-[:checked]:ring-offset-2 has-[:checked]:ring-offset-background">
                                 <input className="peer sr-only" name="payment_method" type="radio" value="credit_card"/>
                                 <svg className="h-6 w-6 text-muted-foreground group-has-[:checked]:text-primary" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15A2.25 2.25 0 0 0 2.25 6.75v10.5A2.25 2.25 0 0 0 4.5 19.5Z" strokeLinecap="round" strokeLinejoin="round"></path>
                                 </svg>
                                 <span>Credit Card</span>
                             </label>
-                            <label className="group relative flex cursor-pointer items-center justify-start gap-3 rounded-xl border border-border p-4 text-sm font-medium transition-all hover:bg-secondary has-[:checked]:border-2 has-[:checked]:border-primary has-[:checked]:bg-secondary/80 has-[:checked]:ring-2 has-[:checked]:ring-primary has-[:checked]:ring-offset-2 has-[:checked]:ring-offset-background">
+                            <label key="radio-paypal" className="group relative flex cursor-pointer items-center justify-start gap-3 rounded-xl border border-border p-4 text-sm font-medium transition-all hover:bg-secondary has-[:checked]:border-2 has-[:checked]:border-primary has-[:checked]:bg-secondary/80 has-[:checked]:ring-2 has-[:checked]:ring-primary has-[:checked]:ring-offset-2 has-[:checked]:ring-offset-background">
                                 <input defaultChecked className="peer sr-only" name="payment_method" type="radio" value="paypal"/>
                                 <svg className="h-6 w-6 text-muted-foreground group-has-[:checked]:text-primary" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M3.454 4.223a.25.25 0 0 0-.236.32l2.674 15.368c.071.408.43.704.845.704h3.332c.416 0 .774-.296.845-.704l1.337-7.695c.07-.408.43-.704.845-.704h2.98c3.834 0 6.43-2.115 6.43-5.234C22.5 2.85 19.98 1 15.656 1H7.835c-.416 0-.774.296-.845-.704L3.454 4.223Z M9.645 4.223h5.926c2.338 0 3.738 1.157 3.738 3.321 0 1.956-1.154 3.033-2.88 3.033h-2.14c-.416 0-.774.296-.845.704l-1.337 7.695a.25.25 0 0 1-.253.211H8.524a.25.25 0 0 1-.253-.211L6.934 4.544a.25.25 0 0 1 .253-.29h2.458Z"></path>
