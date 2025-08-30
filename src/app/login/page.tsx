@@ -155,7 +155,7 @@ export default function LoginPage() {
                 </Link>
               </div>
 
-              <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white h-12 text-base" disabled={isLoading}>
+              <Button type="submit" className="w-full h-12 text-base" disabled={isLoading}>
                 {isLoading && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
                 Sign In
               </Button>
