@@ -2,16 +2,17 @@
 "use client";
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
-import { LoaderCircle, CheckCircle2, CreditCard, ChevronRight } from 'lucide-react';
+import { LoaderCircle, CheckCircle2, CreditCard, ChevronRight, ChevronLeft } from 'lucide-react';
 import HomeHeader from '@/components/home/home-header';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from '@/components/ui/label';
 import { useUser } from '@/hooks/use-user';
 import { cn } from '@/lib/utils';
+import { Input } from '@/components/ui/input';
 
 const creditOptions = [
     { amount: 10, price: 10, popular: false },
@@ -20,7 +21,7 @@ const creditOptions = [
     { amount: 100, price: 75, popular: false },
 ];
 
-const AddCreditsStep = ({ onNext }: { onNext: (amount: number, price: number) => void }) => {
+const AddCreditsStep = ({ onNext, onBack }: { onNext: (amount: number, price: number) => void; onBack: () => void; }) => {
     const [selectedAmount, setSelectedAmount] = useState<string>("25");
     const selectedOption = creditOptions.find(opt => opt.amount === parseInt(selectedAmount));
 
@@ -55,10 +56,49 @@ const AddCreditsStep = ({ onNext }: { onNext: (amount: number, price: number) =>
                     ))}
                     </div>
                 </RadioGroup>
-                <Button onClick={() => onNext(selectedOption!.amount, selectedOption!.price)} className="w-full">
-                    Proceed to Payment
-                    <ChevronRight className="ml-2 h-4 w-4" />
-                </Button>
+                <div className="flex flex-col-reverse sm:flex-row gap-2">
+                    <Button onClick={onBack} variant="outline" className="w-full">
+                        <ChevronLeft className="mr-2 h-4 w-4" /> Go Back
+                    </Button>
+                    <Button onClick={() => onNext(selectedOption!.amount, selectedOption!.price)} className="w-full">
+                        Next Step <ChevronRight className="ml-2 h-4 w-4" />
+                    </Button>
+                </div>
+            </CardContent>
+        </Card>
+    );
+};
+
+const PaymentStep = ({ onNext, onBack }: { onNext: () => void; onBack: () => void; }) => {
+    return (
+        <Card className="w-full max-w-md">
+            <CardHeader>
+                <CardTitle>Payment Details</CardTitle>
+                <CardDescription>Enter your credit card information.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+                 <div className="space-y-2">
+                    <Label htmlFor="card-number">Card Number</Label>
+                    <Input id="card-number" placeholder="0000 0000 0000 0000" />
+                </div>
+                <div className="grid grid-cols-3 gap-4">
+                    <div className="space-y-2 col-span-2">
+                        <Label htmlFor="expiry">Expiry</Label>
+                        <Input id="expiry" placeholder="MM/YY" />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="cvc">CVC</Label>
+                        <Input id="cvc" placeholder="123" />
+                    </div>
+                </div>
+                <div className="flex flex-col-reverse sm:flex-row gap-2 pt-4">
+                    <Button onClick={onBack} variant="outline" className="w-full">
+                         <ChevronLeft className="mr-2 h-4 w-4" /> Go Back
+                    </Button>
+                    <Button onClick={onNext} className="w-full">
+                        Next Step <ChevronRight className="ml-2 h-4 w-4" />
+                    </Button>
+                </div>
             </CardContent>
         </Card>
     );
@@ -88,7 +128,7 @@ const ReviewStep = ({ onConfirm, onBack, isProcessing, amount, price }: { onConf
                         <span className="text-muted-foreground">Payment Method:</span>
                         <div className="flex items-center gap-2">
                             <CreditCard className="h-5 w-5 text-muted-foreground" />
-                            <span className="font-semibold">Credit Card</span>
+                            <span className="font-semibold">Visa **** 1234</span>
                         </div>
                     </div>
                     <div className="flex justify-between">
@@ -103,7 +143,9 @@ const ReviewStep = ({ onConfirm, onBack, isProcessing, amount, price }: { onConf
                     </div>
                 </div>
                  <div className="flex flex-col-reverse gap-4 sm:flex-row">
-                    <Button onClick={onBack} variant="outline" className="w-full">Back</Button>
+                    <Button onClick={onBack} variant="outline" className="w-full" disabled={isProcessing}>
+                        <ChevronLeft className="mr-2 h-4 w-4" /> Go Back
+                    </Button>
                     <Button onClick={onConfirm} className="w-full" disabled={isProcessing}>
                         {isProcessing && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
                         {isProcessing ? 'Processing...' : 'Confirm Purchase'}
@@ -151,19 +193,31 @@ export default function BillingPage() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [isProcessing, setIsProcessing] = useState(false);
+    const [isNavigating, setIsNavigating] = useState(false);
     const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
     const [selectedPurchase, setSelectedPurchase] = useState<{amount: number, price: number} | null>(null);
     const { user, updateUser } = useUser();
 
     const currentStep = searchParams.get('step') || 'add';
 
-    const handleNext = (amount: number, price: number) => {
-        setSelectedPurchase({ amount, price });
-        router.push('/billing?step=review');
+    const navigateToStep = (step: string) => {
+        setIsNavigating(true);
+        setTimeout(() => {
+            router.push(`/billing?step=${step}`);
+        }, 500); // Simulate network latency
     };
 
-    const handleBack = () => {
-        router.push('/billing?step=add');
+    useEffect(() => {
+        setIsNavigating(false);
+    }, [searchParams]);
+
+    const handleSelectCredits = (amount: number, price: number) => {
+        setSelectedPurchase({ amount, price });
+        navigateToStep('payment');
+    };
+
+    const handlePayment = () => {
+        navigateToStep('review');
     };
     
     const handleConfirm = () => {
@@ -177,15 +231,29 @@ export default function BillingPage() {
     };
 
     const renderStep = () => {
+        if (isNavigating) {
+            return (
+                <div className="flex flex-col items-center justify-center gap-4 text-center">
+                    <LoaderCircle className="h-12 w-12 animate-spin text-primary" />
+                    <p className="text-muted-foreground">Loading next step...</p>
+                </div>
+            );
+        }
+
         switch (currentStep) {
+            case 'payment':
+                return <PaymentStep onNext={handlePayment} onBack={() => navigateToStep('add')} />;
             case 'review':
                 if (!selectedPurchase) {
-                    return <AddCreditsStep onNext={handleNext} />;
+                     // This case happens if the user navigates directly to the review URL.
+                     // We redirect them back to the start.
+                    router.push('/billing?step=add');
+                    return null;
                 }
-                return <ReviewStep onConfirm={handleConfirm} onBack={handleBack} isProcessing={isProcessing} {...selectedPurchase} />;
+                return <ReviewStep onConfirm={handleConfirm} onBack={() => navigateToStep('payment')} isProcessing={isProcessing} {...selectedPurchase} />;
             case 'add':
             default:
-                return <AddCreditsStep onNext={handleNext} />;
+                return <AddCreditsStep onNext={handleSelectCredits} onBack={() => router.push('/wallet')} />;
         }
     }
 
@@ -205,3 +273,5 @@ export default function BillingPage() {
         </div>
     )
 }
+
+    
