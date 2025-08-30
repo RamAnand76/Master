@@ -4,21 +4,12 @@
 import { useSearchParams, useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { AppLogo } from '@/components/home/app-logo';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { LoaderCircle } from 'lucide-react';
-
-const BillingHeader = () => (
-    <header className="sticky top-0 z-10 w-full border-b border-solid border-border/60 px-10 py-4 backdrop-blur-sm bg-black/20 text-white">
-        <Link href="/" className="flex items-center gap-2">
-            <AppLogo />
-            <span className="font-semibold text-lg tracking-tight">ResuMaster</span>
-        </Link>
-    </header>
-);
+import HomeHeader from '@/components/home/home-header';
 
 const Step1 = ({ onNext }: { onNext: (step: string) => void }) => {
     return (
@@ -226,7 +217,9 @@ export default function BillingPage() {
 
     return (
         <div className="relative flex min-h-screen flex-col overflow-x-hidden wallet-bg text-foreground">
-            <BillingHeader />
+            <div className="sticky top-0 z-10 w-full border-b border-solid border-border/60 bg-background/80 backdrop-blur-sm">
+                <HomeHeader />
+            </div>
             <main className="flex flex-1 items-center justify-center py-16 sm:py-24 lg:py-32 pb-24 sm:pb-32 lg:pb-40">
                 {renderStep()}
             </main>
@@ -237,5 +230,3 @@ export default function BillingPage() {
         </div>
     )
 }
-
-    

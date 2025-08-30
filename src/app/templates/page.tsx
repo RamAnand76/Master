@@ -60,7 +60,7 @@ export default function TemplatesPage() {
     <>
     <div className="min-h-screen bg-background text-foreground pb-24">
       <HomeHeader />
-      <main className="max-w-7xl mx-auto p-8">
+      <main className="max-w-7xl mx-auto p-8 pt-12">
         <header className="text-center mb-12">
           <h1 className="text-4xl font-bold tracking-tight">Resume Templates</h1>
           <p className="text-muted-foreground mt-2 max-w-2xl mx-auto">

@@ -4,7 +4,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from 'next/link';
-import { AppLogo } from "@/components/home/app-logo";
+import HomeHeader from "@/components/home/home-header";
 
 const NovaLogo = () => (
     <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
@@ -16,20 +16,14 @@ const VisaLogo = () => (
     <img className="w-12" alt="Visa Logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZwlU0IgLiMWe6FYLwK1fYRdPnSekj0ZTairWFQxymLBA5xN0_ATD77tUcsxXAXEw2C7XSJehK1JDgiZ6UzckSogfo5-kWQLW1N4uLgabkseBiVUks5g8uarUsk5yoCT_sELY9ddC8dSEaez0jFMR44KxpTnHXLGZl1jHgjePsVucIcF2ilmr6V9jApMztN_AK2M5pL6IDeOjQI_2cZcsCXV2NjvCo-8ku_4vjKuETAPyYFLqOYVnpt2L0dRp2e74Swy03_IhZJJU"/>
 );
 
-const WalletHeader = () => (
-    <header className="sticky top-0 z-10 flex items-center justify-between whitespace-nowrap border-b border-solid border-border/60 px-10 py-4 backdrop-blur-sm bg-black/20 text-white">
-        <Link href="/" className="flex items-center gap-2">
-            <AppLogo />
-            <span className="font-semibold text-lg tracking-tight">ResuMaster</span>
-        </Link>
-    </header>
-);
 
 export default function WalletPage() {
 
     return (
         <div className="flex flex-col min-h-screen bg-black/30 text-white">
-            <WalletHeader />
+            <div className="sticky top-0 z-10 bg-black/50 backdrop-blur-lg">
+                <HomeHeader />
+            </div>
             <main className="flex-grow px-4 sm:px-6 lg:px-40 py-10 pb-24">
                 <div className="max-w-5xl mx-auto">
                     <div className="mb-10">
@@ -85,7 +79,7 @@ export default function WalletPage() {
 
                         {/* Right Column */}
                         <div className="lg:col-span-1">
-                            <Card className="glassmorphic p-8 sticky top-10 card-interactive">
+                            <Card className="glassmorphic p-8 sticky top-24 card-interactive">
                                 <h3 className="text-lg font-bold mb-4 text-white">Credit Card</h3>
                                 <div className="relative aspect-[1.58/1] w-full rounded-lg bg-gradient-to-br from-gray-700/50 to-gray-800/50 p-4 flex flex-col justify-between shadow-inner backdrop-blur-sm border border-white/10 transition-transform duration-300 hover:scale-105">
                                     <div className="flex justify-between items-start">
@@ -111,5 +105,3 @@ export default function WalletPage() {
         </div>
     );
 }
-
-    
