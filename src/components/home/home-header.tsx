@@ -71,11 +71,17 @@ export default function HomeHeader() {
                                 </Link>
                                 <DropdownMenuItem>
                                     <Crown className="mr-2 h-4 w-4 text-yellow-500" />
-                                    <Badge variant="default" className="text-xs bg-primary hover:bg-primary/90">Free Plan</Badge>
+                                    <div className="flex justify-between items-center w-full">
+                                        <span>Plan</span>
+                                        <Badge variant="secondary" className="text-xs bg-primary/10 text-primary hover:bg-primary/20">Free</Badge>
+                                    </div>
                                 </DropdownMenuItem>
                                 <DropdownMenuItem>
                                     <Database className="mr-2 h-4 w-4" />
-                                    <span>Balance: {user.credits} credits</span>
+                                    <div className="flex justify-between items-center w-full">
+                                        <span>Credits</span>
+                                        <span className="font-semibold text-foreground">{user.credits}</span>
+                                    </div>
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem onClick={handleLogout} className="text-red-400 hover:!text-red-400 focus:!text-red-400 focus:!bg-red-400/10">
