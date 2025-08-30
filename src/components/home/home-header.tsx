@@ -13,6 +13,7 @@ import ProfileDialog from './profile-dialog';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Badge } from '../ui/badge';
+import { AnimatedThemeToggler } from '../magicui/animated-theme-toggler';
 
 export default function HomeHeader() {
     const { user, logout, isAuthenticated } = useUser();
@@ -32,18 +33,7 @@ export default function HomeHeader() {
                     <span className="font-semibold text-lg tracking-tight">ResuMaster</span>
                 </div>
                 <div className="flex items-center gap-2">
-                    <TooltipProvider>
-                        <Tooltip>
-                            <TooltipTrigger asChild>
-                                <Button variant="ghost" size="icon" aria-label="Toggle theme">
-                                    <Sun className="h-5 w-5"/>
-                                </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                                <p>Toggle theme</p>
-                            </TooltipContent>
-                        </Tooltip>
-                    </TooltipProvider>
+                    <AnimatedThemeToggler />
                     
                     {isAuthenticated ? (
                         <DropdownMenu>

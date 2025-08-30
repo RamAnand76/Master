@@ -8,6 +8,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { FloatingDock } from "@/components/ui/floating-dock";
 import { Home, FileText, Settings, User } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ThemeProvider } from "@/components/theme-provider";
 
 // export const metadata: Metadata = {
 //   title: "ResuMaster | ATS-Friendly Resume Builder",
@@ -48,7 +49,7 @@ export default function RootLayout({
   ];
 
   return (
-    <html lang="en" className="dark">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <title>ResuMaster | ATS-Friendly Resume Builder</title>
         <meta name="description" content="Build a professional, ATS-friendly resume in minutes. Get AI-powered suggestions to land your dream job." />
@@ -64,12 +65,17 @@ export default function RootLayout({
         />
       </head>
       <body className={cn("font-body antialiased", isWalletFlow && "wallet-bg")}>
-        {showDock && <FloatingDock items={navItems} />}
-        {children}
-        <Toaster />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {showDock && <FloatingDock items={navItems} />}
+          {children}
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );
 }
-
-    
