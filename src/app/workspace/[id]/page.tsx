@@ -248,6 +248,7 @@ export default function WorkspacePage() {
   );
 
   return (
+    <TooltipProvider>
     <FormProvider {...methods}>
        <div className="h-screen bg-secondary flex flex-col">
         <header className="bg-card/60 backdrop-blur-lg sticky top-0 z-20 border-b border-border/30 shadow-sm">
@@ -326,5 +327,6 @@ export default function WorkspacePage() {
         resume={resumeData}
       />
     </FormProvider>
+    </TooltipProvider>
   );
 }

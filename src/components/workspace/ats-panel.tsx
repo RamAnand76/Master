@@ -1,3 +1,4 @@
+
 "use client";
 
 import { motion, AnimatePresence } from 'framer-motion';
@@ -13,7 +14,6 @@ type AtsPanelProps = {
   analysis: AtsAnalysis | null;
   isAnalyzing: boolean;
   onKeywordClick: (keyword: string) => void;
-  onDownloadPdf: () => void;
 };
 
 const FormattedFeedback = ({ text }: { text: string }) => {
@@ -35,7 +35,7 @@ const FormattedFeedback = ({ text }: { text: string }) => {
     );
 };
 
-export default function AtsPanel({ analysis, isAnalyzing, onKeywordClick, onDownloadPdf }: AtsPanelProps) {
+export default function AtsPanel({ analysis, isAnalyzing, onKeywordClick }: AtsPanelProps) {
     const score = analysis?.score ?? 0;
     const feedback = analysis?.feedback ?? "This score estimates your resume's compatibility with ATS software.";
   
@@ -75,10 +75,6 @@ export default function AtsPanel({ analysis, isAnalyzing, onKeywordClick, onDown
                         </AnimatePresence>
                     </div>
                 </div>
-                <Button onClick={onDownloadPdf} className="w-full sm:w-auto">
-                    <Download className="mr-2 h-4 w-4" />
-                    Download
-                </Button>
             </CardHeader>
             {analysis && (analysis.missingKeywords.length > 0 || analysis.matchingKeywords.length > 0) && (
                 <CardContent className="p-4 pt-0">
