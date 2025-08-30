@@ -2,7 +2,7 @@
 "use client";
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   AlertDialog,
@@ -38,7 +38,7 @@ type ResumeListProps = {
 export default function ResumeList({ projects, deleteProject, hasReachedLimit, onNewResumeClick }: ResumeListProps) {
     return (
         <ShineBorder
-            className="bg-card/30 border-border/20 shadow-sm"
+            className="bg-card border-border/20 shadow-sm light-theme-glow"
             color={["#408080", "#00FFFF", "#408080"]}
         >
         <Card className="bg-transparent border-0">
@@ -61,7 +61,7 @@ export default function ResumeList({ projects, deleteProject, hasReachedLimit, o
                     </TabsList>
                 </CardHeader>
                 <TabsContent value="workspaces" className="m-0 min-h-[250px]">
-                    <div className="p-4 pt-2">
+                    <CardContent className="p-4 pt-2">
                     {projects.length > 0 ? (
                         <div className="space-y-2">
                             {projects.map((project) => (
@@ -130,7 +130,7 @@ export default function ResumeList({ projects, deleteProject, hasReachedLimit, o
                             </Button>
                         </div>
                     )}
-                    </div>
+                    </CardContent>
                 </TabsContent>
                 <TabsContent value="shared" className="mt-0 min-h-[250px]">
                     <div className="p-4 pt-2">

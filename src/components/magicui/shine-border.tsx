@@ -60,9 +60,9 @@ export const ShineBorder = ({
             }`,
             "--duration": `${duration}s`,
             border: "var(--border-width) solid transparent",
-            background: `linear-gradient(110deg, transparent, ${
+            background: `linear-gradient(110deg, transparent, var(--border-color, ${
               Array.isArray(color) ? color.join(",") : color
-            }, transparent) border-box`,
+            }), transparent) border-box`,
             WebkitMask:
               "linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)",
             WebkitMaskComposite: "xor",

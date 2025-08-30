@@ -40,6 +40,7 @@ export default {
         },
         accent: {
           DEFAULT: 'hsl(var(--accent))',
+          '2': 'hsl(var(--accent-2))',
           foreground: 'hsl(var(--accent-foreground))',
         },
         destructive: {
@@ -109,13 +110,10 @@ export default {
           }
         },
         "shine-border": {
-          "0%": {
+          "from": {
             "background-position": "0 0",
           },
-          "50%": {
-            "background-position": "100% 0",
-          },
-          "100%": {
+          "to": {
             "background-position": "200% 0",
           }
         }

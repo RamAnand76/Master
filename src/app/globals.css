@@ -30,25 +30,26 @@ body {
 
 @layer base {
   :root {
-    --background: 210 20% 98%; /* #f8f9fb */
+    --background: 240 5.9% 95%; /* #f1f2f4 */
     --foreground: 224 71.4% 4.1%; /* #0c0d14 */
-    --card: 0 0% 100%;
+    --card: 240 0% 100%;
     --card-foreground: 224 71.4% 4.1%;
-    --popover: 0 0% 100%;
+    --popover: 240 0% 100%;
     --popover-foreground: 224 71.4% 4.1%;
-    --primary: 180 33% 37%; /* #408080 */
+    --primary: 194 71% 40%; /* #22a2b3 */
     --primary-foreground: 0 0% 98%;
     --secondary: 216 34% 91%;
     --secondary-foreground: 224 71.4% 4.1%;
     --muted: 216 34% 91%;
     --muted-foreground: 215 20.2% 65.1%;
-    --accent: 180 100% 50%; /* #00FFFF */
-    --accent-foreground: 224 71.4% 4.1%;
+    --accent: 194 71% 40%; /* #22a2b3 */
+    --accent-2: 188 83% 53%; /* #22d3ee */
+    --accent-foreground: 0 0% 98%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 180 100% 50%;
+    --ring: 194 71% 40%;
     --chart-1: 12 76% 61%;
     --chart-2: 173 58% 39%;
     --chart-3: 197 37% 24%;
@@ -59,9 +60,9 @@ body {
   .dark {
     --background: 0 0% 0%; /* #000000 */
     --foreground: 210 40% 98%; /* #f8fafc */
-    --card: 222 84% 4.9%; /* #020817 */
+    --card: 222.2 84% 4.9%;
     --card-foreground: 210 40% 98%;
-    --popover: 222 84% 4.9%;
+    --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
     --primary: 180 33% 37%; /* #408080 - Muted Teal */
     --primary-foreground: 0 0% 98%;
@@ -70,6 +71,7 @@ body {
     --muted: 217.2 32.6% 17.5%;
     --muted-foreground: 215 20.2% 65.1%;
     --accent: 180 100% 50%; /* #00FFFF - Vibrant Teal */
+    --accent-2: 188 83% 53%; /* #22d3ee */
     --accent-foreground: 210 40% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
@@ -114,4 +116,10 @@ body {
   ::-webkit-scrollbar-corner {
     background: transparent;
   }
+}
+
+@layer utilities {
+    .light-theme-glow {
+        --border-color: hsl(var(--primary)), hsl(var(--accent-2)), hsl(var(--primary));
+    }
 }
