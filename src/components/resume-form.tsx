@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { Fieldset, Legend, Label, Input, Textarea } from '@headlessui/react';
 import { CharacterCount } from './resume-form/character-count';
 import { cn } from '@/lib/utils';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 const inputClasses = (className?: string) => cn(
     'block w-full rounded-lg border-none bg-background/5 px-3 py-1.5 text-sm/6 text-foreground',
@@ -62,7 +63,19 @@ export default function ResumeForm() {
             <Fieldset className="space-y-6 rounded-xl bg-card/80 p-6 sm:p-8 border border-border/20 shadow-lg">
                 <Legend className="text-base/7 font-semibold text-accent">Personal Details</Legend>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <Controller control={control} name="personalDetails.name" render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">Full Name</Label> <Input {...field} readOnly className={inputClasses("mt-1 bg-input cursor-not-allowed opacity-70")} /> </div> )}/>
+                    <Controller control={control} name="personalDetails.name" render={({ field }) => ( 
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <div> 
+                                    <Label className="text-sm/6 font-medium text-foreground">Full Name</Label>
+                                    <Input {...field} readOnly className={inputClasses("mt-1 bg-input cursor-not-allowed opacity-70")} /> 
+                                </div>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <p>Your name is managed in your profile settings.</p>
+                            </TooltipContent>
+                        </Tooltip>
+                    )}/>
                     <Controller control={control} name="personalDetails.email" render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">Email</Label> <Input {...field} className={inputClasses("mt-1 bg-input")} /> </div> )}/>
                     <Controller control={control} name="personalDetails.phone" render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">Phone</Label> <Input {...field} className={inputClasses("mt-1 bg-input")} /> </div> )}/>
                     <Controller control={control} name="personalDetails.location" render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">Location</Label> <Input {...field} className={inputClasses("mt-1 bg-input")} /> </div> )}/>
