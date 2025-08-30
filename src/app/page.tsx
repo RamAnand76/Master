@@ -10,6 +10,7 @@ import HomeHero from '@/components/home/home-hero';
 import ResumeList from '@/components/home/resume-list';
 import { useUser } from '@/hooks/use-user';
 import { Skeleton } from '@/components/ui/skeleton';
+import { motion } from 'framer-motion';
 
 export default function Home() {
   const [projects, setProjects] = useState<ResumeData[]>([]);
@@ -95,7 +96,12 @@ export default function Home() {
       <HomeHeader />
 
       <main className="flex-1 overflow-y-auto pt-4">
-        <div className="flex items-center justify-center py-12">
+        <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="flex items-center justify-center py-12"
+        >
             <div className="max-w-screen-xl w-full mx-auto grid lg:grid-cols-2 gap-12 p-8">
                 <div className="lg:col-span-1">
                   <HomeHero 
@@ -112,7 +118,7 @@ export default function Home() {
                   />
                 </div>
             </div>
-        </div>
+        </motion.div>
       </main>
     </div>
   );

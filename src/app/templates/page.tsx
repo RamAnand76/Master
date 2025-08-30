@@ -14,9 +14,28 @@ import type { ResumeData, Template as TemplateType } from '@/lib/types';
 import { templates } from '@/lib/templates';
 import TemplatePreviewModal from '@/components/templates/template-preview-modal';
 import NewProjectModal from '@/components/new-project-modal';
+import { motion } from 'framer-motion';
 
 const categories = ['All', 'Creative', 'Professional', 'Modern'];
 const tiers = ['All', 'Free', 'Pro', 'Premium'];
+
+const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.1
+        }
+    }
+};
+
+const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+        y: 0,
+        opacity: 1
+    }
+};
 
 export default function TemplatesPage() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -105,15 +124,21 @@ export default function TemplatesPage() {
         </div>
 
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
+        <motion.div 
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12"
+        >
           {filteredTemplates.length > 0 ? (
             filteredTemplates.map((template) => (
-              <TemplateCard 
-                key={template.id} 
-                template={template} 
-                onUseTemplate={() => handleUseTemplate(template.id)}
-                onPreview={() => handlePreview(template)}
-              />
+                <motion.div key={template.id} variants={itemVariants}>
+                    <TemplateCard 
+                        template={template} 
+                        onUseTemplate={() => handleUseTemplate(template.id)}
+                        onPreview={() => handlePreview(template)}
+                    />
+                </motion.div>
             ))
           ) : (
             <div className="col-span-full text-center py-12">
@@ -121,7 +146,7 @@ export default function TemplatesPage() {
                 <p className="text-sm text-muted-foreground">Try selecting a different filter or adjusting your search.</p>
             </div>
           )}
-        </div>
+        </motion.div>
       </main>
     </div>
     <TemplatePreviewModal

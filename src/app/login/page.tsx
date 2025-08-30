@@ -15,6 +15,7 @@ import Link from 'next/link';
 import { LoaderCircle, Eye, EyeOff, Github, Chrome } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Separator } from '@/components/ui/separator';
+import { motion } from 'framer-motion';
 
 const loginSchema = z.object({
   email: z.string().min(1, 'Email is required').email('Invalid email address'),
@@ -71,7 +72,12 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
-        <div className="w-full max-w-sm space-y-6">
+        <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="w-full max-w-sm space-y-6"
+        >
             <div className="text-center space-y-2">
                 <svg
                     width="40"
@@ -183,7 +189,7 @@ export default function LoginPage() {
               Sign Up
             </Link>
           </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

@@ -13,6 +13,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useUser } from '@/hooks/use-user';
 import Link from 'next/link';
 import { LoaderCircle, Eye, EyeOff } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const signupSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -60,7 +61,12 @@ export default function SignupPage() {
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <div className="w-full max-w-sm space-y-6">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="w-full max-w-sm space-y-6"
+      >
         <div className="text-center space-y-2">
             <svg
                 width="40"
@@ -151,7 +157,7 @@ export default function SignupPage() {
             Sign In
           </Link>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
