@@ -14,6 +14,7 @@ import { useUser } from '@/hooks/use-user';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { useTheme } from 'next-themes';
 
 const cardVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -23,7 +24,10 @@ const cardVariants = {
 export default function SettingsPage() {
   const [isProfileDialogOpen, setIsProfileDialogOpen] = useState(false);
   const { user, updateUser } = useUser();
-  const [isDarkMode, setIsDarkMode] = useState(true);
+  const { theme, setTheme } = useTheme();
+  
+  const isDarkMode = theme === 'dark';
+  const toggleTheme = () => setTheme(isDarkMode ? 'light' : 'dark');
 
   const settingsCards = [
     { 
@@ -73,7 +77,7 @@ export default function SettingsPage() {
             <Switch 
             id="dark-mode"
             checked={isDarkMode} 
-            onCheckedChange={setIsDarkMode} 
+            onCheckedChange={toggleTheme}
             aria-label="Toggle dark mode"
             />
         </div>
@@ -127,12 +131,17 @@ export default function SettingsPage() {
       <div className="min-h-screen bg-background text-foreground pb-24">
         <HomeHeader />
         <main className="pt-8">
-            <header className="py-12 text-center">
+            <motion.header 
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="py-12 text-center"
+            >
                 <h1 className="text-4xl font-bold tracking-tight">Settings</h1>
                 <p className="text-muted-foreground mt-2 max-w-2xl mx-auto">
                     Manage your account and application preferences.
                 </p>
-            </header>
+            </motion.header>
             <div className="max-w-3xl mx-auto space-y-8 px-4">
             
             {settingsCards.map((card, index) => (

@@ -80,12 +80,17 @@ export default function TemplatesPage() {
     <div className="min-h-screen bg-background text-foreground pb-24">
       <HomeHeader />
       <main className="max-w-7xl mx-auto p-8 pt-12">
-        <header className="text-center mb-12">
+        <motion.header 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-12"
+        >
           <h1 className="text-4xl font-bold tracking-tight">Resume Templates</h1>
           <p className="text-muted-foreground mt-2 max-w-2xl mx-auto">
             Choose a professionally designed template to kickstart your career. Each one is crafted to be ATS-friendly and fully customizable.
           </p>
-        </header>
+        </motion.header>
 
         <div className="flex flex-col md:flex-row items-center justify-center gap-4 mb-6">
           <div className="w-full md:w-auto md:min-w-64">

@@ -85,7 +85,7 @@ export default function LoginPage() {
                     viewBox="0 0 24 24"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
-                    className="text-white mx-auto"
+                    className="text-primary mx-auto"
                     >
                     <path
                         d="M12 2L2 7L12 12L22 7L12 2Z"
@@ -177,7 +177,7 @@ export default function LoginPage() {
                     <GoogleIcon /> Continue with Google
                 </Button>
                  <Button variant="outline" className="w-full h-11" type="button">
-                    <Github /> Continue with Github
+                    <Github className="mr-2 h-4 w-4" /> Continue with Github
                 </Button>
               </div>
 
