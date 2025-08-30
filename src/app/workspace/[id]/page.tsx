@@ -140,12 +140,15 @@ export default function WorkspacePage() {
   
   useEffect(() => {
     if (isUserLoaded && user.name) {
-      const currentName = methods.getValues('personalDetails.name');
-      if (!currentName || currentName === 'Your Name') {
+      const currentDetails = methods.getValues('personalDetails');
+      if (!currentDetails.name || currentDetails.name === 'Your Name') {
         methods.setValue('personalDetails.name', user.name, { shouldValidate: true, shouldDirty: true });
       }
+       if (!currentDetails.email || currentDetails.email === 'your.email@example.com') {
+        methods.setValue('personalDetails.email', user.email, { shouldValidate: true, shouldDirty: true });
+      }
     }
-  }, [isUserLoaded, user.name, methods]);
+  }, [isUserLoaded, user, methods]);
 
 
   const saveData = useCallback((data: ResumeData) => {
