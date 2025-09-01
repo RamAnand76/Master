@@ -5,16 +5,22 @@ import type { ResumeData, AtsAnalysis } from '@/lib/types';
 import { Mail, Phone, Globe, Linkedin, Github } from 'lucide-react';
 import React from 'react';
 
+const escapeRegExp = (string: string) => {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+};
+
 const HighlightedText = ({ text, keywords }: { text: string; keywords: string[] }) => {
     if (!keywords || keywords.length === 0 || !text) {
         return <>{text}</>;
     }
-    const regex = new RegExp(`(${keywords.join('|')})`, 'gi');
+    const escapedKeywords = keywords.map(kw => escapeRegExp(kw));
+    const regex = new RegExp(`(${escapedKeywords.join('|')})`, 'gi');
     const parts = text.split(regex);
+    
     return (
         <>
             {parts.map((part, i) =>
-                keywords.some(kw => new RegExp(`^${kw}$`, 'i').test(part)) ? (
+                keywords.some(kw => new RegExp(`^${escapeRegExp(kw)}$`, 'i').test(part)) ? (
                     <span key={i} className="bg-green-500/20 rounded px-1">
                         {part}
                     </span>

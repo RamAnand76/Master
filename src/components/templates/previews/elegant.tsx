@@ -4,13 +4,18 @@
 import type { ResumeData, AtsAnalysis } from '@/lib/types';
 import React from 'react';
 
+const escapeRegExp = (string: string) => {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+};
+
 const HighlightedText = ({ text, keywords }: { text: string; keywords: string[] }) => {
     if (!keywords || keywords.length === 0 || !text) return <>{text}</>;
-    const regex = new RegExp(`(${keywords.join('|')})`, 'gi');
+    const escapedKeywords = keywords.map(kw => escapeRegExp(kw));
+    const regex = new RegExp(`(${escapedKeywords.join('|')})`, 'gi');
     return (
         <>
             {text.split(regex).map((part, i) =>
-                keywords.some(kw => new RegExp(`^${kw}$`, 'i').test(part)) ? (
+                keywords.some(kw => new RegExp(`^${escapeRegExp(kw)}$`, 'i').test(part)) ? (
                     <span key={i} className="bg-yellow-200/50 rounded px-1">{part}</span>
                 ) : (
                     <React.Fragment key={i}>{part}</React.Fragment>
@@ -118,7 +123,7 @@ export default function ElegantTemplate({ resumeData, atsAnalysis }: { resumeDat
                         <p>
                             <span className="font-bold min-w-[120px] inline-block">Skills:</span>
                             <span>
-                                {skills.map(skill => skill.name).join(', ')}
+                                <HighlightedText text={skills.map(skill => skill.name).join(', ')} keywords={matchingKeywords} />
                             </span>
                         </p>
                     </div>
