@@ -43,6 +43,22 @@ const loadingStates = [
   { text: 'Almost there...' },
 ];
 
+const ShareIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+        <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+        <polyline points="16 6 12 2 8 6"></polyline>
+        <line x1="12" y1="2" x2="12" y2="15"></line>
+    </svg>
+)
+
+const DownloadIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+        <polyline points="7 10 12 15 17 10"></polyline>
+        <line x1="12" y1="15" x2="12" y2="3"></line>
+    </svg>
+)
+
 export default function WorkspacePage() {
   const params = useParams();
   const id = Array.isArray(params.id) ? params.id[0] : params.id;
@@ -142,11 +158,11 @@ export default function WorkspacePage() {
     if (isUserLoaded && user.name) {
       methods.setValue('personalDetails.name', user.name, { shouldValidate: true, shouldDirty: true });
       const currentEmail = methods.getValues('personalDetails.email');
-       if (!currentEmail || currentEmail === 'your.email@example.com') {
-        methods.setValue('personalDetails.email', user.email, { shouldValidate: true, shouldDirty: true });
+      if (user.email && (!currentEmail || currentEmail === 'your.email@example.com')) {
+          methods.setValue('personalDetails.email', user.email, { shouldValidate: true, shouldDirty: true });
       }
     }
-  }, [isUserLoaded, user.name, user.email, methods]);
+}, [isUserLoaded, user.name, user.email, methods]);
 
 
   const saveData = useCallback((data: ResumeData) => {
@@ -249,7 +265,7 @@ export default function WorkspacePage() {
     <TooltipProvider>
     <FormProvider {...methods}>
        <div className="h-screen bg-secondary flex flex-col">
-        <header className="bg-card/60 backdrop-blur-lg sticky top-0 z-20 border-b border-border/30 shadow-sm">
+        <header className="bg-background/80 backdrop-blur-sm sticky top-0 z-20">
           <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
              <div className="flex items-center gap-4">
                 <Button asChild variant="ghost" size="icon" className="h-8 w-8 rounded-full group hover:bg-primary/10 transition-colors duration-300">
@@ -268,27 +284,27 @@ export default function WorkspacePage() {
                 {saveStatus.text}
               </div>
               <TooltipProvider>
-                <div className="flex items-center gap-2 p-1 bg-background/50 border border-border/20 rounded-lg">
+                <div className="flex items-center gap-1 p-1 bg-background/50 border border-border/20 rounded-full">
                     <Tooltip>
                         <TooltipTrigger asChild>
-                           <Button variant="ghost" size="icon" className="h-7 w-7">
-                                <Sparkles />
+                           <Button variant="ghost" size="icon" className="h-7 w-7 rounded-full">
+                                <Sparkles className="h-4 w-4" />
                             </Button>
                         </TooltipTrigger>
                         <TooltipContent>AI Actions</TooltipContent>
                     </Tooltip>
                     <Tooltip>
                         <TooltipTrigger asChild>
-                            <Button variant="ghost" size="icon" className="h-7 w-7">
-                                <Share2 />
+                            <Button variant="ghost" size="icon" className="h-7 w-7 rounded-full">
+                                <ShareIcon />
                             </Button>
                         </TooltipTrigger>
                         <TooltipContent>Share</TooltipContent>
                     </Tooltip>
                      <Tooltip>
                         <TooltipTrigger asChild>
-                             <Button onClick={handleDownloadPdf} variant="ghost" size="icon" className="h-7 w-7">
-                                <Download />
+                             <Button onClick={handleDownloadPdf} variant="ghost" size="icon" className="h-7 w-7 rounded-full">
+                                <DownloadIcon />
                             </Button>
                         </TooltipTrigger>
                         <TooltipContent>Download PDF</TooltipContent>
