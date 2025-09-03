@@ -2,7 +2,7 @@
 "use client";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
-import { CheckCircle2, CircleDashed } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 
 type LoadingState = {
   text: string;
