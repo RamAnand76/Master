@@ -92,7 +92,7 @@ export default function SettingsPage() {
             <div className="flex items-center justify-between">
                 <p className="text-sm">You are currently on the <span className="font-semibold text-primary">Free</span> plan.</p>
                 <Button asChild>
-                    <Link href="/billing">Upgrade to Pro</Link>
+                    <Link href="/pricing">Upgrade to Pro</Link>
                 </Button>
             </div>
         )

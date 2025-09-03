@@ -49,7 +49,7 @@ export default function ResumeList({ projects, deleteProject, hasReachedLimit, o
                         <CardTitle className="text-base">You have reached your workspace limit.</CardTitle>
                         <CardDescription className="text-xs">Upgrade to premium to create more resumes.</CardDescription>
                     </div>
-                    <Link href="/billing">
+                    <Link href="/pricing" passHref>
                         <ShinyButton borderRadius='0.5rem'>Upgrade</ShinyButton>
                     </Link>
                 </CardHeader>

@@ -58,7 +58,7 @@ export default function WalletPage() {
                                         <p className="text-muted-foreground text-sm mt-1">Unlock unlimited resumes, advanced templates, and priority support.</p>
                                     </div>
                                     <Button asChild>
-                                        <Link href="/billing">Upgrade</Link>
+                                        <Link href="/pricing">Upgrade</Link>
                                     </Button>
                                 </div>
                             </CardContent>
