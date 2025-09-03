@@ -11,7 +11,7 @@ const escapeRegExp = (string: string) => {
 const HighlightedText = ({ text, keywords }: { text: string; keywords: string[] }) => {
     if (!keywords || keywords.length === 0 || !text) return <>{text}</>;
     const escapedKeywords = keywords.map(kw => escapeRegExp(kw));
-    const regex = new RegExp(`(${escapedKeywords.join('|')})`, 'gi');
+    const regex = new RegExp(`\\b(${escapedKeywords.join('|')})\\b`, 'gi');
     return (
         <>
             {text.split(regex).map((part, i) =>
@@ -26,6 +26,7 @@ const HighlightedText = ({ text, keywords }: { text: string; keywords: string[] 
 };
 
 const getUrlUsername = (url: string) => {
+    if (!url || !url.startsWith('http')) return '';
     try {
         const path = new URL(url).pathname;
         return path.split('/').filter(Boolean).pop() || '';

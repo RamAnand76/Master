@@ -6,7 +6,7 @@ import { Mail, Phone, Globe, Linkedin, Github } from 'lucide-react';
 import React from 'react';
 
 const escapeRegExp = (string: string) => {
-    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 };
 
 const HighlightedText = ({ text, keywords }: { text: string; keywords: string[] }) => {
@@ -14,7 +14,7 @@ const HighlightedText = ({ text, keywords }: { text: string; keywords: string[] 
         return <>{text}</>;
     }
     const escapedKeywords = keywords.map(kw => escapeRegExp(kw));
-    const regex = new RegExp(`(${escapedKeywords.join('|')})`, 'gi');
+    const regex = new RegExp(`\\b(${escapedKeywords.join('|')})\\b`, 'gi');
     const parts = text.split(regex);
     
     return (
@@ -40,6 +40,7 @@ const Section = ({ title, children }: { title: string; children: React.ReactNode
 );
 
 const getUrlUsername = (url: string) => {
+    if (!url || !url.startsWith('http')) return '';
     try {
         const path = new URL(url).pathname;
         return path.split('/').filter(Boolean).pop() || '';
@@ -62,9 +63,9 @@ export default function ClassicTemplate({ resumeData, atsAnalysis }: { resumeDat
                     {personalDetails?.location && <span>{personalDetails.location}</span>}
                     {personalDetails?.email && <a href={`mailto:${personalDetails.email}`} className="flex items-center gap-1 hover:text-[#408080] hover:underline"><Mail size={11} />{personalDetails.email}</a>}
                     {personalDetails?.phone && <a href={`tel:${personalDetails.phone}`} className="flex items-center gap-1 hover:text-[#408080] hover:underline"><Phone size={11} />{personalDetails.phone}</a>}
-                    {personalDetails?.website && personalDetails.website.startsWith('http') && <a href={personalDetails.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-[#408080] hover:underline"><Globe size={11} />Portfolio</a>}
-                    {personalDetails?.linkedin && personalDetails.linkedin.startsWith('http') && <a href={personalDetails.linkedin} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-[#408080] hover:underline"><Linkedin size={11} />{getUrlUsername(personalDetails.linkedin)}</a>}
-                    {personalDetails?.github && personalDetails.github.startsWith('http') && <a href={personalDetails.github} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-[#408080] hover:underline"><Github size={11} />{getUrlUsername(personalDetails.github)}</a>}
+                    {personalDetails?.website && <a href={personalDetails.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-[#408080] hover:underline"><Globe size={11} />Portfolio</a>}
+                    {personalDetails?.linkedin && <a href={personalDetails.linkedin} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-[#408080] hover:underline"><Linkedin size={11} />{getUrlUsername(personalDetails.linkedin)}</a>}
+                    {personalDetails?.github && <a href={personalDetails.github} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-[#408080] hover:underline"><Github size={11} />{getUrlUsername(personalDetails.github)}</a>}
                 </div>
             </header>
 
@@ -116,7 +117,7 @@ export default function ClassicTemplate({ resumeData, atsAnalysis }: { resumeDat
                         <div key={proj.id} className="mb-3 last:mb-0">
                             <div className="flex items-baseline gap-2">
                                 <h3 className="font-semibold text-sm text-gray-900">{proj.name}</h3>
-                                {proj.url && proj.url.startsWith('http') && <a href={proj.url} target="_blank" rel="noopener noreferrer" className="text-[#408080]/80 text-xs hover:underline">(Link)</a>}
+                                {proj.url && <a href={proj.url} target="_blank" rel="noopener noreferrer" className="text-[#408080]/80 text-xs hover:underline">(Link)</a>}
                             </div>
                             <div className="mt-1.5 text-gray-600 list-disc pl-4 space-y-0.5 whitespace-pre-wrap text-xs">
                                 <HighlightedText text={proj.description} keywords={matchingKeywords} />
