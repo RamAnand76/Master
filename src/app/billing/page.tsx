@@ -57,10 +57,10 @@ const AddCreditsStep = ({ onNext, onBack }: { onNext: (amount: number, price: nu
                     </div>
                 </RadioGroup>
                 <div className="flex flex-col-reverse sm:flex-row gap-2">
-                    <Button onClick={onBack} variant="outline" className="w-full">
+                    <Button onClick={onBack} variant="outline" className="w-full sm:w-auto">
                         <ChevronLeft className="mr-2 h-4 w-4" /> Go Back
                     </Button>
-                    <Button onClick={() => onNext(selectedOption!.amount, selectedOption!.price)} className="w-full">
+                    <Button onClick={() => onNext(selectedOption!.amount, selectedOption!.price)} className="w-full sm:w-auto sm:ml-auto">
                         Next Step <ChevronRight className="ml-2 h-4 w-4" />
                     </Button>
                 </div>
@@ -95,10 +95,10 @@ const PaymentStep = ({ onNext, onBack }: { onNext: () => void; onBack: () => voi
                     </div>
                 </div>
                 <div className="flex flex-col-reverse sm:flex-row gap-2 pt-4">
-                    <Button onClick={onBack} variant="outline" className="w-full">
+                    <Button onClick={onBack} variant="outline" className="w-full sm:w-auto">
                          <ChevronLeft className="mr-2 h-4 w-4" /> Go Back
                     </Button>
-                    <Button onClick={onNext} className="w-full">
+                    <Button onClick={onNext} className="w-full sm:w-auto sm:ml-auto">
                         Next Step <ChevronRight className="ml-2 h-4 w-4" />
                     </Button>
                 </div>
@@ -145,11 +145,11 @@ const ReviewStep = ({ onConfirm, onBack, isProcessing, amount, price }: { onConf
                         </div>
                     </div>
                 </div>
-                 <div className="flex flex-col-reverse gap-4 sm:flex-row">
-                    <Button onClick={onBack} variant="outline" className="w-full" disabled={isProcessing}>
+                 <div className="flex flex-col-reverse sm:flex-row gap-4">
+                    <Button onClick={onBack} variant="outline" className="w-full sm:w-auto" disabled={isProcessing}>
                         <ChevronLeft className="mr-2 h-4 w-4" /> Go Back
                     </Button>
-                    <Button onClick={onConfirm} className="w-full" disabled={isProcessing}>
+                    <Button onClick={onConfirm} className="w-full sm:w-auto sm:ml-auto" disabled={isProcessing}>
                         {isProcessing && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
                         {isProcessing ? 'Processing...' : 'Confirm Purchase'}
                     </Button>
@@ -276,5 +276,7 @@ export default function BillingPage() {
         </div>
     )
 }
+
+    
 
     
