@@ -2,7 +2,7 @@
 "use client";
 
 import type { ResumeData, AtsAnalysis } from '@/lib/types';
-import { Mail, Phone, Globe, Linkedin, Github, MapPin } from 'lucide-react';
+import { Mail, Phone, Globe, Linkedin, Github, MapPin, Briefcase, GraduationCap, Wrench } from 'lucide-react';
 import React from 'react';
 
 const escapeRegExp = (string: string) => {
@@ -25,6 +25,15 @@ const HighlightedText = ({ text, keywords }: { text: string; keywords: string[] 
         </>
     );
 };
+
+const getUrlUsername = (url: string) => {
+    try {
+        const path = new URL(url).pathname;
+        return path.split('/').filter(Boolean).pop() || '';
+    } catch {
+        return '';
+    }
+}
 
 const Section = ({ title, children, icon: Icon }: { title: string; children: React.ReactNode; icon: React.ElementType }) => (
     <div className="mb-4">
@@ -52,8 +61,8 @@ export default function CreativeTemplate({ resumeData, atsAnalysis }: { resumeDa
                         {personalDetails?.email && <a href={`mailto:${personalDetails.email}`} className="flex items-center gap-1.5 hover:text-[#408080]"><Mail size={12} />{personalDetails.email}</a>}
                         {personalDetails?.phone && <a href={`tel:${personalDetails.phone}`} className="flex items-center gap-1.5 hover:text-[#408080]"><Phone size={12} />{personalDetails.phone}</a>}
                         {personalDetails?.website && <a href={personalDetails.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-[#408080]"><Globe size={12} />Portfolio</a>}
-                        {personalDetails?.linkedin && <a href={personalDetails.linkedin} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-[#408080]"><Linkedin size={12} />LinkedIn</a>}
-                        {personalDetails?.github && <a href={personalDetails.github} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-[#408080]"><Github size={12} />GitHub</a>}
+                        {personalDetails?.linkedin && <a href={personalDetails.linkedin} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-[#408080]"><Linkedin size={12} />{getUrlUsername(personalDetails.linkedin)}</a>}
+                        {personalDetails?.github && <a href={personalDetails.github} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-[#408080]"><Github size={12} />{getUrlUsername(personalDetails.github)}</a>}
                     </div>
                 </div>
             </header>
@@ -67,7 +76,7 @@ export default function CreativeTemplate({ resumeData, atsAnalysis }: { resumeDa
             )}
 
             {experience && experience.length > 0 && (
-                <Section title="Experience" icon={BriefcaseIcon}>
+                <Section title="Experience" icon={Briefcase}>
                     {experience.map(exp => (
                         <div key={exp.id} className="mb-3 last:mb-0">
                             <h3 className="font-semibold text-sm text-gray-900">{exp.role} at {exp.company}</h3>
@@ -81,7 +90,7 @@ export default function CreativeTemplate({ resumeData, atsAnalysis }: { resumeDa
             )}
 
             {education && education.length > 0 && (
-                <Section title="Education" icon={GraduationCapIcon}>
+                <Section title="Education" icon={GraduationCap}>
                     {education.map(edu => (
                         <div key={edu.id} className="mb-3 last:mb-0">
                             <h3 className="font-semibold text-sm text-gray-900">{edu.degree}</h3>
@@ -93,7 +102,7 @@ export default function CreativeTemplate({ resumeData, atsAnalysis }: { resumeDa
             )}
 
             {skills && skills.length > 0 && (
-                <Section title="Skills" icon={WrenchIcon}>
+                <Section title="Skills" icon={Wrench}>
                     <div className="flex flex-wrap gap-2">
                         {skills.filter(s => s.name).map(skill => (
                             <span key={skill.id} className="bg-[#408080]/10 text-[#408080] border border-[#408080]/30 rounded px-2 py-0.5 text-xs font-medium">
@@ -105,64 +114,4 @@ export default function CreativeTemplate({ resumeData, atsAnalysis }: { resumeDa
             )}
         </div>
     );
-}
-
-function BriefcaseIcon(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
-      <rect width="20" height="14" x="2" y="6" rx="2" />
-    </svg>
-  )
-}
-
-function GraduationCapIcon(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.084a1 1 0 0 0 0 1.838l8.57 3.908a2 2 0 0 0 1.66 0z" />
-      <path d="M22 10v6" />
-      <path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5" />
-    </svg>
-  )
-}
-
-function WrenchIcon(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
-    </svg>
-  )
 }

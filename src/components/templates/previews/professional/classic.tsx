@@ -39,6 +39,15 @@ const Section = ({ title, children }: { title: string; children: React.ReactNode
     </div>
 );
 
+const getUrlUsername = (url: string) => {
+    try {
+        const path = new URL(url).pathname;
+        return path.split('/').filter(Boolean).pop() || '';
+    } catch {
+        return '';
+    }
+}
+
 
 export default function ClassicTemplate({ resumeData, atsAnalysis }: { resumeData: ResumeData, atsAnalysis: AtsAnalysis | null }) {
     if (!resumeData) return null;
@@ -54,8 +63,8 @@ export default function ClassicTemplate({ resumeData, atsAnalysis }: { resumeDat
                     {personalDetails?.email && <a href={`mailto:${personalDetails.email}`} className="flex items-center gap-1 hover:text-[#408080] hover:underline"><Mail size={11} />{personalDetails.email}</a>}
                     {personalDetails?.phone && <a href={`tel:${personalDetails.phone}`} className="flex items-center gap-1 hover:text-[#408080] hover:underline"><Phone size={11} />{personalDetails.phone}</a>}
                     {personalDetails?.website && personalDetails.website.startsWith('http') && <a href={personalDetails.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-[#408080] hover:underline"><Globe size={11} />Portfolio</a>}
-                    {personalDetails?.linkedin && personalDetails.linkedin.startsWith('http') && <a href={personalDetails.linkedin} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-[#408080] hover:underline"><Linkedin size={11} />LinkedIn</a>}
-                    {personalDetails?.github && personalDetails.github.startsWith('http') && <a href={personalDetails.github} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-[#408080] hover:underline"><Github size={11} />GitHub</a>}
+                    {personalDetails?.linkedin && personalDetails.linkedin.startsWith('http') && <a href={personalDetails.linkedin} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-[#408080] hover:underline"><Linkedin size={11} />{getUrlUsername(personalDetails.linkedin)}</a>}
+                    {personalDetails?.github && personalDetails.github.startsWith('http') && <a href={personalDetails.github} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-[#408080] hover:underline"><Github size={11} />{getUrlUsername(personalDetails.github)}</a>}
                 </div>
             </header>
 

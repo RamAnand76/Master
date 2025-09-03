@@ -26,6 +26,15 @@ const HighlightedText = ({ text, keywords }: { text: string; keywords: string[] 
     );
 };
 
+const getUrlUsername = (url: string) => {
+    try {
+        const path = new URL(url).pathname;
+        return path.split('/').filter(Boolean).pop() || '';
+    } catch {
+        return '';
+    }
+}
+
 export default function ModernTemplate({ resumeData, atsAnalysis }: { resumeData: ResumeData, atsAnalysis: AtsAnalysis | null }) {
     if (!resumeData) return null;
     const { personalDetails, summary, experience, education, projects, skills } = resumeData;
@@ -41,8 +50,8 @@ export default function ModernTemplate({ resumeData, atsAnalysis }: { resumeData
                     {personalDetails?.phone && <a href={`tel:${personalDetails.phone}`} className="flex items-center gap-2 hover:text-[#408080]"><Phone size={12} className="flex-shrink-0" /><span>{personalDetails.phone}</span></a>}
                     {personalDetails?.location && <p className="flex items-center gap-2"><MapPin size={12} className="flex-shrink-0" /><span>{personalDetails.location}</span></p>}
                     {personalDetails?.website && <a href={personalDetails.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-[#408080]"><Globe size={12} className="flex-shrink-0" /><span>Portfolio</span></a>}
-                    {personalDetails?.linkedin && <a href={personalDetails.linkedin} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-[#408080]"><Linkedin size={12} className="flex-shrink-0" /><span>LinkedIn</span></a>}
-                    {personalDetails?.github && <a href={personalDetails.github} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-[#408080]"><Github size={12} className="flex-shrink-0" /><span>GitHub</span></a>}
+                    {personalDetails?.linkedin && <a href={personalDetails.linkedin} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-[#408080]"><Linkedin size={12} className="flex-shrink-0" /><span>{getUrlUsername(personalDetails.linkedin)}</span></a>}
+                    {personalDetails?.github && <a href={personalDetails.github} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-[#408080]"><Github size={12} className="flex-shrink-0" /><span>{getUrlUsername(personalDetails.github)}</span></a>}
                 </div>
                 <hr className="my-4 border-gray-300" />
                 {skills && skills.length > 0 && (

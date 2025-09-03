@@ -25,6 +25,15 @@ const HighlightedText = ({ text, keywords }: { text: string; keywords: string[] 
     );
 };
 
+const getUrlUsername = (url: string) => {
+    try {
+        const path = new URL(url).pathname;
+        return path.split('/').filter(Boolean).pop() || '';
+    } catch {
+        return '';
+    }
+}
+
 
 export default function ElegantTemplate({ resumeData, atsAnalysis }: { resumeData: ResumeData, atsAnalysis: AtsAnalysis | null }) {
     if (!resumeData) return null;
@@ -34,16 +43,31 @@ export default function ElegantTemplate({ resumeData, atsAnalysis }: { resumeDat
     const contactInfo = [
         personalDetails.phone,
         personalDetails.email,
-        personalDetails.linkedin?.replace(/https?:\/\/(www\.)?/, ''),
-        personalDetails.github?.replace(/https?:\/\/(www\.)?/, '')
-    ].filter(Boolean).join(' | ');
+        personalDetails.website ? `Portfolio (${personalDetails.website})` : null,
+        personalDetails.linkedin ? `LinkedIn (${getUrlUsername(personalDetails.linkedin)})` : null,
+        personalDetails.github ? `GitHub (${getUrlUsername(personalDetails.github)})` : null
+    ].filter(Boolean);
 
     return (
         <div className="bg-white text-black text-[10pt] leading-normal font-serif p-[0.35in]" style={{ fontFamily: '"Times New Roman", serif' }}>
             {/* Header Section */}
             <header className="text-center mb-4">
                 <h1 className="text-[16pt] font-bold mb-1">{personalDetails.name}</h1>
-                <p className="text-[10pt] mb-3">{contactInfo}</p>
+                <p className="text-[10pt] mb-3">
+                    {contactInfo.map((info, index) => {
+                        if (!info) return null;
+                        const urlMatch = info.match(/\((https?:\/\/[^)]+)\)/);
+                        if (urlMatch) {
+                            const text = info.replace(urlMatch[0], '').trim();
+                            return <React.Fragment key={index}>{index > 0 && ' | '}<a href={urlMatch[1]} className="text-blue-600 hover:underline">{text}</a></React.Fragment>;
+                        }
+                        const emailMatch = info.match(/[\w.-]+@[\w.-]+/);
+                        if (emailMatch) {
+                            return <React.Fragment key={index}>{index > 0 && ' | '}<a href={`mailto:${info}`} className="text-blue-600 hover:underline">{info}</a></React.Fragment>;
+                        }
+                        return <React.Fragment key={index}>{index > 0 && ' | '}{info}</React.Fragment>;
+                    })}
+                </p>
             </header>
 
             {/* Summary Section */}
