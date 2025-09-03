@@ -31,8 +31,9 @@ export default function AiSuggestionDialog({ open, onOpenChange, fieldName, curr
   const { toast } = useToast();
   const { jobDescription, jobPosition, company } = getValues();
 
-  const isTailoredMode = !!(jobDescription && jobPosition && company && (fieldName === 'summary' || (fieldName?.startsWith('experience.') && fieldName.endsWith('.description'))));
+  const isTailoredMode = !!(jobDescription && jobPosition && company && fieldName && (fieldName === 'summary' || fieldName.startsWith('experience.')));
   const isTailoredExperience = isTailoredMode && fieldName?.startsWith('experience.');
+  const isTailoredSummary = isTailoredMode && fieldName === 'summary';
 
   useEffect(() => {
     if (open && fieldName) {
@@ -68,7 +69,7 @@ export default function AiSuggestionDialog({ open, onOpenChange, fieldName, curr
 
   const handleUseSuggestion = () => {
     if (isTailoredMode && tailoredContent && fieldName) {
-        if (fieldName === 'summary') {
+        if (isTailoredSummary) {
             setValue(fieldName, tailoredContent.summary, { shouldDirty: true, shouldValidate: true });
         } else if (isTailoredExperience) {
              setValue(fieldName, tailoredContent.experienceDescription, { shouldDirty: true, shouldValidate: true });
@@ -89,7 +90,7 @@ export default function AiSuggestionDialog({ open, onOpenChange, fieldName, curr
   }
   
   const displayContent = isTailoredMode 
-    ? (fieldName === 'summary' ? tailoredContent?.summary : tailoredContent?.experienceDescription)
+    ? (isTailoredSummary ? tailoredContent?.summary : tailoredContent?.experienceDescription)
     : suggestion?.improvedContent;
     
   const displayExplanation = isTailoredMode
