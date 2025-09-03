@@ -9,7 +9,7 @@ import ResumeForm from '@/components/resume-form';
 import ResumePreview from '@/components/resume-preview';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { ArrowLeft, Download, Save, Share2, Sparkles } from 'lucide-react';
+import { ArrowLeft, Download, Save, Share2, Sparkles, FileText, LayoutGrid, BotMessageSquare } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useParams } from 'next/navigation';
 import { MultiStepLoader } from '@/components/ui/multi-step-loader';
@@ -36,11 +36,9 @@ function debounce<F extends (...args: any[]) => any>(func: F, waitFor: number) {
 }
 
 const loadingStates = [
-  { text: 'Loading your resume...' },
-  { text: 'Preparing your workspace...' },
-  { text: 'Assembling the editor...' },
-  { text: 'Finalizing the preview...' },
-  { text: 'Almost there...' },
+  { text: 'Loading your resume data', icon: <FileText /> },
+  { text: 'Preparing your workspace', icon: <LayoutGrid /> },
+  { text: 'Running initial analysis', icon: <BotMessageSquare /> },
 ];
 
 const ShareIcon = () => (
@@ -62,7 +60,7 @@ const DownloadIcon = () => (
 export default function WorkspacePage() {
   const params = useParams();
   const id = Array.isArray(params.id) ? params.id[0] : params.id;
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [loadingStep, setLoadingStep] = useState(0);
   const [isSaving, setIsSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const { toast } = useToast();
@@ -128,41 +126,47 @@ export default function WorkspacePage() {
 
 
   useEffect(() => {
-    const savedProjects = localStorage.getItem('resuMasterProjects');
-    if (savedProjects) {
-       try {
-        const projects: ResumeData[] = JSON.parse(savedProjects);
-        const currentProject = projects.find(p => p.id === id);
-        if (currentProject) {
-          methods.reset(currentProject);
-          setLastSaved(new Date()); // Assume it was just saved when loaded
-          if (currentProject.jobDescription) {
-            performAtsAnalysis(currentProject);
-          } else {
-            setAtsAnalysis({ score: 0, feedback: "Add a job description for an ATS analysis.", missingKeywords: [], matchingKeywords: [] });
-          }
+    const loadData = async () => {
+        setLoadingStep(0); // Start loading
+        await new Promise(resolve => setTimeout(resolve, 500)); // Simulate initial delay
+        
+        const savedProjects = localStorage.getItem('resuMasterProjects');
+        let currentProject: ResumeData | undefined;
+        if (savedProjects) {
+            try {
+                const projects: ResumeData[] = JSON.parse(savedProjects);
+                currentProject = projects.find(p => p.id === id);
+                if (currentProject) {
+                    methods.reset(currentProject);
+                    setLastSaved(new Date());
+                }
+            } catch (e) {
+                console.error("Failed to parse projects from localStorage", e);
+            }
         }
-      } catch (e) {
-        console.error("Failed to parse projects from localStorage", e);
-      }
-    }
-    // Simulate a longer loading time to see the loader
-    const timer = setTimeout(() => {
-        setIsLoaded(true);
-    }, 1500); 
-    
-    return () => clearTimeout(timer);
+        
+        setLoadingStep(1); // Data loaded
+        await new Promise(resolve => setTimeout(resolve, 500)); // Simulate prep
+        setLoadingStep(2); // Workspace prepared
+        
+        if (currentProject?.jobDescription) {
+            await performAtsAnalysis(currentProject);
+        } else {
+            setAtsAnalysis({ score: 0, feedback: "Add a job description for an ATS analysis.", missingKeywords: [], matchingKeywords: [] });
+        }
+
+        await new Promise(resolve => setTimeout(resolve, 500)); // Simulate analysis
+        setLoadingStep(3); // Loading complete
+    };
+
+    loadData();
   }, [id, methods, performAtsAnalysis]);
   
   useEffect(() => {
     if (isUserLoaded && user.name) {
-      methods.setValue('personalDetails.name', user.name, { shouldValidate: true, shouldDirty: true });
-      const currentEmail = methods.getValues('personalDetails.email');
-      if (user.email && (!currentEmail || currentEmail === 'your.email@example.com')) {
-          methods.setValue('personalDetails.email', user.email, { shouldValidate: true, shouldDirty: true });
-      }
+        methods.setValue('personalDetails.name', user.name, { shouldValidate: true, shouldDirty: true });
     }
-}, [isUserLoaded, user.name, user.email, methods]);
+  }, [isUserLoaded, user.name, methods]);
 
 
   const saveData = useCallback((data: ResumeData) => {
@@ -225,10 +229,11 @@ export default function WorkspacePage() {
   }
 
   const saveStatus = getSaveStatus();
+  const isLoading = loadingStep < loadingStates.length;
 
-  if (!isLoaded) {
+  if (isLoading) {
     return (
-        <MultiStepLoader loadingStates={loadingStates} loading={!isLoaded} duration={300} loop={false} />
+        <MultiStepLoader loadingStates={loadingStates} currentState={loadingStep} loading={isLoading} />
     );
   }
 
