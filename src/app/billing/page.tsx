@@ -79,7 +79,10 @@ const PaymentStep = ({ onNext, onBack }: { onNext: () => void; onBack: () => voi
             <CardContent className="space-y-4">
                  <div className="space-y-2">
                     <Label htmlFor="card-number">Card Number</Label>
-                    <Input id="card-number" placeholder="0000 0000 0000 0000" />
+                    <div className="relative">
+                        <CreditCard className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Input id="card-number" placeholder="0000 0000 0000 0000" className="pl-9" />
+                    </div>
                 </div>
                 <div className="grid grid-cols-3 gap-4">
                     <div className="space-y-2 col-span-2">
