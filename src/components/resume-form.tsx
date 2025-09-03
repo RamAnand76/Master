@@ -8,16 +8,13 @@ import { ResumeData, educationSchema, experienceSchema, projectSchema, skillSche
 import AiSuggestionDialog from './ai-suggestion-dialog';
 import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
-import { Fieldset, Legend, Label, Input, Textarea } from '@headlessui/react';
 import { CharacterCount } from './resume-form/character-count';
 import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-
-const inputClasses = (className?: string) => cn(
-    'block w-full rounded-lg border-none bg-background/5 px-3 py-1.5 text-sm/6 text-foreground',
-    'focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25 transition-all duration-200 ease-in-out',
-    className
-);
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { Form, FormField, FormItem, FormMessage, FormControl } from '@/components/ui/form';
 
 const EmptyState = ({ icon, title, description, buttonText, onAdd }: { icon: React.ReactNode, title: string, description: string, buttonText: string, onAdd: () => void }) => (
     <div className="text-center py-12 border-2 border-dashed border-border/30 rounded-lg flex flex-col items-center justify-center">
@@ -60,55 +57,65 @@ export default function ResumeForm() {
     
     return (
         <>
-            <Fieldset className="space-y-6 rounded-xl bg-card/80 p-6 sm:p-8 border border-border/20 shadow-lg">
-                <Legend className="text-base/7 font-semibold text-accent">Personal Details</Legend>
+            <div className="space-y-6 rounded-xl bg-card/80 p-6 sm:p-8 border border-border/20 shadow-lg">
+                <h2 className="text-base/7 font-semibold text-accent">Personal Details</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <Controller control={control} name="personalDetails.name" render={({ field }) => ( 
-                        <Tooltip>
-                            <TooltipTrigger asChild>
-                                <div> 
-                                    <Label className="text-sm/6 font-medium text-foreground">Full Name</Label>
-                                    <Input {...field} readOnly className={inputClasses("mt-1 bg-input cursor-not-allowed opacity-70")} /> 
-                                </div>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                                <p>Your name is managed in your profile settings.</p>
-                            </TooltipContent>
-                        </Tooltip>
+                    <FormField control={control} name="personalDetails.name" render={({ field }) => ( 
+                        <FormItem>
+                             <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <div> 
+                                        <Label>Full Name</Label>
+                                        <FormControl>
+                                            <Input {...field} readOnly className="mt-1 bg-input cursor-not-allowed opacity-70" /> 
+                                        </FormControl>
+                                    </div>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>Your name is managed in your profile settings.</p>
+                                </TooltipContent>
+                            </Tooltip>
+                            <FormMessage />
+                        </FormItem>
                     )}/>
-                    <Controller control={control} name="personalDetails.email" render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">Email</Label> <Input {...field} className={inputClasses("mt-1 bg-input")} /> </div> )}/>
-                    <Controller control={control} name="personalDetails.phone" render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">Phone</Label> <Input {...field} className={inputClasses("mt-1 bg-input")} /> </div> )}/>
-                    <Controller control={control} name="personalDetails.location" render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">Location</Label> <Input {...field} className={inputClasses("mt-1 bg-input")} /> </div> )}/>
-                    <Controller control={control} name="personalDetails.website" render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">Portfolio/Website</Label> <Input {...field} className={inputClasses("mt-1 bg-input")} /> </div> )}/>
-                    <Controller control={control} name="personalDetails.linkedin" render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">LinkedIn</Label> <Input {...field} className={inputClasses("mt-1 bg-input")} /> </div> )}/>
-                    <Controller control={control} name="personalDetails.github" render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">GitHub</Label> <Input {...field} className={inputClasses("mt-1 bg-input")} /> </div> )}/>
+                    <FormField control={control} name="personalDetails.email" render={({ field }) => ( <FormItem> <Label>Email</Label> <FormControl><Input {...field} className="mt-1 bg-input" /></FormControl> <FormMessage /> </FormItem> )}/>
+                    <FormField control={control} name="personalDetails.phone" render={({ field }) => ( <FormItem> <Label>Phone</Label> <FormControl><Input {...field} className="mt-1 bg-input" /></FormControl> <FormMessage /> </FormItem> )}/>
+                    <FormField control={control} name="personalDetails.location" render={({ field }) => ( <FormItem> <Label>Location</Label> <FormControl><Input {...field} className="mt-1 bg-input" /></FormControl> <FormMessage /> </FormItem> )}/>
+                    <FormField control={control} name="personalDetails.website" render={({ field }) => ( <FormItem> <Label>Portfolio/Website</Label> <FormControl><Input {...field} className="mt-1 bg-input" /></FormControl> <FormMessage /> </FormItem> )}/>
+                    <FormField control={control} name="personalDetails.linkedin" render={({ field }) => ( <FormItem> <Label>LinkedIn</Label> <FormControl><Input {...field} className="mt-1 bg-input" /></FormControl> <FormMessage /> </FormItem> )}/>
+                    <FormField control={control} name="personalDetails.github" render={({ field }) => ( <FormItem> <Label>GitHub</Label> <FormControl><Input {...field} className="mt-1 bg-input" /></FormControl> <FormMessage /> </FormItem> )}/>
                 </div>
-            </Fieldset>
+            </div>
 
-            <Fieldset className="space-y-1 rounded-xl bg-card/80 p-6 sm:p-8 border border-border/20 shadow-lg">
-                <Legend className="text-base/7 font-semibold text-accent">Summary</Legend>
-                <Controller
+            <div className="space-y-1 rounded-xl bg-card/80 p-6 sm:p-8 border border-border/20 shadow-lg">
+                <h2 className="text-base/7 font-semibold text-accent">Summary</h2>
+                <FormField
                     control={control}
                     name="summary"
                     render={({ field }) => (
-                        <div className="relative">
-                           <Textarea {...field} rows={5} className={inputClasses('pr-10 pb-8 resize-none bg-input')} />
-                           <div className="absolute bottom-2 right-2 flex items-center gap-2">
-                                <Button type="button" size="icon" variant="ghost" className="h-7 w-7 text-primary hover:text-primary/90" onClick={() => handleGetSuggestion('summary')} disabled={isAiLoading}>
-                                    {isAiLoading && suggestionField === 'summary' ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
-                                </Button>
+                        <FormItem>
+                            <div className="relative">
+                               <FormControl>
+                                <Textarea {...field} rows={5} className='pr-10 pb-8 resize-none bg-input' />
+                               </FormControl>
+                               <div className="absolute bottom-2 right-2 flex items-center gap-2">
+                                    <Button type="button" size="icon" variant="ghost" className="h-7 w-7 text-primary hover:text-primary/90" onClick={() => handleGetSuggestion('summary')} disabled={isAiLoading}>
+                                        {isAiLoading && suggestionField === 'summary' ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+                                    </Button>
+                                </div>
+                                <div className="absolute bottom-2.5 left-3">
+                                    <CharacterCount name={field.name as keyof ResumeData} max={resumeDataSchema.shape.summary.maxLength!} />
+                                </div>
                             </div>
-                            <div className="absolute bottom-2.5 left-3">
-                                <CharacterCount name={field.name as keyof ResumeData} max={resumeDataSchema.shape.summary.maxLength!} />
-                            </div>
-                        </div>
+                            <FormMessage />
+                        </FormItem>
                     )}
                 />
-            </Fieldset>
+            </div>
             
-            <Fieldset className="space-y-4 rounded-xl bg-card/80 p-6 sm:p-8 border border-border/20 shadow-lg">
+            <div className="space-y-4 rounded-xl bg-card/80 p-6 sm:p-8 border border-border/20 shadow-lg">
                 <div className="flex justify-between items-center">
-                    <Legend className="text-base/7 font-semibold text-accent">Experience</Legend>
+                    <h2 className="text-base/7 font-semibold text-accent">Experience</h2>
                     <Button variant="ghost" size="sm" onClick={() => appendExperience(experienceSchema.parse({}))} type="button">
                         <PlusCircle className="mr-2 h-4 w-4" /> Add Experience
                     </Button>
@@ -117,25 +124,30 @@ export default function ResumeForm() {
                     experienceFields.map((field, index) => (
                         <div key={field.id} className="relative p-4 border border-border/50 rounded-lg">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <Controller control={control} name={`experience.${index}.role`} render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">Role</Label> <Input {...field} className={inputClasses("mt-1 bg-input")} /> </div> )}/>
-                                <Controller control={control} name={`experience.${index}.company`} render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">Company</Label> <Input {...field} className={inputClasses("mt-1 bg-input")} /> </div> )}/>
-                                <Controller control={control} name={`experience.${index}.startDate`} render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">Start Date</Label> <Input {...field} className={inputClasses("mt-1 bg-input")} /> </div> )}/>
-                                <Controller control={control} name={`experience.${index}.endDate`} render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">End Date</Label> <Input {...field} className={inputClasses("mt-1 bg-input")} /> </div> )}/>
+                                <FormField control={control} name={`experience.${index}.role`} render={({ field }) => ( <FormItem> <Label>Role</Label> <FormControl><Input {...field} className="mt-1 bg-input" /></FormControl> <FormMessage /> </FormItem> )}/>
+                                <FormField control={control} name={`experience.${index}.company`} render={({ field }) => ( <FormItem> <Label>Company</Label> <FormControl><Input {...field} className="mt-1 bg-input" /></FormControl> <FormMessage /> </FormItem> )}/>
+                                <FormField control={control} name={`experience.${index}.startDate`} render={({ field }) => ( <FormItem> <Label>Start Date</Label> <FormControl><Input {...field} className="mt-1 bg-input" /></FormControl> <FormMessage /> </FormItem> )}/>
+                                <FormField control={control} name={`experience.${index}.endDate`} render={({ field }) => ( <FormItem> <Label>End Date</Label> <FormControl><Input {...field} className="mt-1 bg-input" /></FormControl> <FormMessage /> </FormItem> )}/>
                             </div>
                             <div className="mt-4">
-                                <Controller control={control} name={`experience.${index}.description`} render={({ field }) => ( 
-                                    <div className="relative"> 
-                                        <Label className="text-sm/6 font-medium text-foreground">Description</Label> 
-                                        <Textarea {...field} rows={5} className={inputClasses('mt-1 pr-10 pb-8 resize-none bg-input')} />
-                                        <div className="absolute bottom-2 right-2 flex items-center gap-2">
-                                            <Button type="button" size="icon" variant="ghost" className="h-7 w-7 text-primary hover:text-primary/90" onClick={() => handleGetSuggestion(`experience.${index}.description`)} disabled={isAiLoading}>
-                                                {isAiLoading && suggestionField === `experience.${index}.description` ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
-                                            </Button>
-                                        </div>
-                                        <div className="absolute bottom-2.5 left-3">
-                                            <CharacterCount name={field.name as keyof ResumeData} max={experienceSchema.shape.description.maxLength!} />
-                                        </div>
-                                    </div> 
+                                <FormField control={control} name={`experience.${index}.description`} render={({ field }) => ( 
+                                    <FormItem> 
+                                        <Label>Description</Label> 
+                                        <div className="relative"> 
+                                            <FormControl>
+                                                <Textarea {...field} rows={5} className='mt-1 pr-10 pb-8 resize-none bg-input' />
+                                            </FormControl>
+                                            <div className="absolute bottom-2 right-2 flex items-center gap-2">
+                                                <Button type="button" size="icon" variant="ghost" className="h-7 w-7 text-primary hover:text-primary/90" onClick={() => handleGetSuggestion(`experience.${index}.description`)} disabled={isAiLoading}>
+                                                    {isAiLoading && suggestionField === `experience.${index}.description` ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+                                                </Button>
+                                            </div>
+                                            <div className="absolute bottom-2.5 left-3">
+                                                <CharacterCount name={field.name as keyof ResumeData} max={experienceSchema.shape.description.maxLength!} />
+                                            </div>
+                                        </div> 
+                                        <FormMessage />
+                                    </FormItem> 
                                 )}/>
                             </div>
                             <Button type="button" variant="ghost" size="icon" className="absolute top-2 right-2 text-muted-foreground hover:text-red-500" onClick={() => removeExperience(index)}>
@@ -152,11 +164,11 @@ export default function ResumeForm() {
                         onAdd={() => appendExperience(experienceSchema.parse({}))}
                     />
                 )}
-            </Fieldset>
+            </div>
 
-            <Fieldset className="space-y-4 rounded-xl bg-card/80 p-6 sm:p-8 border border-border/20 shadow-lg">
+            <div className="space-y-4 rounded-xl bg-card/80 p-6 sm:p-8 border border-border/20 shadow-lg">
                  <div className="flex justify-between items-center">
-                    <Legend className="text-base/7 font-semibold text-accent">Education</Legend>
+                    <h2 className="text-base/7 font-semibold text-accent">Education</h2>
                     <Button variant="ghost" size="sm" onClick={() => appendEducation(educationSchema.parse({}))} type="button">
                         <PlusCircle className="mr-2 h-4 w-4" /> Add Education
                     </Button>
@@ -165,25 +177,30 @@ export default function ResumeForm() {
                     educationFields.map((field, index) => (
                         <div key={field.id} className="relative p-4 border border-border/50 rounded-lg">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <Controller control={control} name={`education.${index}.degree`} render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">Degree</Label> <Input {...field} className={inputClasses("mt-1 bg-input")} /> </div> )}/>
-                                <Controller control={control} name={`education.${index}.institution`} render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">Institution</Label> <Input {...field} className={inputClasses("mt-1 bg-input")} /> </div> )}/>
-                                <Controller control={control} name={`education.${index}.startDate`} render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">Start Date</Label> <Input {...field} className={inputClasses("mt-1 bg-input")} /> </div> )}/>
-                                <Controller control={control} name={`education.${index}.endDate`} render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">End Date</Label> <Input {...field} className={inputClasses("mt-1 bg-input")} /> </div> )}/>
+                                <FormField control={control} name={`education.${index}.degree`} render={({ field }) => ( <FormItem> <Label>Degree</Label> <FormControl><Input {...field} className="mt-1 bg-input" /></FormControl> <FormMessage /> </FormItem> )}/>
+                                <FormField control={control} name={`education.${index}.institution`} render={({ field }) => ( <FormItem> <Label>Institution</Label> <FormControl><Input {...field} className="mt-1 bg-input" /></FormControl> <FormMessage /> </FormItem> )}/>
+                                <FormField control={control} name={`education.${index}.startDate`} render={({ field }) => ( <FormItem> <Label>Start Date</Label> <FormControl><Input {...field} className="mt-1 bg-input" /></FormControl> <FormMessage /> </FormItem> )}/>
+                                <FormField control={control} name={`education.${index}.endDate`} render={({ field }) => ( <FormItem> <Label>End Date</Label> <FormControl><Input {...field} className="mt-1 bg-input" /></FormControl> <FormMessage /> </FormItem> )}/>
                             </div>
                              <div className="mt-4">
-                                <Controller control={control} name={`education.${index}.description`} render={({ field }) => ( 
-                                    <div className="relative"> 
-                                        <Label className="text-sm/6 font-medium text-foreground">Description</Label>
-                                         <Textarea {...field} rows={5} className={inputClasses('mt-1 pr-10 pb-8 resize-none bg-input')} />
-                                        <div className="absolute bottom-2 right-2 flex items-center gap-2">
-                                            <Button type="button" size="icon" variant="ghost" className="h-7 w-7 text-primary hover:text-primary/90" onClick={() => handleGetSuggestion(`education.${index}.description`)} disabled={isAiLoading}>
-                                                {isAiLoading && suggestionField === `education.${index}.description` ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
-                                            </Button>
-                                        </div>
-                                         <div className="absolute bottom-2.5 left-3">
-                                            <CharacterCount name={field.name as keyof ResumeData} max={educationSchema.shape.description.maxLength!} />
-                                        </div>
-                                    </div> 
+                                <FormField control={control} name={`education.${index}.description`} render={({ field }) => ( 
+                                    <FormItem> 
+                                        <Label>Description</Label>
+                                         <div className="relative"> 
+                                            <FormControl>
+                                                <Textarea {...field} rows={5} className='mt-1 pr-10 pb-8 resize-none bg-input' />
+                                            </FormControl>
+                                            <div className="absolute bottom-2 right-2 flex items-center gap-2">
+                                                <Button type="button" size="icon" variant="ghost" className="h-7 w-7 text-primary hover:text-primary/90" onClick={() => handleGetSuggestion(`education.${index}.description`)} disabled={isAiLoading}>
+                                                    {isAiLoading && suggestionField === `education.${index}.description` ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+                                                </Button>
+                                            </div>
+                                            <div className="absolute bottom-2.5 left-3">
+                                                <CharacterCount name={field.name as keyof ResumeData} max={educationSchema.shape.description.maxLength!} />
+                                            </div>
+                                        </div> 
+                                        <FormMessage />
+                                    </FormItem> 
                                 )}/>
                             </div>
                             <Button type="button" variant="ghost" size="icon" className="absolute top-2 right-2 text-muted-foreground hover:text-red-500" onClick={() => removeEducation(index)}>
@@ -200,11 +217,11 @@ export default function ResumeForm() {
                         onAdd={() => appendEducation(educationSchema.parse({}))}
                     />
                 )}
-            </Fieldset>
+            </div>
 
-            <Fieldset className="space-y-4 rounded-xl bg-card/80 p-6 sm:p-8 border border-border/20 shadow-lg">
+            <div className="space-y-4 rounded-xl bg-card/80 p-6 sm:p-8 border border-border/20 shadow-lg">
                 <div className="flex justify-between items-center">
-                    <Legend className="text-base/7 font-semibold text-accent">Projects</Legend>
+                    <h2 className="text-base/7 font-semibold text-accent">Projects</h2>
                     <Button variant="ghost" size="sm" onClick={() => appendProject(projectSchema.parse({}))} type="button">
                         <PlusCircle className="mr-2 h-4 w-4" /> Add Project
                     </Button>
@@ -213,23 +230,28 @@ export default function ResumeForm() {
                     projectFields.map((field, index) => (
                          <div key={field.id} className="relative p-4 border border-border/50 rounded-lg">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <Controller control={control} name={`projects.${index}.name`} render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">Project Name</Label> <Input {...field} className={inputClasses("mt-1 bg-input")} /> </div> )}/>
-                                <Controller control={control} name={`projects.${index}.url`} render={({ field }) => ( <div> <Label className="text-sm/6 font-medium text-foreground">Project URL</Label> <Input {...field} className={inputClasses("mt-1 bg-input")} /> </div> )}/>
+                                <FormField control={control} name={`projects.${index}.name`} render={({ field }) => ( <FormItem> <Label>Project Name</Label> <FormControl><Input {...field} className="mt-1 bg-input" /></FormControl> <FormMessage /> </FormItem> )}/>
+                                <FormField control={control} name={`projects.${index}.url`} render={({ field }) => ( <FormItem> <Label>Project URL</Label> <FormControl><Input {...field} className="mt-1 bg-input" /></FormControl> <FormMessage /> </FormItem> )}/>
                             </div>
                             <div className="mt-4">
-                                <Controller control={control} name={`projects.${index}.description`} render={({ field }) => ( 
-                                    <div className="relative"> 
-                                        <Label className="text-sm/6 font-medium text-foreground">Description</Label>
-                                        <Textarea {...field} rows={5} className={inputClasses('mt-1 pr-10 pb-8 resize-none bg-input')} />
-                                        <div className="absolute bottom-2 right-2 flex items-center gap-2">
-                                            <Button type="button" size="icon" variant="ghost" className="h-7 w-7 text-primary hover:text-primary/90" onClick={() => handleGetSuggestion(`projects.${index}.description`)} disabled={isAiLoading}>
-                                                {isAiLoading && suggestionField === `projects.${index}.description` ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
-                                            </Button>
-                                        </div>
-                                        <div className="absolute bottom-2.5 left-3">
-                                            <CharacterCount name={field.name as keyof ResumeData} max={projectSchema.shape.description.maxLength!} />
-                                        </div>
-                                    </div> 
+                                <FormField control={control} name={`projects.${index}.description`} render={({ field }) => ( 
+                                    <FormItem> 
+                                        <Label>Description</Label>
+                                        <div className="relative"> 
+                                            <FormControl>
+                                                <Textarea {...field} rows={5} className='mt-1 pr-10 pb-8 resize-none bg-input' />
+                                            </FormControl>
+                                            <div className="absolute bottom-2 right-2 flex items-center gap-2">
+                                                <Button type="button" size="icon" variant="ghost" className="h-7 w-7 text-primary hover:text-primary/90" onClick={() => handleGetSuggestion(`projects.${index}.description`)} disabled={isAiLoading}>
+                                                    {isAiLoading && suggestionField === `projects.${index}.description` ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+                                                </Button>
+                                            </div>
+                                            <div className="absolute bottom-2.5 left-3">
+                                                <CharacterCount name={field.name as keyof ResumeData} max={projectSchema.shape.description.maxLength!} />
+                                            </div>
+                                        </div> 
+                                        <FormMessage />
+                                    </FormItem> 
                                 )}/>
                             </div>
                              <Button type="button" variant="ghost" size="icon" className="absolute top-2 right-2 text-muted-foreground hover:text-red-500" onClick={() => removeProject(index)}>
@@ -246,17 +268,17 @@ export default function ResumeForm() {
                         onAdd={() => appendProject(projectSchema.parse({}))}
                     />
                 )}
-            </Fieldset>
+            </div>
 
-            <Fieldset className="space-y-4 rounded-xl bg-card/80 p-6 sm:p-8 border border-border/20 shadow-lg">
-                <Legend className="text-base/7 font-semibold text-accent">Skills</Legend>
+            <div className="space-y-4 rounded-xl bg-card/80 p-6 sm:p-8 border border-border/20 shadow-lg">
+                <h2 className="text-base/7 font-semibold text-accent">Skills</h2>
                  <div className="space-y-4">
                     <Input
                         placeholder="Type a skill and press Enter..."
                         value={skillInputValue}
                         onChange={(e) => setSkillInputValue(e.target.value)}
                         onKeyDown={handleSkillInputKeyDown}
-                        className={inputClasses("bg-input")}
+                        className="bg-input"
                     />
                      {skillFields.length > 0 ? (
                         <div className="flex flex-wrap gap-2">
@@ -284,7 +306,7 @@ export default function ResumeForm() {
                         />
                     )}
                  </div>
-            </Fieldset>
+            </div>
 
             <AiSuggestionDialog
                 open={!!suggestionField && !isAiLoading}
@@ -300,3 +322,5 @@ export default function ResumeForm() {
         </>
     );
 }
+
+    
