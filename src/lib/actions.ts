@@ -6,7 +6,8 @@ import { generateTailoredResume } from "@/ai/flows/generate-tailored-resume";
 import { analyzeResumeForAts } from "@/ai/flows/analyze-resume-for-ats";
 import { getKeywordSuggestion } from "@/ai/flows/get-keyword-suggestion";
 import { validateJobDetails } from "@/ai/flows/validate-job-details";
-import { GenerateTailoredResumeInput, type AnalyzeResumeForAtsInput, type GetKeywordSuggestionInput, type ValidateJobDetailsInput } from "./types";
+import { enhanceDescriptionForAts } from "@/ai/flows/enhance-description-for-ats";
+import { GenerateTailoredResumeInput, type AnalyzeResumeForAtsInput, type GetKeywordSuggestionInput, type ValidateJobDetailsInput, type EnhanceDescriptionForAtsInput } from "./types";
 
 export async function getAiSuggestions(resumeContent: string) {
   if (!resumeContent.trim()) {
@@ -30,6 +31,23 @@ export async function generateTailoredResumeAction(input: GenerateTailoredResume
     console.error("AI tailoring error:", error);
     return { error: "Failed to generate tailored content. Please try again later." };
   }
+}
+
+export async function enhanceDescriptionAction(input: EnhanceDescriptionForAtsInput) {
+    if (!input.descriptionToEnhance.trim()) {
+        return { error: "Content is empty, cannot provide suggestions." };
+    }
+    if (!input.jobDescription.trim()) {
+        return { error: "Job description is empty, cannot enhance content." };
+    }
+
+    try {
+        const result = await enhanceDescriptionForAts(input);
+        return result;
+    } catch (error) {
+        console.error("AI enhancement error:", error);
+        return { error: "Failed to enhance description. Please try again." };
+    }
 }
 
 export async function analyzeResumeAction(input: AnalyzeResumeForAtsInput) {

@@ -12,7 +12,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { getAiSuggestions, generateTailoredResumeAction } from "@/lib/actions";
+import { getAiSuggestions, generateTailoredResumeAction, enhanceDescriptionAction } from "@/lib/actions";
 import { useToast } from "@/hooks/use-toast";
 import type { ResumeData } from "@/lib/types";
 
@@ -26,33 +26,32 @@ type AiSuggestionDialogProps = {
 
 export default function AiSuggestionDialog({ open, onOpenChange, fieldName, currentValue, setIsLoading }: AiSuggestionDialogProps) {
   const [suggestion, setSuggestion] = useState<{ improvedContent: string; explanation: string } | null>(null);
-  const [tailoredContent, setTailoredContent] = useState<{ summary: string; experienceDescription: string} | null>(null);
+  const [enhancedContent, setEnhancedContent] = useState<string | null>(null);
   const { setValue, getValues } = useFormContext<ResumeData>();
   const { toast } = useToast();
-  const { jobDescription, jobPosition, company } = getValues();
+  const { jobDescription } = getValues();
 
-  const isTailoredMode = !!(jobDescription && jobPosition && company && fieldName && (fieldName === 'summary' || fieldName.startsWith('experience.')));
-  const isTailoredExperience = isTailoredMode && fieldName?.startsWith('experience.');
-  const isTailoredSummary = isTailoredMode && fieldName === 'summary';
+  const isEnhanceMode = !!(jobDescription && fieldName && (fieldName.startsWith('experience.') || fieldName.startsWith('projects.')));
 
   useEffect(() => {
     if (open && fieldName) {
       setIsLoading(true);
       setSuggestion(null);
-      setTailoredContent(null);
+      setEnhancedContent(null);
       
-      if (isTailoredMode) {
-        generateTailoredResumeAction({ jobDescription, jobPosition, company })
-            .then((result) => {
-                if (result && "summary" in result) {
-                    setTailoredContent(result);
-                } else {
-                    toast({ variant: "destructive", title: "Error", description: result?.error || "Could not generate tailored suggestions." });
-                    onOpenChange(false);
-                }
-            })
-            .finally(() => setIsLoading(false));
-      } else {
+      if (isEnhanceMode) {
+        enhanceDescriptionAction({ descriptionToEnhance: currentValue, jobDescription })
+          .then((result) => {
+            if (result && "enhancedDescription" in result) {
+              setEnhancedContent(result.enhancedDescription);
+            } else {
+              toast({ variant: "destructive", title: "Error", description: result?.error || "Could not enhance content." });
+              onOpenChange(false);
+            }
+          })
+          .finally(() => setIsLoading(false));
+
+      } else { // Fallback to general suggestions if not in enhance mode
         getAiSuggestions(currentValue)
           .then((result) => {
             if (!result || "error" in result) {
@@ -65,15 +64,11 @@ export default function AiSuggestionDialog({ open, onOpenChange, fieldName, curr
           .finally(() => setIsLoading(false));
       }
     }
-  }, [open, currentValue, fieldName, toast, onOpenChange, isTailoredMode, jobDescription, jobPosition, company, setIsLoading]);
+  }, [open, currentValue, fieldName, toast, onOpenChange, isEnhanceMode, jobDescription, setIsLoading]);
 
   const handleUseSuggestion = () => {
-    if (isTailoredMode && tailoredContent && fieldName) {
-        if (isTailoredSummary) {
-            setValue(fieldName, tailoredContent.summary, { shouldDirty: true, shouldValidate: true });
-        } else if (isTailoredExperience) {
-             setValue(fieldName, tailoredContent.experienceDescription, { shouldDirty: true, shouldValidate: true });
-        }
+    if (isEnhanceMode && enhancedContent && fieldName) {
+        setValue(fieldName, enhancedContent, { shouldDirty: true, shouldValidate: true });
     } else if (suggestion && fieldName) {
       setValue(fieldName, suggestion.improvedContent, { shouldDirty: true, shouldValidate: true });
     }
@@ -89,22 +84,24 @@ export default function AiSuggestionDialog({ open, onOpenChange, fieldName, curr
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
   
-  const displayContent = isTailoredMode 
-    ? (isTailoredSummary ? tailoredContent?.summary : tailoredContent?.experienceDescription)
+  const displayContent = isEnhanceMode 
+    ? enhancedContent
     : suggestion?.improvedContent;
     
-  const displayExplanation = isTailoredMode
-    ? `This has been tailored for the ${jobPosition} role at ${company}.`
+  const displayExplanation = isEnhanceMode
+    ? `This has been rewritten to better align with the job description, using keywords and quantifiable achievements to improve its ATS score.`
     : suggestion?.explanation;
+
+  const dialogTitle = isEnhanceMode ? `Enhanced Suggestion for your ${toTitleCase(fieldName)}` : `AI Suggestions for your ${toTitleCase(fieldName)}`;
+  const dialogDescription = isEnhanceMode ? "The AI has rewritten your text to be more impactful and ATS-friendly." : "Our AI has analyzed your text and provided suggestions for improvement.";
+
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-3xl">
         <DialogHeader>
-          <DialogTitle>AI Suggestions for your {toTitleCase(fieldName)}</DialogTitle>
-          <DialogDescription>
-            Our AI has analyzed your text and provided suggestions for improvement.
-          </DialogDescription>
+          <DialogTitle>{dialogTitle}</DialogTitle>
+          <DialogDescription>{dialogDescription}</DialogDescription>
         </DialogHeader>
         {displayContent ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4 max-h-[60vh] overflow-y-auto p-1">

@@ -86,6 +86,17 @@ export const SuggestResumeImprovementsOutputSchema = z.object({
 });
 export type SuggestResumeImprovementsOutput = z.infer<typeof SuggestResumeImprovementsOutputSchema>;
 
+export const EnhanceDescriptionForAtsInputSchema = z.object({
+    descriptionToEnhance: z.string().describe("The user's current description for a project or experience."),
+    jobDescription: z.string().describe("The target job description for ATS optimization."),
+});
+export type EnhanceDescriptionForAtsInput = z.infer<typeof EnhanceDescriptionForAtsInputSchema>;
+
+export const EnhanceDescriptionForAtsOutputSchema = z.object({
+    enhancedDescription: z.string().describe("The rewritten, ATS-optimized description."),
+});
+export type EnhanceDescriptionForAtsOutput = z.infer<typeof EnhanceDescriptionForAtsOutputSchema>;
+
 export const GenerateTailoredResumeInputSchema = z.object({
   jobPosition: z.string().describe("The job position the user is applying for."),
   company: z.string().describe("The company the user is applying to."),
