@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { getAiSuggestions, generateTailoredResumeAction, enhanceDescriptionAction } from "@/lib/actions";
 import { useToast } from "@/hooks/use-toast";
 import type { ResumeData } from "@/lib/types";
+import { LoaderCircle } from "lucide-react";
 
 type AiSuggestionDialogProps = {
   open: boolean;
@@ -39,57 +40,65 @@ export default function AiSuggestionDialog({ open, onOpenChange, fieldName, curr
       setSuggestion(null);
       setEnhancedContent(null);
       
-      if (isEnhanceMode) {
-        enhanceDescriptionAction({ descriptionToEnhance: currentValue, jobDescription })
-          .then((result) => {
+      const performAction = async () => {
+        try {
+          if (isEnhanceMode) {
+            const result = await enhanceDescriptionAction({ descriptionToEnhance: currentValue, jobDescription });
             if (result && "enhancedDescription" in result) {
               setEnhancedContent(result.enhancedDescription);
             } else {
               toast({ variant: "destructive", title: "Error", description: result?.error || "Could not enhance content." });
               onOpenChange(false);
             }
-          })
-          .finally(() => setIsLoading(false));
-
-      } else { // Fallback to general suggestions if not in enhance mode
-        getAiSuggestions(currentValue)
-          .then((result) => {
+          } else { // Fallback to general suggestions
+            const result = await getAiSuggestions(currentValue);
             if (!result || "error" in result) {
               toast({ variant: "destructive", title: "Error", description: result?.error || "An unknown error occurred." });
               onOpenChange(false);
             } else {
               setSuggestion(result);
             }
-          })
-          .finally(() => setIsLoading(false));
-      }
+          }
+        } catch (error) {
+            toast({ variant: "destructive", title: "Error", description: "An unexpected error occurred." });
+            onOpenChange(false);
+        } finally {
+            setIsLoading(false);
+        }
+      };
+      
+      performAction();
     }
-  }, [open, currentValue, fieldName, toast, onOpenChange, isEnhanceMode, jobDescription, setIsLoading]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, fieldName, currentValue, jobDescription, isEnhanceMode, onOpenChange, toast]);
 
   const handleUseSuggestion = () => {
-    if (isEnhanceMode && enhancedContent && fieldName) {
-        setValue(fieldName, enhancedContent, { shouldDirty: true, shouldValidate: true });
-    } else if (suggestion && fieldName) {
-      setValue(fieldName, suggestion.improvedContent, { shouldDirty: true, shouldValidate: true });
+    if (fieldName) {
+      const contentToApply = isEnhanceMode ? enhancedContent : suggestion?.improvedContent;
+      if (contentToApply) {
+        setValue(fieldName, contentToApply, { shouldDirty: true, shouldValidate: true });
+      }
     }
     onOpenChange(false);
   };
-
+  
   const toTitleCase = (str: string | null) => {
     if (!str) return '';
-    if(str.includes('.')) {
-        const [field, index, subField] = str.split('.');
-        return `${toTitleCase(field)} - ${toTitleCase(subField)}`;
+    if (str.includes('.')) {
+      const parts = str.split('.');
+      const field = parts[0];
+      const subField = parts[2];
+      return `${field.charAt(0).toUpperCase() + field.slice(1)} - ${subField.charAt(0).toUpperCase() + subField.slice(1)}`;
     }
     return str.charAt(0).toUpperCase() + str.slice(1);
-  }
+  };
   
   const displayContent = isEnhanceMode 
     ? enhancedContent
     : suggestion?.improvedContent;
     
   const displayExplanation = isEnhanceMode
-    ? `This has been rewritten to better align with the job description, using keywords and quantifiable achievements to improve its ATS score.`
+    ? "This suggestion has been rewritten to better align with the job description, using relevant keywords and quantifiable achievements to improve its ATS score."
     : suggestion?.explanation;
 
   const dialogTitle = isEnhanceMode ? `Enhanced Suggestion for your ${toTitleCase(fieldName)}` : `AI Suggestions for your ${toTitleCase(fieldName)}`;
@@ -103,7 +112,11 @@ export default function AiSuggestionDialog({ open, onOpenChange, fieldName, curr
           <DialogTitle>{dialogTitle}</DialogTitle>
           <DialogDescription>{dialogDescription}</DialogDescription>
         </DialogHeader>
-        {displayContent ? (
+        {!displayContent ? (
+          <div className="flex justify-center items-center h-48">
+            <LoaderCircle className="h-8 w-8 animate-spin text-primary" />
+          </div>
+        ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4 max-h-[60vh] overflow-y-auto p-1">
             <div>
               <h4 className="font-semibold mb-2">Suggested Improvement</h4>
@@ -118,7 +131,7 @@ export default function AiSuggestionDialog({ open, onOpenChange, fieldName, curr
               </div>
             </div>
           </div>
-        ) : null}
+        )}
         <DialogFooter className="pt-4">
           <Button variant="ghost" onClick={() => onOpenChange(false)}>Cancel</Button>
           <Button onClick={handleUseSuggestion} disabled={!displayContent} className="bg-primary hover:bg-primary/90 text-primary-foreground">
