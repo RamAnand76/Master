@@ -54,11 +54,28 @@ export function generatePdf(resumeData: ResumeData) {
     yPos += doc.getTextDimensions(pd.name).h + 8;
   }
   
-  const contactItems = [pd.location, pd.email, pd.phone, pd.website, pd.linkedin, pd.github].filter(Boolean);
+  const getUrlUsername = (url: string) => {
+    if (!url || !url.startsWith('http')) return '';
+    try {
+        const path = new URL(url).pathname;
+        return path.split('/').filter(Boolean).pop() || '';
+    } catch {
+        return '';
+    }
+  }
+
+  const contactItems = [
+      pd.location,
+      pd.email,
+      pd.phone,
+      pd.website ? `Portfolio` : undefined,
+      pd.linkedin ? `LinkedIn` : undefined,
+      pd.github ? `GitHub` : undefined
+  ].filter((item): item is string => !!item);
+  
   if (contactItems.length > 0) {
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(fontSizes.small);
-    doc.setTextColor(colors.muted);
     
     const separator = ' | ';
     const separatorWidth = doc.getTextWidth(separator);
@@ -68,17 +85,33 @@ export function generatePdf(resumeData: ResumeData) {
 
     contactItems.forEach((item, index) => {
         const itemWidth = doc.getTextWidth(item);
-        if(item.startsWith('http')) {
-            doc.setTextColor('#007bff'); // Set link color
-            doc.textWithLink(item, currentX, yPos, { url: item });
-            doc.setTextColor(colors.muted);
-        } else if (item.includes('@')) {
-             doc.setTextColor('#007bff'); // Set link color
-            doc.textWithLink(item, currentX, yPos, { url: `mailto:${item}` });
-            doc.setTextColor(colors.muted);
-        } else {
-            doc.text(item, currentX, yPos);
+        const itemHeight = doc.getTextDimensions(item).h;
+
+        let isLink = false;
+        let url = '';
+
+        if (item === 'Portfolio' && pd.website) {
+            isLink = true;
+            url = pd.website;
+        } else if (item === 'LinkedIn' && pd.linkedin) {
+            isLink = true;
+            url = pd.linkedin;
+        } else if (item === 'GitHub' && pd.github) {
+            isLink = true;
+            url = pd.github;
+        } else if (item.includes('@') && item === pd.email) {
+            isLink = true;
+            url = `mailto:${pd.email}`;
         }
+        
+        doc.setTextColor(isLink ? '#007bff' : colors.muted);
+        doc.text(item, currentX, yPos);
+        
+        if (isLink) {
+            doc.link(currentX, yPos - itemHeight, itemWidth, itemHeight, { url });
+        }
+        
+        doc.setTextColor(colors.muted);
 
         currentX += itemWidth;
 
@@ -88,7 +121,7 @@ export function generatePdf(resumeData: ResumeData) {
         }
     });
     
-    yPos += doc.getTextDimensions(contactItems.join(' | ')).h + 20;
+    yPos += doc.getTextDimensions('A').h + 20;
   }
   
   const drawSection = (title: string, contentFn: () => void) => {
