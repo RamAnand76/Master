@@ -41,7 +41,8 @@ export function generatePdf(resumeData: ResumeData) {
   const colors = {
       primary: '#408080',
       text: '#333333',
-      muted: '#666666'
+      muted: '#666666',
+      link: '#007bff'
   };
 
   doc.setTextColor(colors.text);
@@ -51,7 +52,7 @@ export function generatePdf(resumeData: ResumeData) {
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(fontSizes.name);
     doc.text(pd.name, page.width / 2, yPos, { align: 'center' });
-    yPos += doc.getTextDimensions(pd.name).h;
+    yPos += doc.getTextDimensions(pd.name).h - 5;
   }
   
   const getUrlUsername = (url: string) => {
@@ -64,14 +65,14 @@ export function generatePdf(resumeData: ResumeData) {
     }
   }
 
-  const contactItems = [
-      pd.location,
-      pd.email,
-      pd.phone,
-      pd.website ? `Portfolio` : undefined,
-      pd.linkedin ? `LinkedIn` : undefined,
-      pd.github ? `GitHub` : undefined
-  ].filter((item): item is string => !!item);
+  const contactItems: { text: string; url?: string }[] = [];
+  if (pd.location) contactItems.push({ text: pd.location });
+  if (pd.email) contactItems.push({ text: pd.email, url: `mailto:${pd.email}` });
+  if (pd.phone) contactItems.push({ text: pd.phone, url: `tel:${pd.phone}` });
+  if (pd.website) contactItems.push({ text: 'Portfolio', url: pd.website });
+  if (pd.linkedin) contactItems.push({ text: getUrlUsername(pd.linkedin) || 'LinkedIn', url: pd.linkedin });
+  if (pd.github) contactItems.push({ text: getUrlUsername(pd.github) || 'GitHub', url: pd.github });
+
   
   if (contactItems.length > 0) {
     doc.setFont('helvetica', 'normal');
@@ -80,42 +81,23 @@ export function generatePdf(resumeData: ResumeData) {
 
     const separator = ' | ';
     const separatorWidth = doc.getTextWidth(separator);
-    const totalWidth = contactItems.reduce((acc, item) => acc + doc.getTextWidth(item), 0) + separatorWidth * (contactItems.length - 1);
+    
+    const itemsWithWidths = contactItems.map(item => ({...item, width: doc.getTextWidth(item.text)}));
+    const totalWidth = itemsWithWidths.reduce((acc, item) => acc + item.width, 0) + separatorWidth * (contactItems.length - 1);
     
     let currentX = (page.width - totalWidth) / 2;
+    const itemHeight = doc.getTextDimensions('A').h;
 
-    contactItems.forEach((item, index) => {
-        const itemWidth = doc.getTextWidth(item);
-        const itemHeight = doc.getTextDimensions(item).h;
-
-        let isLink = false;
-        let url = '';
-        let displayItem = item;
-
-        if (item === 'Portfolio' && pd.website) {
-            isLink = true;
-            url = pd.website;
-        } else if (item === 'LinkedIn' && pd.linkedin) {
-            isLink = true;
-            url = pd.linkedin;
-            displayItem = getUrlUsername(url) || 'LinkedIn';
-        } else if (item === 'GitHub' && pd.github) {
-            isLink = true;
-            url = pd.github;
-            displayItem = getUrlUsername(url) || 'GitHub';
-        } else if (item.includes('@') && item === pd.email) {
-            isLink = true;
-            url = `mailto:${pd.email}`;
-        }
-        
-        doc.setTextColor(isLink ? '#007bff' : colors.muted);
-        doc.text(displayItem, currentX, yPos);
+    itemsWithWidths.forEach((item, index) => {
+        const isLink = !!item.url;
+        doc.setTextColor(isLink ? colors.link : colors.muted);
+        doc.text(item.text, currentX, yPos);
         
         if (isLink) {
-            doc.link(currentX, yPos - itemHeight, doc.getTextWidth(displayItem), itemHeight, { url });
+            doc.link(currentX, yPos - itemHeight, item.width, itemHeight, { url: item.url! });
         }
         
-        currentX += doc.getTextWidth(displayItem);
+        currentX += item.width;
 
         if (index < contactItems.length - 1) {
             doc.setTextColor(colors.muted);
@@ -124,7 +106,7 @@ export function generatePdf(resumeData: ResumeData) {
         }
     });
     
-    yPos += doc.getTextDimensions('A').h + 15;
+    yPos += itemHeight + 15;
   }
   
   const drawSection = (title: string, contentFn: () => void) => {
@@ -160,9 +142,14 @@ export function generatePdf(resumeData: ResumeData) {
   if (experience && experience.length > 0) {
     drawSection('Experience', () => {
       experience.forEach(exp => {
+        if (yPos > page.height - page.margins.bottom - 40) { // Check for page break
+            doc.addPage();
+            yPos = page.margins.top;
+        }
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(fontSizes.subHeader);
         doc.text(exp.role, page.margins.left, yPos);
+        
         const dateText = `${exp.startDate} - ${exp.endDate}`;
         doc.setFont('helvetica', 'normal');
         doc.setTextColor(colors.muted);
@@ -178,13 +165,15 @@ export function generatePdf(resumeData: ResumeData) {
 
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(fontSizes.body);
-        const descLines = doc.splitTextToSize(exp.description, page.contentWidth - 15); // Indent
         
-        descLines.forEach((line: string, index: number) => {
-            const prefix = line.startsWith('-') ? '' : '- ';
-            const textLines = doc.splitTextToSize(prefix + line.replace(/^- /, ''), page.contentWidth - 15);
+        const descLines = exp.description.split('\n').filter(line => line.trim() !== '');
+        
+        descLines.forEach((line: string) => {
+            const prefix = '- ';
+            const textLines = doc.splitTextToSize(line.replace(/^- /, ''), page.contentWidth - 15);
+            doc.text(prefix, page.margins.left, yPos);
             doc.text(textLines, page.margins.left + 15, yPos);
-            yPos += doc.getTextDimensions(textLines).h;
+            yPos += doc.getTextDimensions(textLines).h + 2;
         });
 
         yPos += 10;
@@ -196,6 +185,10 @@ export function generatePdf(resumeData: ResumeData) {
   if (education && education.length > 0) {
     drawSection('Education', () => {
         education.forEach(edu => {
+        if (yPos > page.height - page.margins.bottom - 40) { // Check for page break
+            doc.addPage();
+            yPos = page.margins.top;
+        }
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(fontSizes.subHeader);
         doc.text(edu.degree, page.margins.left, yPos);
