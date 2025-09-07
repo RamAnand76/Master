@@ -1,8 +1,9 @@
 
 "use client";
 
+import React, { Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import React, { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { LoaderCircle, CheckCircle2, CreditCard, ChevronRight, ChevronLeft } from 'lucide-react';
@@ -192,7 +193,8 @@ const SuccessModal = ({ isOpen, onOpenChange, amount }: { isOpen: boolean, onOpe
     );
 };
 
-export default function BillingPage() {
+
+function BillingFlow() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [isProcessing, setIsProcessing] = useState(false);
@@ -261,10 +263,7 @@ export default function BillingPage() {
     }
 
     return (
-        <div className="relative flex min-h-screen flex-col overflow-x-hidden text-foreground">
-            <div className="sticky top-0 z-10 w-full border-b border-solid border-border/60 bg-background/80 backdrop-blur-sm">
-                <HomeHeader />
-            </div>
+        <>
             <main className="flex flex-1 items-center justify-center py-16 sm:py-24">
                 {renderStep()}
             </main>
@@ -273,6 +272,23 @@ export default function BillingPage() {
                 onOpenChange={() => setIsSuccessModalOpen(false)} 
                 amount={selectedPurchase?.amount || 0}
             />
+        </>
+    );
+}
+
+export default function BillingPage() {
+    return (
+        <div className="relative flex min-h-screen flex-col overflow-x-hidden text-foreground">
+            <div className="sticky top-0 z-10 w-full border-b border-solid border-border/60 bg-background/80 backdrop-blur-sm">
+                <HomeHeader />
+            </div>
+            <Suspense fallback={
+                <div className="flex flex-1 items-center justify-center">
+                    <LoaderCircle className="h-12 w-12 animate-spin text-primary" />
+                </div>
+            }>
+                <BillingFlow />
+            </Suspense>
         </div>
     )
 }
