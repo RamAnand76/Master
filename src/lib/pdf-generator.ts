@@ -51,7 +51,7 @@ export function generatePdf(resumeData: ResumeData) {
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(fontSizes.name);
     doc.text(pd.name, page.width / 2, yPos, { align: 'center' });
-    yPos += doc.getTextDimensions(pd.name).h + 8;
+    yPos += doc.getTextDimensions(pd.name).h;
   }
   
   const getUrlUsername = (url: string) => {
@@ -76,7 +76,8 @@ export function generatePdf(resumeData: ResumeData) {
   if (contactItems.length > 0) {
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(fontSizes.small);
-    
+    doc.setTextColor(colors.muted);
+
     const separator = ' | ';
     const separatorWidth = doc.getTextWidth(separator);
     const totalWidth = contactItems.reduce((acc, item) => acc + doc.getTextWidth(item), 0) + separatorWidth * (contactItems.length - 1);
@@ -89,6 +90,7 @@ export function generatePdf(resumeData: ResumeData) {
 
         let isLink = false;
         let url = '';
+        let displayItem = item;
 
         if (item === 'Portfolio' && pd.website) {
             isLink = true;
@@ -96,32 +98,33 @@ export function generatePdf(resumeData: ResumeData) {
         } else if (item === 'LinkedIn' && pd.linkedin) {
             isLink = true;
             url = pd.linkedin;
+            displayItem = getUrlUsername(url) || 'LinkedIn';
         } else if (item === 'GitHub' && pd.github) {
             isLink = true;
             url = pd.github;
+            displayItem = getUrlUsername(url) || 'GitHub';
         } else if (item.includes('@') && item === pd.email) {
             isLink = true;
             url = `mailto:${pd.email}`;
         }
         
         doc.setTextColor(isLink ? '#007bff' : colors.muted);
-        doc.text(item, currentX, yPos);
+        doc.text(displayItem, currentX, yPos);
         
         if (isLink) {
-            doc.link(currentX, yPos - itemHeight, itemWidth, itemHeight, { url });
+            doc.link(currentX, yPos - itemHeight, doc.getTextWidth(displayItem), itemHeight, { url });
         }
         
-        doc.setTextColor(colors.muted);
-
-        currentX += itemWidth;
+        currentX += doc.getTextWidth(displayItem);
 
         if (index < contactItems.length - 1) {
+            doc.setTextColor(colors.muted);
             doc.text(separator, currentX, yPos);
             currentX += separatorWidth;
         }
     });
     
-    yPos += doc.getTextDimensions('A').h + 20;
+    yPos += doc.getTextDimensions('A').h + 15;
   }
   
   const drawSection = (title: string, contentFn: () => void) => {
@@ -164,19 +167,27 @@ export function generatePdf(resumeData: ResumeData) {
         doc.setFont('helvetica', 'normal');
         doc.setTextColor(colors.muted);
         doc.text(dateText, page.width - page.margins.right, yPos, { align: 'right' });
-        yPos += doc.getTextDimensions(exp.role).h;
+        doc.setTextColor(colors.text);
+
+        yPos += doc.getTextDimensions(exp.role).h + 2;
         
         doc.setFont('helvetica', 'italic');
         doc.setFontSize(fontSizes.body);
-        doc.setTextColor(colors.text);
         doc.text(exp.company, page.margins.left, yPos);
         yPos += doc.getTextDimensions(exp.company).h + 5;
 
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(fontSizes.body);
         const descLines = doc.splitTextToSize(exp.description, page.contentWidth - 15); // Indent
-        doc.text(descLines, page.margins.left + 15, yPos);
-        yPos += doc.getTextDimensions(descLines).h + 10;
+        
+        descLines.forEach((line: string, index: number) => {
+            const prefix = line.startsWith('-') ? '' : '- ';
+            const textLines = doc.splitTextToSize(prefix + line.replace(/^- /, ''), page.contentWidth - 15);
+            doc.text(textLines, page.margins.left + 15, yPos);
+            yPos += doc.getTextDimensions(textLines).h;
+        });
+
+        yPos += 10;
       });
     });
   }
@@ -192,11 +203,11 @@ export function generatePdf(resumeData: ResumeData) {
         doc.setFont('helvetica', 'normal');
         doc.setTextColor(colors.muted);
         doc.text(dateText, page.width - page.margins.right, yPos, { align: 'right' });
-        yPos += doc.getTextDimensions(edu.degree).h;
+        doc.setTextColor(colors.text);
+        yPos += doc.getTextDimensions(edu.degree).h + 2;
 
         doc.setFont('helvetica', 'italic');
         doc.setFontSize(fontSizes.body);
-        doc.setTextColor(colors.text);
         doc.text(edu.institution, page.margins.left, yPos);
         yPos += doc.getTextDimensions(edu.institution).h + 10;
       });
