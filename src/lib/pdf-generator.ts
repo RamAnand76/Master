@@ -54,14 +54,41 @@ export function generatePdf(resumeData: ResumeData) {
     yPos += doc.getTextDimensions(pd.name).h + 8;
   }
   
-  const contactInfo = [pd.location, pd.email, pd.phone, pd.website, pd.linkedin, pd.github].filter(Boolean);
-  if (contactInfo.length > 0) {
+  const contactItems = [pd.location, pd.email, pd.phone, pd.website, pd.linkedin, pd.github].filter(Boolean);
+  if (contactItems.length > 0) {
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(fontSizes.small);
     doc.setTextColor(colors.muted);
-    const contactText = contactInfo.join(' | ');
-    doc.text(contactText, page.width / 2, yPos, { align: 'center' });
-    yPos += doc.getTextDimensions(contactText).h + 20;
+    
+    const separator = ' | ';
+    const separatorWidth = doc.getTextWidth(separator);
+    const totalWidth = contactItems.reduce((acc, item) => acc + doc.getTextWidth(item), 0) + separatorWidth * (contactItems.length - 1);
+    
+    let currentX = (page.width - totalWidth) / 2;
+
+    contactItems.forEach((item, index) => {
+        const itemWidth = doc.getTextWidth(item);
+        if(item.startsWith('http')) {
+            doc.setTextColor('#007bff'); // Set link color
+            doc.textWithLink(item, currentX, yPos, { url: item });
+            doc.setTextColor(colors.muted);
+        } else if (item.includes('@')) {
+             doc.setTextColor('#007bff'); // Set link color
+            doc.textWithLink(item, currentX, yPos, { url: `mailto:${item}` });
+            doc.setTextColor(colors.muted);
+        } else {
+            doc.text(item, currentX, yPos);
+        }
+
+        currentX += itemWidth;
+
+        if (index < contactItems.length - 1) {
+            doc.text(separator, currentX, yPos);
+            currentX += separatorWidth;
+        }
+    });
+    
+    yPos += doc.getTextDimensions(contactItems.join(' | ')).h + 20;
   }
   
   const drawSection = (title: string, contentFn: () => void) => {
@@ -101,7 +128,6 @@ export function generatePdf(resumeData: ResumeData) {
         doc.setFontSize(fontSizes.subHeader);
         doc.text(exp.role, page.margins.left, yPos);
         const dateText = `${exp.startDate} - ${exp.endDate}`;
-        const dateWidth = doc.getTextWidth(dateText);
         doc.setFont('helvetica', 'normal');
         doc.setTextColor(colors.muted);
         doc.text(dateText, page.width - page.margins.right, yPos, { align: 'right' });
