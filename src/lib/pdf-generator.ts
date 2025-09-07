@@ -52,7 +52,7 @@ export function generatePdf(resumeData: ResumeData) {
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(fontSizes.name);
     doc.text(pd.name, page.width / 2, yPos, { align: 'center' });
-    yPos += doc.getTextDimensions(pd.name).h - 5;
+    yPos += doc.getTextDimensions(pd.name).h;
   }
   
   const getUrlUsername = (url: string) => {
