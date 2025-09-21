@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
@@ -15,6 +15,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useTheme } from 'next-themes';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const cardVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -25,6 +26,11 @@ export default function SettingsPage() {
   const [isProfileDialogOpen, setIsProfileDialogOpen] = useState(false);
   const { user, updateUser } = useUser();
   const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   
   const isDarkMode = theme === 'dark';
   const toggleTheme = () => setTheme(isDarkMode ? 'light' : 'dark');
@@ -74,12 +80,16 @@ export default function SettingsPage() {
       content: (
          <div className="flex items-center justify-between">
             <Label htmlFor="dark-mode">Dark Mode</Label>
-            <Switch 
-            id="dark-mode"
-            checked={isDarkMode} 
-            onCheckedChange={toggleTheme}
-            aria-label="Toggle dark mode"
-            />
+            {mounted ? (
+                <Switch 
+                    id="dark-mode"
+                    checked={isDarkMode} 
+                    onCheckedChange={toggleTheme}
+                    aria-label="Toggle dark mode"
+                />
+            ) : (
+                <Skeleton className="h-6 w-11 rounded-full" />
+            )}
         </div>
       ),
     },
