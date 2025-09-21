@@ -4,7 +4,8 @@
 import { useFormContext, useFieldArray, Controller } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import { Trash2, Sparkles, LoaderCircle, PlusCircle, Briefcase, GraduationCap, FolderKanban, Star } from 'lucide-react';
-import { ResumeData, educationSchema, experienceSchema, projectSchema, skillSchema, resumeDataSchema } from '@/lib/types';
+import type { ResumeData } from '@/lib/types';
+import { educationSchema, experienceSchema, projectSchema, skillSchema, resumeDataSchema } from '@/lib/schemas';
 import AiSuggestionDialog from './ai-suggestion-dialog';
 import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
@@ -322,5 +323,7 @@ export default function ResumeForm() {
         </>
     );
 }
+
+    
 
     
