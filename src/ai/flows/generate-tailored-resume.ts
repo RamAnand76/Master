@@ -1,15 +1,18 @@
+
 'use server';
 
 /**
  * @fileOverview An AI agent that tailors resume content to a job description.
  *
  * - generateTailoredResume - A function that generates tailored resume content.
- * - GenerateTailoredResumeInput - The input type for the generateTailoredResume function.
- * - GenerateTailoredResumeOutput - The return type for the generateTailoredResume function.
  */
 
 import {ai} from '@/ai/genkit';
-import { GenerateTailoredResumeInputSchema, GenerateTailoredResumeOutputSchema, type GenerateTailoredResumeInput, type GenerateTailoredResumeOutput } from '@/lib/types';
+import { z } from 'zod';
+import { GenerateTailoredResumeInputSchema, GenerateTailoredResumeOutputSchema } from '@/lib/schemas';
+
+type GenerateTailoredResumeInput = z.infer<typeof GenerateTailoredResumeInputSchema>;
+type GenerateTailoredResumeOutput = z.infer<typeof GenerateTailoredResumeOutputSchema>;
 
 
 export async function generateTailoredResume(

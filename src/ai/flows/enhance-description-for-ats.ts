@@ -5,12 +5,14 @@
  * @fileOverview An AI agent that enhances a description for ATS optimization.
  *
  * - enhanceDescriptionForAts - A function that enhances a description based on a job description.
- * - EnhanceDescriptionForAtsInput - The input type for the enhanceDescriptionForAts function.
- * - EnhanceDescriptionForAtsOutput - The return type for the enhanceDescriptionForAts function.
  */
 
 import {ai} from '@/ai/genkit';
-import { EnhanceDescriptionForAtsInputSchema, EnhanceDescriptionForAtsOutputSchema, type EnhanceDescriptionForAtsInput, type EnhanceDescriptionForAtsOutput } from '@/lib/types';
+import { z } from 'zod';
+import { EnhanceDescriptionForAtsInputSchema, EnhanceDescriptionForAtsOutputSchema } from '@/lib/schemas';
+
+type EnhanceDescriptionForAtsInput = z.infer<typeof EnhanceDescriptionForAtsInputSchema>;
+type EnhanceDescriptionForAtsOutput = z.infer<typeof EnhanceDescriptionForAtsOutputSchema>;
 
 export async function enhanceDescriptionForAts(
   input: EnhanceDescriptionForAtsInput
@@ -56,4 +58,3 @@ const enhanceDescriptionForAtsFlow = ai.defineFlow(
     return output!;
   }
 );
-

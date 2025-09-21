@@ -15,7 +15,11 @@ import { Button } from "@/components/ui/button";
 import { getKeywordSuggestionAction } from "@/lib/actions";
 import { useToast } from "@/hooks/use-toast";
 import type { ResumeData } from "@/lib/types";
+import { GetKeywordSuggestionInputSchema } from "@/lib/schemas";
 import { LoaderCircle } from "lucide-react";
+import { z } from "zod";
+
+type GetKeywordSuggestionInput = z.infer<typeof GetKeywordSuggestionInputSchema>;
 
 type KeywordSuggestionDialogProps = {
   open: boolean;
@@ -35,7 +39,7 @@ export default function KeywordSuggestionDialog({ open, onOpenChange, keyword, r
       setIsLoading(true);
       setSuggestion(null);
       
-      getKeywordSuggestionAction({ keyword, resume })
+      getKeywordSuggestionAction({ keyword, resume } as GetKeywordSuggestionInput)
         .then((result) => {
             if (result && "suggestion" in result) {
                 setSuggestion(result);

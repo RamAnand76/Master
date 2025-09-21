@@ -1,26 +1,19 @@
+
 'use server';
 
 /**
  * @fileOverview An AI agent that suggests improvements to resume content.
  *
  * - suggestResumeImprovements - A function that suggests improvements to resume content.
- * - SuggestResumeImprovementsInput - The input type for the suggestResumeImprovements function.
- * - SuggestResumeImprovementsOutput - The return type for the suggestResumeImprovements function.
  */
 
 import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
+import { z } from 'zod';
+import { SuggestResumeImprovementsInputSchema, SuggestResumeImprovementsOutputSchema } from '@/lib/schemas';
 
-const SuggestResumeImprovementsInputSchema = z.object({
-  resumeContent: z.string().describe('The content of the resume to be improved.'),
-});
-export type SuggestResumeImprovementsInput = z.infer<typeof SuggestResumeImprovementsInputSchema>;
+type SuggestResumeImprovementsInput = z.infer<typeof SuggestResumeImprovementsInputSchema>;
+type SuggestResumeImprovementsOutput = z.infer<typeof SuggestResumeImprovementsOutputSchema>;
 
-const SuggestResumeImprovementsOutputSchema = z.object({
-  improvedContent: z.string().describe('The improved content of the resume with suggestions.'),
-  explanation: z.string().describe('An explanation of the changes made and why they were suggested.'),
-});
-export type SuggestResumeImprovementsOutput = z.infer<typeof SuggestResumeImprovementsOutputSchema>;
 
 export async function suggestResumeImprovements(
   input: SuggestResumeImprovementsInput

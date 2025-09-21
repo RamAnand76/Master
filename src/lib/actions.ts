@@ -1,13 +1,21 @@
 
 "use server";
 
+import { z } from "zod";
 import { suggestResumeImprovements } from "@/ai/flows/suggest-resume-improvements";
 import { generateTailoredResume } from "@/ai/flows/generate-tailored-resume";
 import { analyzeResumeForAts } from "@/ai/flows/analyze-resume-for-ats";
 import { getKeywordSuggestion } from "@/ai/flows/get-keyword-suggestion";
 import { validateJobDetails } from "@/ai/flows/validate-job-details";
 import { enhanceDescriptionForAts } from "@/ai/flows/enhance-description-for-ats";
-import { GenerateTailoredResumeInput, type AnalyzeResumeForAtsInput, type GetKeywordSuggestionInput, type ValidateJobDetailsInput, type EnhanceDescriptionForAtsInput } from "./types";
+import { GenerateTailoredResumeInputSchema, AnalyzeResumeForAtsInputSchema, GetKeywordSuggestionInputSchema, ValidateJobDetailsInputSchema, EnhanceDescriptionForAtsInputSchema } from "./schemas";
+
+type GenerateTailoredResumeInput = z.infer<typeof GenerateTailoredResumeInputSchema>;
+type AnalyzeResumeForAtsInput = z.infer<typeof AnalyzeResumeForAtsInputSchema>;
+type GetKeywordSuggestionInput = z.infer<typeof GetKeywordSuggestionInputSchema>;
+type ValidateJobDetailsInput = z.infer<typeof ValidateJobDetailsInputSchema>;
+type EnhanceDescriptionForAtsInput = z.infer<typeof EnhanceDescriptionForAtsInputSchema>;
+
 
 export async function getAiSuggestions(resumeContent: string) {
   if (!resumeContent.trim()) {

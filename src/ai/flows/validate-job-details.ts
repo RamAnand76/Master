@@ -5,12 +5,16 @@
  * @fileOverview An AI agent that validates job details.
  * 
  * - validateJobDetails - A function that validates the job details.
- * - ValidateJobDetailsInput - The input type for the validateJobDetails function.
- * - ValidateJobDetailsOutput - The return type for the validateJobDetails function.
  */
 
 import { ai } from '@/ai/genkit';
-import { ValidateJobDetailsInputSchema, ValidateJobDetailsOutputSchema, type ValidateJobDetailsInput, type ValidateJobDetailsOutput } from '@/lib/types';
+import { z } from 'zod';
+import { ValidateJobDetailsInputSchema, ValidateJobDetailsOutputSchema } from '@/lib/schemas';
+
+
+type ValidateJobDetailsInput = z.infer<typeof ValidateJobDetailsInputSchema>;
+type ValidateJobDetailsOutput = z.infer<typeof ValidateJobDetailsOutputSchema>;
+
 
 export async function validateJobDetails(
     input: ValidateJobDetailsInput

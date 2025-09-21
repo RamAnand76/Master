@@ -5,12 +5,14 @@
  * @fileOverview An AI agent that analyzes a resume against a job description for ATS compatibility.
  * 
  * - analyzeResumeForAts - A function that analyzes the resume and returns an ATS score and feedback.
- * - AnalyzeResumeForAtsInput - The input type for the analyzeResumeForAts function.
- * - AnalyzeResumeForAtsOutput - The return type for the analyzeResumeForAts function.
  */
 
 import { ai } from '@/ai/genkit';
-import { AnalyzeResumeForAtsInputSchema, AnalyzeResumeForAtsOutputSchema, type AnalyzeResumeForAtsInput, type AnalyzeResumeForAtsOutput } from '@/lib/types';
+import { z } from 'zod';
+import { AnalyzeResumeForAtsInputSchema, AnalyzeResumeForAtsOutputSchema } from '@/lib/schemas';
+
+type AnalyzeResumeForAtsInput = z.infer<typeof AnalyzeResumeForAtsInputSchema>;
+type AnalyzeResumeForAtsOutput = z.infer<typeof AnalyzeResumeForAtsOutputSchema>;
 
 export async function analyzeResumeForAts(
     input: AnalyzeResumeForAtsInput

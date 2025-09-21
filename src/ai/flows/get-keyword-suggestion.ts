@@ -5,12 +5,15 @@
  * @fileOverview An AI agent that suggests how to integrate a missing keyword into a resume.
  * 
  * - getKeywordSuggestion - A function that returns a suggestion for a given keyword.
- * - GetKeywordSuggestionInput - The input type for the getKeywordSuggestion function.
- * - GetKeywordSuggestionOutput - The return type for the getKeywordSuggestion function.
  */
 
 import { ai } from '@/ai/genkit';
-import { GetKeywordSuggestionInputSchema, GetKeywordSuggestionOutputSchema, type GetKeywordSuggestionInput, type GetKeywordSuggestionOutput } from '@/lib/types';
+import { z } from 'zod';
+import { GetKeywordSuggestionInputSchema, GetKeywordSuggestionOutputSchema } from '@/lib/schemas';
+
+type GetKeywordSuggestionInput = z.infer<typeof GetKeywordSuggestionInputSchema>;
+type GetKeywordSuggestionOutput = z.infer<typeof GetKeywordSuggestionOutputSchema>;
+
 
 export async function getKeywordSuggestion(
     input: GetKeywordSuggestionInput
