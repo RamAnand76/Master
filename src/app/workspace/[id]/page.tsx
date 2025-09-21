@@ -4,7 +4,8 @@
 import { useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { type ResumeData, resumeDataSchema, type AtsAnalysis } from '@/lib/types';
+import { type ResumeData, type AtsAnalysis } from '@/lib/types';
+import { resumeDataSchema } from '@/lib/schemas';
 import ResumeForm from '@/components/resume-form';
 import ResumePreview from '@/components/resume-preview';
 import { Button } from '@/components/ui/button';
@@ -61,7 +62,7 @@ export default function WorkspacePage() {
   const params = useParams();
   const id = Array.isArray(params.id) ? params.id[0] : params.id;
   const [loadingStep, setLoadingStep] = useState(0);
-  const [isSaving, setIsSaving] = useState(false);
+  const [isSaving, setIsSaving] = useState(isSaving);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const { toast } = useToast();
   const { user, isLoaded: isUserLoaded } = useUser();
@@ -349,3 +350,5 @@ export default function WorkspacePage() {
     </TooltipProvider>
   );
 }
+
+    
