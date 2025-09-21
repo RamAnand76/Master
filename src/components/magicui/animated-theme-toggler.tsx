@@ -5,9 +5,16 @@ import { useTheme } from "next-themes";
 import { Moon, Sun } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Button } from "../ui/button";
+import { useEffect, useState } from "react";
 
 export function AnimatedThemeToggler() {
   const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
 
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");
@@ -22,7 +29,7 @@ export function AnimatedThemeToggler() {
       aria-label="Toggle theme"
     >
       <AnimatePresence initial={false} mode="wait">
-        {theme === "dark" ? (
+        {mounted && theme === "dark" ? (
           <motion.div
             key="moon"
             initial={{ y: -20, opacity: 0 }}
@@ -33,7 +40,7 @@ export function AnimatedThemeToggler() {
           >
             <Moon className="h-5 w-5" />
           </motion.div>
-        ) : (
+        ) : mounted && theme === 'light' ? (
           <motion.div
             key="sun"
             initial={{ y: 20, opacity: 0 }}
@@ -44,7 +51,7 @@ export function AnimatedThemeToggler() {
           >
             <Sun className="h-5 w-5" />
           </motion.div>
-        )}
+        ) : null}
       </AnimatePresence>
     </Button>
   );
