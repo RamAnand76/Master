@@ -62,7 +62,7 @@ export default function WorkspacePage() {
   const params = useParams();
   const id = Array.isArray(params.id) ? params.id[0] : params.id;
   const [loadingStep, setLoadingStep] = useState(0);
-  const [isSaving, setIsSaving] = useState(isSaving);
+  const [isSaving, setIsSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const { toast } = useToast();
   const { user, isLoaded: isUserLoaded } = useUser();
@@ -350,5 +350,3 @@ export default function WorkspacePage() {
     </TooltipProvider>
   );
 }
-
-    
