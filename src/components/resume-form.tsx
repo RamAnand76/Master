@@ -310,7 +310,7 @@ export default function ResumeForm() {
             </div>
 
             <AiSuggestionDialog
-                open={!!suggestionField && !isAiLoading}
+                open={!!suggestionField}
                 onOpenChange={(isOpen) => {
                     if (!isOpen) {
                         setSuggestionField(null);
@@ -323,7 +323,3 @@ export default function ResumeForm() {
         </>
     );
 }
-
-    
-
-    

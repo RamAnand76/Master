@@ -12,7 +12,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { getAiSuggestions, generateTailoredResumeAction, enhanceDescriptionAction } from "@/lib/actions";
+import { enhanceDescriptionAction } from "@/lib/actions";
 import { useToast } from "@/hooks/use-toast";
 import type { ResumeData } from "@/lib/types";
 import { LoaderCircle } from "lucide-react";
@@ -26,24 +26,18 @@ type AiSuggestionDialogProps = {
 };
 
 export default function AiSuggestionDialog({ open, onOpenChange, fieldName, currentValue, setIsLoading }: AiSuggestionDialogProps) {
-  const [suggestion, setSuggestion] = useState<{ improvedContent: string; explanation: string } | null>(null);
   const [enhancedContent, setEnhancedContent] = useState<string | null>(null);
   const { setValue, getValues } = useFormContext<ResumeData>();
   const { toast } = useToast();
   const { jobDescription } = getValues();
 
-  const isEnhanceMode = !!(jobDescription && fieldName);
-
   useEffect(() => {
     if (open && fieldName) {
       setIsLoading(true);
-      setSuggestion(null);
       setEnhancedContent(null);
       
       const performAction = async () => {
         try {
-          if (isEnhanceMode) {
-            // Use enhanceDescriptionAction for all fields now, providing a generic job description for summary.
             const result = await enhanceDescriptionAction({ 
               descriptionToEnhance: currentValue, 
               jobDescription: jobDescription || "a professional job" 
@@ -54,15 +48,6 @@ export default function AiSuggestionDialog({ open, onOpenChange, fieldName, curr
               toast({ variant: "destructive", title: "Error", description: result?.error || "Could not enhance content." });
               onOpenChange(false);
             }
-          } else { // Fallback for safety, though isEnhanceMode should usually be true
-            const result = await getAiSuggestions(currentValue);
-            if (!result || "error" in result) {
-              toast({ variant: "destructive", title: "Error", description: result?.error || "An unknown error occurred." });
-              onOpenChange(false);
-            } else {
-              setSuggestion(result);
-            }
-          }
         } catch (error) {
             toast({ variant: "destructive", title: "Error", description: "An unexpected error occurred." });
             onOpenChange(false);
@@ -74,14 +59,11 @@ export default function AiSuggestionDialog({ open, onOpenChange, fieldName, curr
       performAction();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open, fieldName, currentValue, jobDescription, isEnhanceMode, onOpenChange, toast]);
+  }, [open, fieldName, currentValue, jobDescription, onOpenChange, toast]);
 
   const handleUseSuggestion = () => {
-    if (fieldName) {
-      const contentToApply = isEnhanceMode ? enhancedContent : suggestion?.improvedContent;
-      if (contentToApply) {
-        setValue(fieldName, contentToApply, { shouldDirty: true, shouldValidate: true });
-      }
+    if (fieldName && enhancedContent) {
+      setValue(fieldName, enhancedContent, { shouldDirty: true, shouldValidate: true });
     }
     onOpenChange(false);
   };
@@ -96,18 +78,10 @@ export default function AiSuggestionDialog({ open, onOpenChange, fieldName, curr
     }
     return str.charAt(0).toUpperCase() + str.slice(1);
   };
-  
-  const displayContent = isEnhanceMode 
-    ? enhancedContent
-    : suggestion?.improvedContent;
     
-  const displayExplanation = isEnhanceMode
-    ? `This suggestion has been rewritten to be more impactful and professional.${jobDescription ? " It is also tailored to the job description you provided." : ""}`
-    : suggestion?.explanation;
-
+  const displayExplanation = `This suggestion has been rewritten to be more impactful and professional.${jobDescription ? " It is also tailored to the job description you provided." : ""}`;
   const dialogTitle = `Enhanced Suggestion for your ${toTitleCase(fieldName)}`;
-  const dialogDescription = isEnhanceMode ? "The AI has rewritten your text to be more impactful." : "Our AI has analyzed your text and provided suggestions for improvement.";
-
+  const dialogDescription = "The AI has rewritten your text to be more impactful.";
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -116,7 +90,7 @@ export default function AiSuggestionDialog({ open, onOpenChange, fieldName, curr
           <DialogTitle>{dialogTitle}</DialogTitle>
           <DialogDescription>{dialogDescription}</DialogDescription>
         </DialogHeader>
-        {!displayContent ? (
+        {!enhancedContent ? (
           <div className="flex justify-center items-center h-48">
             <LoaderCircle className="h-8 w-8 animate-spin text-primary" />
           </div>
@@ -125,7 +99,7 @@ export default function AiSuggestionDialog({ open, onOpenChange, fieldName, curr
             <div>
               <h4 className="font-semibold mb-2">Suggested Improvement</h4>
               <div className="bg-secondary p-4 rounded-md text-sm whitespace-pre-wrap h-full">
-                {displayContent}
+                {enhancedContent}
               </div>
             </div>
             <div>
@@ -138,7 +112,7 @@ export default function AiSuggestionDialog({ open, onOpenChange, fieldName, curr
         )}
         <DialogFooter className="pt-4">
           <Button variant="ghost" onClick={() => onOpenChange(false)}>Cancel</Button>
-          <Button onClick={handleUseSuggestion} disabled={!displayContent} className="bg-primary hover:bg-primary/90 text-primary-foreground">
+          <Button onClick={handleUseSuggestion} disabled={!enhancedContent} className="bg-primary hover:bg-primary/90 text-primary-foreground">
             Use this suggestion
           </Button>
         </DialogFooter>

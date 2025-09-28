@@ -2,7 +2,6 @@
 "use server";
 
 import { z } from "zod";
-import { suggestResumeImprovements } from "@/ai/flows/suggest-resume-improvements";
 import { generateTailoredResume } from "@/ai/flows/generate-tailored-resume";
 import { analyzeResumeForAts } from "@/ai/flows/analyze-resume-for-ats";
 import { getKeywordSuggestion } from "@/ai/flows/get-keyword-suggestion";
@@ -16,20 +15,6 @@ type GetKeywordSuggestionInput = z.infer<typeof GetKeywordSuggestionInputSchema>
 type ValidateJobDetailsInput = z.infer<typeof ValidateJobDetailsInputSchema>;
 type EnhanceDescriptionForAtsInput = z.infer<typeof EnhanceDescriptionForAtsInputSchema>;
 
-
-export async function getAiSuggestions(resumeContent: string) {
-  if (!resumeContent.trim()) {
-    return { error: "Content is empty, cannot provide suggestions." };
-  }
-  
-  try {
-    const result = await suggestResumeImprovements({ resumeContent });
-    return result;
-  } catch (error) {
-    console.error("AI suggestion error:", error);
-    return { error: "Failed to get AI suggestions. Please try again later." };
-  }
-}
 
 export async function generateTailoredResumeAction(input: GenerateTailoredResumeInput) {
   try {
