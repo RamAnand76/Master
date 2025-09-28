@@ -32,7 +32,7 @@ export default function AiSuggestionDialog({ open, onOpenChange, fieldName, curr
   const { toast } = useToast();
   const { jobDescription } = getValues();
 
-  const isEnhanceMode = !!(jobDescription && fieldName && (fieldName.startsWith('experience.') || fieldName.startsWith('projects.')));
+  const isEnhanceMode = !!(jobDescription && fieldName);
 
   useEffect(() => {
     if (open && fieldName) {
@@ -43,14 +43,18 @@ export default function AiSuggestionDialog({ open, onOpenChange, fieldName, curr
       const performAction = async () => {
         try {
           if (isEnhanceMode) {
-            const result = await enhanceDescriptionAction({ descriptionToEnhance: currentValue, jobDescription });
+            // Use enhanceDescriptionAction for all fields now, providing a generic job description for summary.
+            const result = await enhanceDescriptionAction({ 
+              descriptionToEnhance: currentValue, 
+              jobDescription: jobDescription || "a professional job" 
+            });
             if (result && "enhancedDescription" in result) {
               setEnhancedContent(result.enhancedDescription);
             } else {
               toast({ variant: "destructive", title: "Error", description: result?.error || "Could not enhance content." });
               onOpenChange(false);
             }
-          } else { // Fallback to general suggestions
+          } else { // Fallback for safety, though isEnhanceMode should usually be true
             const result = await getAiSuggestions(currentValue);
             if (!result || "error" in result) {
               toast({ variant: "destructive", title: "Error", description: result?.error || "An unknown error occurred." });
@@ -98,11 +102,11 @@ export default function AiSuggestionDialog({ open, onOpenChange, fieldName, curr
     : suggestion?.improvedContent;
     
   const displayExplanation = isEnhanceMode
-    ? "This suggestion has been rewritten to better align with the job description, using relevant keywords and quantifiable achievements to improve its ATS score."
+    ? `This suggestion has been rewritten to be more impactful and professional.${jobDescription ? " It is also tailored to the job description you provided." : ""}`
     : suggestion?.explanation;
 
-  const dialogTitle = isEnhanceMode ? `Enhanced Suggestion for your ${toTitleCase(fieldName)}` : `AI Suggestions for your ${toTitleCase(fieldName)}`;
-  const dialogDescription = isEnhanceMode ? "The AI has rewritten your text to be more impactful and ATS-friendly." : "Our AI has analyzed your text and provided suggestions for improvement.";
+  const dialogTitle = `Enhanced Suggestion for your ${toTitleCase(fieldName)}`;
+  const dialogDescription = isEnhanceMode ? "The AI has rewritten your text to be more impactful." : "Our AI has analyzed your text and provided suggestions for improvement.";
 
 
   return (
