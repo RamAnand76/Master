@@ -30,12 +30,14 @@ export async function enhanceDescriptionAction(input: EnhanceDescriptionForAtsIn
     if (!input.descriptionToEnhance.trim()) {
         return { error: "Content is empty, cannot provide suggestions." };
     }
-    if (!input.jobDescription.trim()) {
-        return { error: "Job description is empty, cannot enhance content." };
-    }
+    
+    const executionInput = {
+        ...input,
+        jobDescription: input.jobDescription.trim() || "a professional job role",
+    };
 
     try {
-        const result = await enhanceDescriptionForAts(input);
+        const result = await enhanceDescriptionForAts(executionInput);
         return result;
     } catch (error) {
         console.error("AI enhancement error:", error);
