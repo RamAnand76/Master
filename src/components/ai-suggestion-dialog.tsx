@@ -29,10 +29,10 @@ export default function AiSuggestionDialog({ open, onOpenChange, fieldName, curr
   const [enhancedContent, setEnhancedContent] = useState<string | null>(null);
   const { setValue, getValues } = useFormContext<ResumeData>();
   const { toast } = useToast();
-  const { jobDescription } = getValues();
-
+  
   useEffect(() => {
     if (open && fieldName) {
+      const { jobDescription } = getValues();
       setIsLoading(true);
       setEnhancedContent(null);
       
@@ -40,8 +40,9 @@ export default function AiSuggestionDialog({ open, onOpenChange, fieldName, curr
         try {
             const result = await enhanceDescriptionAction({ 
               descriptionToEnhance: currentValue, 
-              jobDescription: jobDescription || "a professional job" 
+              jobDescription: jobDescription || ""
             });
+
             if (result && "enhancedDescription" in result) {
               setEnhancedContent(result.enhancedDescription);
             } else {
@@ -59,7 +60,7 @@ export default function AiSuggestionDialog({ open, onOpenChange, fieldName, curr
       performAction();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open, fieldName, currentValue, jobDescription, onOpenChange, toast]);
+  }, [open, fieldName, currentValue]);
 
   const handleUseSuggestion = () => {
     if (fieldName && enhancedContent) {
@@ -79,6 +80,7 @@ export default function AiSuggestionDialog({ open, onOpenChange, fieldName, curr
     return str.charAt(0).toUpperCase() + str.slice(1);
   };
     
+  const { jobDescription } = getValues();
   const displayExplanation = `This suggestion has been rewritten to be more impactful and professional.${jobDescription ? " It is also tailored to the job description you provided." : ""}`;
   const dialogTitle = `Enhanced Suggestion for your ${toTitleCase(fieldName)}`;
   const dialogDescription = "The AI has rewritten your text to be more impactful.";
