@@ -6,6 +6,9 @@ import { useFormContext } from "react-hook-form";
 import {
   Dialog,
   DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { enhanceDescriptionAction } from "@/lib/actions";
@@ -68,40 +71,28 @@ export default function AiSuggestionDialog({ open, onOpenChange, fieldName, curr
     }
     onOpenChange(false);
   };
-  
-  const toTitleCase = (str: string | null) => {
-    if (!str) return '';
-    if (str.includes('.')) {
-      const parts = str.split('.');
-      const field = parts[0];
-      const subField = parts[2];
-      return `${field.charAt(0).toUpperCase() + field.slice(1)} - ${subField.charAt(0).toUpperCase() + subField.slice(1)}`;
-    }
-    return str.charAt(0).toUpperCase() + str.slice(1);
-  };
     
   const { jobDescription } = getValues();
-  const displayExplanation = `This suggestion has been rewritten to be more impactful and professional.${jobDescription ? " It is also tailored to the job description you provided." : ""}`;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-none sm:max-w-6xl w-full h-full sm:h-[95vh] bg-card/80 backdrop-blur-2xl sm:rounded-2xl shadow-glow border border-accent/10 flex flex-col p-0">
-        <div className="p-6 flex-shrink-0 z-10">
-            <div className="flex justify-between items-center">
+        <DialogHeader className="p-6 flex-shrink-0 z-10">
+           <div className="flex justify-between items-center">
                 <div className="flex items-center gap-4">
                     <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center border border-primary/20 shadow-inner-glow">
                         <span className="material-symbols-outlined text-accent text-3xl">auto_awesome</span>
                     </div>
                     <div>
-                        <h1 className="text-2xl font-extrabold text-foreground tracking-tight">AI-Powered Enhancement</h1>
-                        <p className="text-foreground/70 mt-1">Your summary has been optimized for impact and clarity.</p>
+                        <DialogTitle className="text-2xl font-extrabold text-foreground tracking-tight text-left">AI-Powered Enhancement</DialogTitle>
+                        <DialogDescription className="text-foreground/70 mt-1 text-left">Your summary has been optimized for impact and clarity.</DialogDescription>
                     </div>
                 </div>
                 <button onClick={() => onOpenChange(false)} className="text-foreground/60 hover:text-foreground transition-colors p-2 rounded-full hover:bg-white/10">
                     <span className="material-symbols-outlined">close</span>
                 </button>
             </div>
-        </div>
+        </DialogHeader>
 
         {isLoading ? (
             <div className="flex-grow flex items-center justify-center">
