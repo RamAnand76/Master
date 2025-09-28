@@ -6,16 +6,13 @@ import { useFormContext } from "react-hook-form";
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { enhanceDescriptionAction } from "@/lib/actions";
 import { useToast } from "@/hooks/use-toast";
 import type { ResumeData } from "@/lib/types";
-import { LoaderCircle, Sparkles, X } from "lucide-react";
+import { LoaderCircle } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 type AiSuggestionDialogProps = {
   open: boolean;
@@ -57,6 +54,7 @@ export default function AiSuggestionDialog({ open, onOpenChange, fieldName, curr
     }
   };
 
+
   useEffect(() => {
     if (open && fieldName) {
       performAction();
@@ -84,26 +82,23 @@ export default function AiSuggestionDialog({ open, onOpenChange, fieldName, curr
     
   const { jobDescription } = getValues();
   const displayExplanation = `This suggestion has been rewritten to be more impactful and professional.${jobDescription ? " It is also tailored to the job description you provided." : ""}`;
-  const keyImprovements = "The key improvements include using stronger action verbs, quantifying achievements where possible, and structuring the points for better readability. The tone is now more confident and business-oriented, which is ideal for a professional summary. This version highlights not just the tasks performed but also the value and skills demonstrated.";
-  const dialogTitle = `Enhanced Suggestion for your ${toTitleCase(fieldName)}`;
-  const dialogDescription = "The AI has rewritten your text to be more impactful.";
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-5xl h-[90vh] bg-card rounded-xl shadow-glow border border-accent/20 flex flex-col p-0">
-        <div className="p-6 flex-shrink-0">
-            <div className="flex justify-between items-start">
+      <DialogContent className="max-w-none sm:max-w-6xl w-full h-full sm:h-[95vh] bg-card/80 backdrop-blur-2xl sm:rounded-2xl shadow-glow border border-accent/10 flex flex-col p-0">
+        <div className="p-6 flex-shrink-0 z-10">
+            <div className="flex justify-between items-center">
                 <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center border border-primary/30">
-                        <Sparkles className="text-accent h-6 w-6" />
+                    <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center border border-primary/20 shadow-inner-glow">
+                        <span className="material-symbols-outlined text-accent text-3xl">auto_awesome</span>
                     </div>
                     <div>
-                        <DialogTitle className="text-xl font-bold text-foreground">{dialogTitle}</DialogTitle>
-                        <DialogDescription className="text-foreground/60 mt-1 text-sm">{dialogDescription}</DialogDescription>
+                        <h1 className="text-2xl font-extrabold text-foreground tracking-tight">AI-Powered Enhancement</h1>
+                        <p className="text-foreground/70 mt-1">Your summary has been optimized for impact and clarity.</p>
                     </div>
                 </div>
-                <button onClick={() => onOpenChange(false)} className="text-foreground/60 hover:text-foreground transition-colors">
-                    <X />
+                <button onClick={() => onOpenChange(false)} className="text-foreground/60 hover:text-foreground transition-colors p-2 rounded-full hover:bg-white/10">
+                    <span className="material-symbols-outlined">close</span>
                 </button>
             </div>
         </div>
@@ -113,30 +108,46 @@ export default function AiSuggestionDialog({ open, onOpenChange, fieldName, curr
                 <LoaderCircle className="h-12 w-12 animate-spin text-primary" />
             </div>
         ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-6 pb-6 flex-grow overflow-y-auto">
-                <div className="bg-background/50 p-6 rounded-lg border border-white/10 flex flex-col">
-                    <h2 className="text-lg font-semibold text-foreground mb-4 flex-shrink-0">Suggested Improvement</h2>
-                    <div className="prose prose-invert prose-p:text-foreground/80 prose-li:text-foreground/80 overflow-y-auto h-full pr-2 text-sm whitespace-pre-wrap">
-                        {suggestion?.enhancedDescription}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 px-6 pb-6 flex-grow overflow-hidden z-10">
+                <div className="bg-background/50 backdrop-blur-sm p-6 rounded-xl border border-white/10 flex flex-col overflow-hidden shadow-lg">
+                    <h2 className="text-xl font-bold text-foreground mb-4 flex-shrink-0 tracking-tight">Suggested Improvement</h2>
+                    <div className="prose prose-invert prose-p:text-foreground/80 prose-li:text-foreground/80 overflow-y-auto h-full pr-4 custom-scrollbar">
+                        <ul className="space-y-4">
+                            {suggestion?.enhancedDescription.split('\n').filter(s => s.trim().length > 0).map((line, i) => (
+                                <li key={i} className="flex items-start gap-3">
+                                    <span className="material-symbols-outlined text-accent mt-1">check_circle</span>
+                                    <span>{line.replace(/^- /, '')}</span>
+                                </li>
+                            ))}
+                        </ul>
                     </div>
                 </div>
-                <div className="bg-background/50 p-6 rounded-lg border border-white/10 flex flex-col">
-                    <h2 className="text-lg font-semibold text-foreground mb-4 flex-shrink-0">Explanation</h2>
-                    <div className="text-foreground/80 space-y-4 overflow-y-auto h-full pr-2 text-sm">
-                        <p>{displayExplanation}</p>
-                        <p>{keyImprovements}</p>
+                <div className="bg-background/50 backdrop-blur-sm p-6 rounded-xl border border-white/10 flex flex-col overflow-hidden shadow-lg">
+                    <h2 className="text-xl font-bold text-foreground mb-4 flex-shrink-0 tracking-tight">Explanation</h2>
+                    <div className="text-foreground/80 space-y-4 overflow-y-auto h-full pr-4 custom-scrollbar">
+                        <div className="bg-primary/10 border border-primary/20 rounded-lg p-4 shadow-inner-glow transition-all hover:bg-primary/20 hover:border-primary/30">
+                            <p className="font-semibold text-foreground">Impactful Language:</p>
+                            <p className="text-sm text-foreground/70">The rewrite uses stronger action verbs and a more confident tone to highlight your skills and achievements effectively.</p>
+                        </div>
+                        <div className="bg-primary/10 border border-primary/20 rounded-lg p-4 shadow-inner-glow transition-all hover:bg-primary/20 hover:border-primary/30">
+                            <p className="font-semibold text-foreground">Clarity and Readability:</p>
+                            <p className="text-sm text-foreground/70">The content is structured for easy scanning, making it more digestible for recruiters and hiring managers.</p>
+                        </div>
+                        <div className="bg-primary/10 border border-primary/20 rounded-lg p-4 shadow-inner-glow transition-all hover:bg-primary/20 hover:border-primary/30">
+                            <p className="font-semibold text-foreground">Professional Tone:</p>
+                            <p className="text-sm text-foreground/70">This version elevates the language to be more business-oriented, demonstrating professionalism and value.</p>
+                        </div>
                     </div>
                 </div>
             </div>
         )}
 
-        <div className="mt-auto p-6 flex-shrink-0 flex justify-end items-center gap-4 border-t border-white/10">
-            <Button variant="outline" onClick={() => onOpenChange(false)} className="px-6 py-2 rounded-lg font-semibold text-foreground/80 bg-transparent border border-white/20 hover:bg-white/10 hover:border-white/30 transition-all duration-300">
+        <div className="mt-auto p-6 flex-shrink-0 flex flex-col sm:flex-row justify-end items-center gap-4 border-t border-white/10 bg-card/80 backdrop-blur-sm z-10">
+            <Button variant="ghost" onClick={() => onOpenChange(false)} className="px-6 py-2.5 rounded-lg font-semibold text-foreground/80 bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300 w-full sm:w-auto">
                 Cancel
             </Button>
-            <Button onClick={handleUseSuggestion} disabled={isLoading || !suggestion} className="relative inline-flex items-center justify-center px-6 py-2 overflow-hidden font-semibold text-black rounded-lg group bg-accent">
-                <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-primary rounded-full group-hover:w-56 group-hover:h-56"></span>
-                <span className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-primary"></span>
+            <Button onClick={handleUseSuggestion} disabled={isLoading || !suggestion} className="relative inline-flex items-center justify-center px-6 py-2.5 overflow-hidden font-semibold text-black rounded-lg group bg-accent shadow-lg shadow-accent/30 hover:shadow-accent/50 transition-all duration-300 w-full sm:w-auto">
+                <span className="absolute w-full h-full bg-gradient-to-br from-white/20 to-transparent transition-all duration-500 ease-out group-hover:from-white/30"></span>
                 <span className="relative">Use this suggestion</span>
             </Button>
         </div>
