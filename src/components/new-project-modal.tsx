@@ -126,15 +126,22 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate,
 
     const newProject = resumeDataSchema.parse({
       name: values.title,
-      createdAt: new Date().toISOString(),
       summary,
-      experience: experienceDescription ? [experienceSchema.parse({ description: experienceDescription })] : [],
+      experience: experienceDescription ? [experienceSchema.parse({})] : [],
+      education: [educationSchema.parse({})],
+      projects: [],
+      skills: [],
       jobDescription: values.jobDescription,
       jobPosition: values.jobPosition,
       company: values.company,
       template: values.template,
     });
     
+    // Manually set the description for the first experience item if it exists
+    if (newProject.experience[0]) {
+      newProject.experience[0].description = experienceDescription;
+    }
+
     onProjectCreate(newProject);
     onOpenChange(false);
     methods.reset();

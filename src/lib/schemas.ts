@@ -49,9 +49,7 @@ export const resumeDataSchema = z.object({
   name: z.string().max(50).default('Untitled Resume'),
   template: z.string().default('classic'),
   createdAt: z.string().datetime().default(() => new Date().toISOString()),
-  personalDetails: personalDetailsSchema.default({
-    name: 'Your Name', email: 'your.email@example.com', phone: '+1 (123) 456-7890', location: 'City, State', website: '', linkedin: '', github: ''
-  }),
+  personalDetails: personalDetailsSchema.default({}),
   summary: z.string().max(300, "Summary cannot exceed 300 characters.").default('A brief professional summary about yourself.'),
   experience: z.array(experienceSchema).default([]),
   education: z.array(educationSchema).default([]),
