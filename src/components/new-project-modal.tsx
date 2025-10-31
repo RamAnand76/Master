@@ -92,7 +92,7 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate,
 
     let summary = resumeDataSchema.shape.summary._def.defaultValue as string;
     let experienceDescription = experienceSchema.shape.description._def.defaultValue as string;
-    const maxSummaryLength = resumeDataSchema.shape.summary.maxLength || 350;
+    const maxSummaryLength = resumeDataSchema.shape.summary.maxLength || 300;
 
     if (values.jobDescription) {
         try {
@@ -125,7 +125,6 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate,
     setIsGenerating(false);
 
     const newProject = resumeDataSchema.parse({
-      id: `studio-${Math.random().toString(36).substring(2, 12)}`,
       name: values.title,
       createdAt: new Date().toISOString(),
       summary,

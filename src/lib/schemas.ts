@@ -45,7 +45,7 @@ export const skillSchema = z.object({
 });
 
 export const resumeDataSchema = z.object({
-  id: z.string(),
+  id: z.string().default(() => `studio-${Math.random().toString(36).substring(2, 12)}`),
   name: z.string().max(50).default('Untitled Resume'),
   template: z.string().default('classic'),
   createdAt: z.string().datetime().default(() => new Date().toISOString()),
@@ -126,4 +126,12 @@ export const EnhanceDescriptionForAtsInputSchema = z.object({
 
 export const EnhanceDescriptionForAtsOutputSchema = z.object({
     enhancedDescription: z.string().describe("The rewritten, ATS-optimized description."),
+});
+
+export const SuggestGeneralImprovementsInputSchema = z.object({
+  descriptionToEnhance: z.string().describe("The user's current description for a project or experience."),
+});
+
+export const SuggestGeneralImprovementsOutputSchema = z.object({
+    enhancedDescription: z.string().describe("The rewritten, generally improved description."),
 });
