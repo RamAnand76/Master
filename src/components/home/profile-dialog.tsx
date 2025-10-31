@@ -11,6 +11,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
+import { useParams } from 'next/navigation';
+import type { ResumeData } from '@/lib/types';
 
 const profileSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters.").max(50),
@@ -29,6 +31,9 @@ const FIFTEEN_DAYS_IN_MS = 15 * 24 * 60 * 60 * 1000;
 export default function ProfileDialog({ open, onOpenChange }: ProfileDialogProps) {
   const { user, updateUser, isLoaded } = useUser();
   const { toast } = useToast();
+  const params = useParams();
+  const id = Array.isArray(params.id) ? params.id[0] : params.id;
+
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
@@ -58,6 +63,23 @@ export default function ProfileDialog({ open, onOpenChange }: ProfileDialogProps
       nameLastUpdatedAt: isNameChanged ? new Date().toISOString() : user.nameLastUpdatedAt,
     });
     
+    // Also update the current resume if we are in a workspace
+    if (id && isNameChanged) {
+        try {
+            const savedProjects = localStorage.getItem('resuMasterProjects');
+            if (savedProjects) {
+                const projects: ResumeData[] = JSON.parse(savedProjects);
+                const projectIndex = projects.findIndex(p => p.id === id);
+                if (projectIndex > -1) {
+                    projects[projectIndex].personalDetails.name = values.name;
+                    localStorage.setItem('resuMasterProjects', JSON.stringify(projects));
+                }
+            }
+        } catch(e) {
+            console.error("Could not update resume name in localStorage", e);
+        }
+    }
+
     toast({
       title: "Profile Updated",
       description: "Your details have been saved successfully.",

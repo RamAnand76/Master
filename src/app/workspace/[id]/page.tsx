@@ -164,7 +164,7 @@ export default function WorkspacePage() {
   }, [id, methods, performAtsAnalysis]);
   
   useEffect(() => {
-    if (isUserLoaded && user.name) {
+    if (isUserLoaded && user.name && methods.getValues('personalDetails.name') !== user.name) {
         methods.setValue('personalDetails.name', user.name, { shouldValidate: true, shouldDirty: true });
     }
   }, [isUserLoaded, user.name, methods]);
