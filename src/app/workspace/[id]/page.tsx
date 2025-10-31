@@ -344,7 +344,7 @@ export default function WorkspacePage() {
 
          <MobileTabs 
             activeTab={activeMobileTab} 
-            setActiveTab={setActiveTab} 
+            setActiveTab={setActiveMobileTab} 
          />
       </div>
       <KeywordSuggestionDialog 
@@ -357,3 +357,5 @@ export default function WorkspacePage() {
     </TooltipProvider>
   );
 }
+
+    
