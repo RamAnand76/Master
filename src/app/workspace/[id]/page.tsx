@@ -164,17 +164,14 @@ export default function WorkspacePage() {
   }, [id, methods, performAtsAnalysis]);
   
   useEffect(() => {
-    if (isUserLoaded && user.name && methods.getValues('personalDetails.name') !== user.name) {
-        const currentData = methods.getValues();
-        methods.reset({
-            ...currentData,
-            personalDetails: {
-                ...currentData.personalDetails,
-                name: user.name,
-            },
-        });
+    // Only run this effect after the initial load is complete and user is loaded.
+    if (loadingStep >= 3 && isUserLoaded && user.name) {
+      const currentFormName = methods.getValues('personalDetails.name');
+      if (currentFormName !== user.name) {
+        methods.setValue('personalDetails.name', user.name);
+      }
     }
-  }, [isUserLoaded, user.name, methods]);
+  }, [isUserLoaded, user.name, loadingStep, methods]);
 
 
   const saveData = useCallback((data: ResumeData) => {
@@ -357,5 +354,3 @@ export default function WorkspacePage() {
     </TooltipProvider>
   );
 }
-
-    
