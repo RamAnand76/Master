@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { type ResumeData } from "@/lib/types";
-import { resumeDataSchema, experienceSchema } from "@/lib/schemas";
+import { resumeDataSchema, experienceSchema, educationSchema } from "@/lib/schemas";
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { MultiStepLoader } from "./ui/multi-step-loader";
@@ -289,3 +289,5 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate,
     </>
   );
 }
+
+    
