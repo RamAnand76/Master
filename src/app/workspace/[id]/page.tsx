@@ -165,7 +165,14 @@ export default function WorkspacePage() {
   
   useEffect(() => {
     if (isUserLoaded && user.name && methods.getValues('personalDetails.name') !== user.name) {
-        methods.setValue('personalDetails.name', user.name, { shouldValidate: true, shouldDirty: true });
+        const currentData = methods.getValues();
+        methods.reset({
+            ...currentData,
+            personalDetails: {
+                ...currentData.personalDetails,
+                name: user.name,
+            },
+        });
     }
   }, [isUserLoaded, user.name, methods]);
 
@@ -337,7 +344,7 @@ export default function WorkspacePage() {
 
          <MobileTabs 
             activeTab={activeMobileTab} 
-            setActiveTab={setActiveMobileTab} 
+            setActiveTab={setActiveTab} 
          />
       </div>
       <KeywordSuggestionDialog 
