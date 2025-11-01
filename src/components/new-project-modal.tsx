@@ -144,19 +144,17 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate,
     <>
     <MultiStepLoader loadingStates={loadingStates} loading={isGenerating} duration={1500} />
     <Dialog open={isOpen && !isGenerating} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl h-[90vh] md:h-[80vh] flex flex-col">
-        <DialogHeader>
+      <DialogContent className="max-w-4xl h-[90vh] md:h-auto md:max-h-[80vh] flex flex-col p-0">
+        <DialogHeader className="p-6 pb-4">
           <DialogTitle>Create a New Resume</DialogTitle>
           <DialogDescription>
             Start by telling us about the job you're applying for and choose a template.
           </DialogDescription>
         </DialogHeader>
         <FormProvider {...methods}>
-          <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-8 flex-1 overflow-y-auto md:overflow-hidden">
+          <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 flex-1 overflow-hidden px-6">
             
-            {/* Left Column: Form */}
-            <ScrollArea className="pr-4 -mr-4 md:h-full">
-              <div className="space-y-3">
+            <div className="flex flex-col space-y-3 overflow-y-auto pr-2 -mr-2">
                 <FormField
                   control={control}
                   name="title"
@@ -209,10 +207,8 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate,
                     </FormItem>
                   )}
                 />
-              </div>
-            </ScrollArea>
+            </div>
 
-            {/* Right Column: Template Selector */}
             <div className="flex flex-col min-h-0">
                 <FormLabel>Select a Template</FormLabel>
                 <Tabs value={activeCategory} onValueChange={setActiveCategory} className="mt-3">
@@ -267,7 +263,7 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate,
                         })}
                     </div>
                 </ScrollArea>
-                </div>
+            </div>
             
             <DialogFooter className="md:col-span-2 mt-auto pt-4 border-t border-border">
                 <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>Cancel</Button>
@@ -282,5 +278,3 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate,
     </>
   );
 }
-
-    
