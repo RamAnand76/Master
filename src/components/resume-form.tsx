@@ -7,7 +7,7 @@ import { Trash2, Sparkles, LoaderCircle, PlusCircle, Briefcase, GraduationCap, F
 import type { ResumeData } from '@/lib/types';
 import { educationSchema, experienceSchema, projectSchema, skillSchema, resumeDataSchema } from '@/lib/schemas';
 import AiSuggestionDialog from './ai-suggestion-dialog';
-import VideoPromptDialog from './workspace/video-prompt-dialog';
+import VideoPromptDialog from '@/components/workspace/video-prompt-dialog';
 import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { CharacterCount } from './resume-form/character-count';
