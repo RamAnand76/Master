@@ -28,10 +28,10 @@ export default function HomeHeader() {
     return (
         <>
             <header className="sticky top-0 z-10 px-4 py-2 flex justify-between items-center border-b border-border bg-background/80 backdrop-blur-sm">
-                <div className="flex items-center gap-2">
+                <Link href="/" className="flex items-center gap-2">
                     <AppLogo />
                     <span className="font-semibold text-lg tracking-tight">ResuMaster</span>
-                </div>
+                </Link>
                 <div className="flex items-center gap-2">
                     <AnimatedThemeToggler />
                     
