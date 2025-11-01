@@ -6,7 +6,25 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import Link from 'next/link';
 import HomeHeader from "@/components/home/home-header";
 import { useUser } from "@/hooks/use-user";
-import { CreditCard, WalletCards, Briefcase } from "lucide-react";
+import { CreditCard, WalletCards, Briefcase, PlusCircle } from "lucide-react";
+import { motion } from 'framer-motion';
+
+const containerVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: {
+            staggerChildren: 0.1
+        }
+    }
+};
+
+const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 }
+};
+
 
 export default function WalletPage() {
     const { user } = useUser();
@@ -17,56 +35,73 @@ export default function WalletPage() {
                 <HomeHeader />
             </div>
             <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-10 pb-24">
-                <header className="mb-10">
+                <motion.header 
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="mb-10"
+                >
                     <h1 className="text-4xl font-bold tracking-tight">Wallet</h1>
                     <p className="mt-2 text-muted-foreground">Manage your credits and subscription plan.</p>
-                </header>
+                </motion.header>
 
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+                <motion.div 
+                    variants={containerVariants}
+                    initial="hidden"
+                    animate="visible"
+                    className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start"
+                >
                     <div className="lg:col-span-2 space-y-8">
-                        <Card>
-                            <CardHeader>
-                                <CardTitle className="flex items-center gap-2">
-                                    <WalletCards className="w-5 h-5 text-primary" />
-                                    <span>Current Balance</span>
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <div className="flex items-baseline gap-4">
-                                    <p className="text-5xl font-extrabold text-primary">{user.credits}</p>
-                                    <span className="text-2xl font-medium text-muted-foreground">credits</span>
-                                </div>
-                                <p className="mt-2 text-sm text-muted-foreground">Ready to be used across all ResuMaster services.</p>
-                                <Button asChild className="mt-6">
-                                    <Link href="/billing">Add More Credits</Link>
-                                </Button>
-                            </CardContent>
-                        </Card>
-                        
-                        <Card>
-                            <CardHeader>
-                                <CardTitle className="flex items-center gap-2">
-                                    <Briefcase className="w-5 h-5 text-primary" />
-                                    <span>Current Plan</span>
-                                </CardTitle>
-                                <CardDescription>You are currently on the Free plan.</CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-4 bg-secondary/50 rounded-lg">
-                                    <div>
-                                        <p className="font-semibold text-foreground">Upgrade to Pro</p>
-                                        <p className="text-muted-foreground text-sm mt-1">Unlock unlimited resumes, advanced templates, and priority support.</p>
+                        <motion.div variants={itemVariants}>
+                            <Card className="shadow-lg">
+                                <CardHeader>
+                                    <CardTitle className="flex items-center gap-2">
+                                        <WalletCards className="w-5 h-5 text-primary" />
+                                        <span>Current Balance</span>
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="flex items-baseline gap-4">
+                                        <p className="text-5xl font-extrabold text-primary">{user.credits}</p>
+                                        <span className="text-2xl font-medium text-muted-foreground">credits</span>
                                     </div>
-                                    <Button asChild>
-                                        <Link href="/pricing">Upgrade</Link>
+                                    <p className="mt-2 text-sm text-muted-foreground">Ready to be used across all ResuMaster services.</p>
+                                    <Button asChild className="mt-6">
+                                        <Link href="/billing">
+                                            <PlusCircle className="mr-2 h-4 w-4" />
+                                            Add More Credits
+                                        </Link>
                                     </Button>
-                                </div>
-                            </CardContent>
-                        </Card>
+                                </CardContent>
+                            </Card>
+                        </motion.div>
+                        
+                        <motion.div variants={itemVariants}>
+                            <Card className="shadow-lg">
+                                <CardHeader>
+                                    <CardTitle className="flex items-center gap-2">
+                                        <Briefcase className="w-5 h-5 text-primary" />
+                                        <span>Current Plan</span>
+                                    </CardTitle>
+                                    <CardDescription>You are currently on the Free plan.</CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-4 bg-secondary/50 rounded-lg">
+                                        <div>
+                                            <p className="font-semibold text-foreground">Upgrade to Pro</p>
+                                            <p className="text-muted-foreground text-sm mt-1">Unlock unlimited resumes, advanced templates, and priority support.</p>
+                                        </div>
+                                        <Button asChild>
+                                            <Link href="/pricing">Upgrade</Link>
+                                        </Button>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </motion.div>
                     </div>
 
-                    <div className="lg:col-span-1">
-                        <Card className="sticky top-24">
+                    <motion.div variants={itemVariants} className="lg:col-span-1">
+                        <Card className="sticky top-24 shadow-lg">
                             <CardHeader>
                                 <CardTitle className="flex items-center gap-2">
                                     <CreditCard className="w-5 h-5 text-primary"/>
@@ -88,8 +123,8 @@ export default function WalletPage() {
                                 </Button>
                             </CardContent>
                         </Card>
-                    </div>
-                </div>
+                    </motion.div>
+                </motion.div>
             </main>
         </div>
     );
