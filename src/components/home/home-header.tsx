@@ -55,11 +55,11 @@ export default function HomeHeader() {
                                 </DropdownMenuItem>
                                 <Link href="/wallet" passHref>
                                     <DropdownMenuItem>
-                                            <Wallet className="mr-2 h-4 w-4" />
-                                            <div className="flex justify-between items-center w-full">
-                                                <span>Wallet</span>
-                                                <span className="font-semibold text-foreground">{user.credits}</span>
-                                            </div>
+                                        <Wallet className="mr-2 h-4 w-4" />
+                                        <div className="flex justify-between items-center w-full">
+                                            <span>Wallet</span>
+                                            <Badge variant="secondary" className="text-xs">{user.credits} credits</Badge>
+                                        </div>
                                     </DropdownMenuItem>
                                 </Link>
                                 <DropdownMenuItem>
