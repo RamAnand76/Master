@@ -56,7 +56,10 @@ export default function HomeHeader() {
                                 <Link href="/wallet" passHref>
                                     <DropdownMenuItem>
                                             <Wallet className="mr-2 h-4 w-4" />
-                                            <span>Wallet</span>
+                                            <div className="flex justify-between items-center w-full">
+                                                <span>Wallet</span>
+                                                <span className="font-semibold text-foreground">{user.credits}</span>
+                                            </div>
                                     </DropdownMenuItem>
                                 </Link>
                                 <DropdownMenuItem>
@@ -64,13 +67,6 @@ export default function HomeHeader() {
                                     <div className="flex justify-between items-center w-full">
                                         <span>Plan</span>
                                         <Badge variant="secondary" className="text-xs bg-primary/10 text-primary hover:bg-primary/20">Free</Badge>
-                                    </div>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem>
-                                    <Database className="mr-2 h-4 w-4" />
-                                    <div className="flex justify-between items-center w-full">
-                                        <span>Credits</span>
-                                        <span className="font-semibold text-foreground">{user.credits}</span>
                                     </div>
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
