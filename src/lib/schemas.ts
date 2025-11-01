@@ -80,7 +80,7 @@ export const GenerateTailoredResumeInputSchema = z.object({
 
 export const GenerateTailoredResumeOutputSchema = z.object({
   summary: z.string().describe("A professional summary tailored to the job description."),
-  experienceDescription: z.string().describe("A description for the most recent experience, tailored to the job description."),
+  experienceDescription: z.string().describe("This is no longer used, but kept for schema compatibility. It will be an empty string.").default(""),
 });
 
 export const AnalyzeResumeForAtsInputSchema = z.object({

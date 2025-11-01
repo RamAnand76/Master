@@ -25,14 +25,14 @@ const prompt = ai.definePrompt({
   name: 'generateTailoredResumePrompt',
   input: {schema: GenerateTailoredResumeInputSchema},
   output: {schema: GenerateTailoredResumeOutputSchema},
-  prompt: `You are an expert resume writer. Given the user's desired job position, company, and the job description, generate a tailored professional summary and a set of impactful bullet points for their most recent experience.
+  prompt: `You are an expert resume writer. Given the user's desired job position, company, and the job description, generate a tailored professional summary.
 
 Job Position: {{{jobPosition}}}
 Company: {{{company}}}
 Job Description:
 {{{jobDescription}}}
 
-Generate a professional summary and a description for the most recent experience, tailored to the job description. The experience description should be a series of bullet points, each starting with a hyphen.
+Generate a professional summary tailored to the job description.
 `,
 });
 
@@ -44,6 +44,9 @@ const generateTailoredResumeFlow = ai.defineFlow(
   },
   async input => {
     const {output} = await prompt(input);
-    return output!;
+    // Ensure experienceDescription is always an empty string as it's no longer generated.
+    return { summary: output!.summary, experienceDescription: '' };
   }
 );
+
+    

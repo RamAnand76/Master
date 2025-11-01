@@ -91,7 +91,6 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate,
     }
 
     let summary = resumeDataSchema.shape.summary._def.defaultValue as string;
-    let experienceDescription = experienceSchema.shape.description._def.defaultValue as string;
     const maxSummaryLength = resumeDataSchema.shape.summary.maxLength || 300;
 
     if (values.jobDescription) {
@@ -104,7 +103,6 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate,
 
             if (result && "summary" in result) {
                 summary = result.summary.substring(0, maxSummaryLength);
-                experienceDescription = result.experienceDescription;
             } else {
                 toast({
                     variant: "destructive",
@@ -127,7 +125,7 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate,
     const newProject = resumeDataSchema.parse({
       name: values.title,
       summary,
-      experience: experienceDescription ? [experienceSchema.parse({})] : [],
+      experience: [], // Always start with an empty experience array
       education: [educationSchema.parse({})],
       projects: [],
       skills: [],
@@ -137,11 +135,6 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate,
       template: values.template,
     });
     
-    // Manually set the description for the first experience item if it exists
-    if (newProject.experience[0]) {
-      newProject.experience[0].description = experienceDescription;
-    }
-
     onProjectCreate(newProject);
     onOpenChange(false);
     methods.reset();
