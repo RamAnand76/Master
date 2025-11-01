@@ -37,9 +37,9 @@ function debounce<F extends (...args: any[]) => any>(func: F, waitFor: number) {
 }
 
 const loadingStates = [
-  { text: 'Loading your resume data', icon: <FileText /> },
-  { text: 'Preparing your workspace', icon: <LayoutGrid /> },
-  { text: 'Running initial analysis', icon: <BotMessageSquare /> },
+  { text: 'Loading your resume data...' },
+  { text: 'Preparing your workspace...' },
+  { text: 'Running initial analysis...' },
 ];
 
 const ShareIcon = () => (
@@ -61,6 +61,7 @@ const DownloadIcon = () => (
 export default function WorkspacePage() {
   const params = useParams();
   const id = Array.isArray(params.id) ? params.id[0] : params.id;
+  const [isLoading, setIsLoading] = useState(true);
   const [loadingStep, setLoadingStep] = useState(0);
   const [isSaving, setIsSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
@@ -75,11 +76,59 @@ export default function WorkspacePage() {
   const methods = useForm<ResumeData>({
     resolver: zodResolver(resumeDataSchema),
     mode: 'onChange',
-    defaultValues: resumeDataSchema.parse({ id: '' }),
   });
 
   const resumeName = methods.watch('name');
   const resumeData = methods.watch();
+
+  useEffect(() => {
+    const loadData = async () => {
+        setIsLoading(true);
+        setLoadingStep(0); 
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        const savedProjects = localStorage.getItem('resuMasterProjects');
+        let currentProject: ResumeData | undefined;
+        if (savedProjects) {
+            try {
+                const projects: ResumeData[] = JSON.parse(savedProjects);
+                currentProject = projects.find(p => p.id === id);
+                if (currentProject) {
+                    methods.reset(resumeDataSchema.parse(currentProject));
+                    setLastSaved(new Date());
+                }
+            } catch (e) {
+                console.error("Failed to parse projects from localStorage", e);
+            }
+        }
+        
+        setLoadingStep(1);
+        await new Promise(resolve => setTimeout(resolve, 500));
+        setLoadingStep(2);
+        
+        if (currentProject?.jobDescription) {
+            await performAtsAnalysis(currentProject);
+        } else {
+            setAtsAnalysis({ score: 0, feedback: "Add a job description for an ATS analysis.", missingKeywords: [], matchingKeywords: [] });
+        }
+
+        await new Promise(resolve => setTimeout(resolve, 500));
+        setIsLoading(false);
+    };
+
+    loadData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, methods.reset]);
+  
+  useEffect(() => {
+    // Only run this effect after the initial load is complete and user is loaded.
+    if (!isLoading && isUserLoaded && user.name) {
+      const currentFormName = methods.getValues('personalDetails.name');
+      if (currentFormName !== user.name) {
+        methods.setValue('personalDetails.name', user.name, { shouldDirty: true });
+      }
+    }
+  }, [isUserLoaded, user.name, isLoading, methods]);
 
   const handleDownloadPdf = async () => {
     toast({
@@ -126,54 +175,6 @@ export default function WorkspacePage() {
   const debouncedAtsAnalysis = useMemo(() => debounce(performAtsAnalysis, 2000), [performAtsAnalysis]);
 
 
-  useEffect(() => {
-    const loadData = async () => {
-        setLoadingStep(0); // Start loading
-        await new Promise(resolve => setTimeout(resolve, 500)); // Simulate initial delay
-        
-        const savedProjects = localStorage.getItem('resuMasterProjects');
-        let currentProject: ResumeData | undefined;
-        if (savedProjects) {
-            try {
-                const projects: ResumeData[] = JSON.parse(savedProjects);
-                currentProject = projects.find(p => p.id === id);
-                if (currentProject) {
-                    methods.reset(currentProject);
-                    setLastSaved(new Date());
-                }
-            } catch (e) {
-                console.error("Failed to parse projects from localStorage", e);
-            }
-        }
-        
-        setLoadingStep(1); // Data loaded
-        await new Promise(resolve => setTimeout(resolve, 500)); // Simulate prep
-        setLoadingStep(2); // Workspace prepared
-        
-        if (currentProject?.jobDescription) {
-            await performAtsAnalysis(currentProject);
-        } else {
-            setAtsAnalysis({ score: 0, feedback: "Add a job description for an ATS analysis.", missingKeywords: [], matchingKeywords: [] });
-        }
-
-        await new Promise(resolve => setTimeout(resolve, 500)); // Simulate analysis
-        setLoadingStep(3); // Loading complete
-    };
-
-    loadData();
-  }, [id, methods, performAtsAnalysis]);
-  
-  useEffect(() => {
-    // Only run this effect after the initial load is complete and user is loaded.
-    if (loadingStep >= 3 && isUserLoaded && user.name) {
-      const currentFormName = methods.getValues('personalDetails.name');
-      if (currentFormName !== user.name) {
-        methods.setValue('personalDetails.name', user.name);
-      }
-    }
-  }, [isUserLoaded, user.name, loadingStep, methods]);
-
-
   const saveData = useCallback((data: ResumeData) => {
     try {
       const savedProjects = localStorage.getItem('resuMasterProjects');
@@ -201,6 +202,7 @@ export default function WorkspacePage() {
   const debouncedSave = useMemo(() => debounce(saveData, 1000), [saveData]);
 
   useEffect(() => {
+    if (isLoading) return;
     const subscription = methods.watch((value) => {
       setIsSaving(true);
       // @ts-ignore
@@ -214,7 +216,7 @@ export default function WorkspacePage() {
       });
     });
     return () => subscription.unsubscribe();
-  }, [methods, debouncedSave, debouncedAtsAnalysis]);
+  }, [methods, debouncedSave, debouncedAtsAnalysis, isLoading]);
   
   const getSaveStatus = () => {
       if (isSaving) {
@@ -234,7 +236,6 @@ export default function WorkspacePage() {
   }
 
   const saveStatus = getSaveStatus();
-  const isLoading = loadingStep < loadingStates.length;
 
   if (isLoading) {
     return (
@@ -354,3 +355,5 @@ export default function WorkspacePage() {
     </TooltipProvider>
   );
 }
+
+    

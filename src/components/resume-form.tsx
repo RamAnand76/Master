@@ -3,10 +3,11 @@
 
 import { useFormContext, useFieldArray, Controller } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
-import { Trash2, Sparkles, LoaderCircle, PlusCircle, Briefcase, GraduationCap, FolderKanban, Star } from 'lucide-react';
+import { Trash2, Sparkles, LoaderCircle, PlusCircle, Briefcase, GraduationCap, FolderKanban, Star, Clapperboard } from 'lucide-react';
 import type { ResumeData } from '@/lib/types';
 import { educationSchema, experienceSchema, projectSchema, skillSchema, resumeDataSchema } from '@/lib/schemas';
 import AiSuggestionDialog from './ai-suggestion-dialog';
+import VideoPromptDialog from './workspace/video-prompt-dialog';
 import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { CharacterCount } from './resume-form/character-count';
@@ -33,7 +34,8 @@ const EmptyState = ({ icon, title, description, buttonText, onAdd }: { icon: Rea
 export default function ResumeForm() {
     const { control, getValues } = useFormContext<ResumeData>();
     const [suggestionField, setSuggestionField] = useState<'summary' | `experience.${number}.description` | `education.${number}.description` | `projects.${number}.description` | null>(null);
-    const [isAiLoading, setIsAiLoading] = useState(false);
+    const [videoPromptField, setVideoPromptField] = useState<`experience.${number}` | null>(null);
+    const [isAiLoading, setIsAiLoading] = useState<string | null>(null);
 
     const { fields: experienceFields, append: appendExperience, remove: removeExperience } = useFieldArray({ control, name: 'experience' });
     const { fields: educationFields, append: appendEducation, remove: removeEducation } = useFieldArray({ control, name: 'education' });
@@ -43,8 +45,14 @@ export default function ResumeForm() {
     const [skillInputValue, setSkillInputValue] = useState('');
 
     const handleGetSuggestion = (fieldName: 'summary' | `experience.${number}.description` | `education.${number}.description` | `projects.${number}.description`) => {
+        setIsAiLoading(fieldName);
         setSuggestionField(fieldName);
     };
+
+    const handleGetVideoPrompt = (index: number) => {
+        setVideoPromptField(`experience.${index}`);
+    };
+
 
     const handleSkillInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter' || e.key === 'Tab') {
@@ -100,8 +108,8 @@ export default function ResumeForm() {
                                 <Textarea {...field} rows={5} className='pr-10 pb-8 resize-none bg-input' />
                                </FormControl>
                                <div className="absolute bottom-2 right-2 flex items-center gap-2">
-                                    <Button type="button" size="icon" variant="ghost" className="h-7 w-7 text-primary hover:text-primary/90" onClick={() => handleGetSuggestion('summary')} disabled={isAiLoading}>
-                                        {isAiLoading && suggestionField === 'summary' ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+                                    <Button type="button" size="icon" variant="ghost" className="h-7 w-7 text-primary hover:text-primary/90" onClick={() => handleGetSuggestion('summary')} disabled={!!isAiLoading}>
+                                        {isAiLoading === 'summary' ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
                                     </Button>
                                 </div>
                                 <div className="absolute bottom-2.5 left-3">
@@ -139,8 +147,16 @@ export default function ResumeForm() {
                                                 <Textarea {...field} rows={5} className='mt-1 pr-10 pb-8 resize-none bg-input' />
                                             </FormControl>
                                             <div className="absolute bottom-2 right-2 flex items-center gap-2">
-                                                <Button type="button" size="icon" variant="ghost" className="h-7 w-7 text-primary hover:text-primary/90" onClick={() => handleGetSuggestion(`experience.${index}.description`)} disabled={isAiLoading}>
-                                                    {isAiLoading && suggestionField === `experience.${index}.description` ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+                                                <Tooltip>
+                                                    <TooltipTrigger asChild>
+                                                        <Button type="button" size="icon" variant="ghost" className="h-7 w-7 text-purple-400 hover:text-purple-400/90" onClick={() => handleGetVideoPrompt(index)}>
+                                                            <Clapperboard className="h-4 w-4" />
+                                                        </Button>
+                                                    </TooltipTrigger>
+                                                    <TooltipContent><p>Generate Video Prompt</p></TooltipContent>
+                                                </Tooltip>
+                                                <Button type="button" size="icon" variant="ghost" className="h-7 w-7 text-primary hover:text-primary/90" onClick={() => handleGetSuggestion(`experience.${index}.description`)} disabled={!!isAiLoading}>
+                                                    {isAiLoading === `experience.${index}.description` ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
                                                 </Button>
                                             </div>
                                             <div className="absolute bottom-2.5 left-3">
@@ -192,8 +208,8 @@ export default function ResumeForm() {
                                                 <Textarea {...field} rows={5} className='mt-1 pr-10 pb-8 resize-none bg-input' />
                                             </FormControl>
                                             <div className="absolute bottom-2 right-2 flex items-center gap-2">
-                                                <Button type="button" size="icon" variant="ghost" className="h-7 w-7 text-primary hover:text-primary/90" onClick={() => handleGetSuggestion(`education.${index}.description`)} disabled={isAiLoading}>
-                                                    {isAiLoading && suggestionField === `education.${index}.description` ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+                                                <Button type="button" size="icon" variant="ghost" className="h-7 w-7 text-primary hover:text-primary/90" onClick={() => handleGetSuggestion(`education.${index}.description`)} disabled={!!isAiLoading}>
+                                                    {isAiLoading === `education.${index}.description` ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
                                                 </Button>
                                             </div>
                                             <div className="absolute bottom-2.5 left-3">
@@ -243,8 +259,8 @@ export default function ResumeForm() {
                                                 <Textarea {...field} rows={5} className='mt-1 pr-10 pb-8 resize-none bg-input' />
                                             </FormControl>
                                             <div className="absolute bottom-2 right-2 flex items-center gap-2">
-                                                <Button type="button" size="icon" variant="ghost" className="h-7 w-7 text-primary hover:text-primary/90" onClick={() => handleGetSuggestion(`projects.${index}.description`)} disabled={isAiLoading}>
-                                                    {isAiLoading && suggestionField === `projects.${index}.description` ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+                                                <Button type="button" size="icon" variant="ghost" className="h-7 w-7 text-primary hover:text-primary/90" onClick={() => handleGetSuggestion(`projects.${index}.description`)} disabled={!!isAiLoading}>
+                                                    {isAiLoading === `projects.${index}.description` ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
                                                 </Button>
                                             </div>
                                             <div className="absolute bottom-2.5 left-3">
@@ -314,12 +330,22 @@ export default function ResumeForm() {
                 onOpenChange={(isOpen) => {
                     if (!isOpen) {
                         setSuggestionField(null);
+                        setIsAiLoading(null);
                     }
                 }}
                 fieldName={suggestionField}
-                currentValue={getValues(suggestionField || 'summary')}
-                setIsLoading={setIsAiLoading}
+                currentValue={suggestionField ? getValues(suggestionField) : ''}
+            />
+            <VideoPromptDialog
+                open={!!videoPromptField}
+                onOpenChange={(isOpen) => {
+                    if (!isOpen) setVideoPromptField(null);
+                }}
+                fieldName={videoPromptField}
+                experience={videoPromptField ? getValues(videoPromptField) : undefined}
             />
         </>
     );
 }
+
+    

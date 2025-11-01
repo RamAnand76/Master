@@ -44,6 +44,15 @@ export default function AiSuggestionDialog({ open, onOpenChange, fieldName, curr
         });
 
         if (result && "enhancedDescription" in result) {
+          if (result.enhancedDescription.includes("To provide a targeted rewrite")) {
+            toast({
+              variant: "destructive",
+              title: "More Information Needed",
+              description: "Please provide a job description and the content you'd like to enhance for a better AI suggestion.",
+            });
+            onOpenChange(false);
+            return;
+          }
           setSuggestion(result);
         } else {
           toast({ variant: "destructive", title: "Error", description: result?.error || "Could not enhance content." });
@@ -68,12 +77,14 @@ export default function AiSuggestionDialog({ open, onOpenChange, fieldName, curr
   const handleUseSuggestion = () => {
     if (fieldName && suggestion) {
       setValue(fieldName, suggestion.enhancedDescription, { shouldDirty: true, shouldValidate: true });
+      toast({
+        title: "Suggestion Applied",
+        description: "The AI-enhanced content has been applied."
+      })
     }
     onOpenChange(false);
   };
     
-  const { jobDescription } = getValues();
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-none sm:max-w-4xl w-full h-full sm:h-[80vh] bg-card/80 backdrop-blur-2xl sm:rounded-2xl shadow-glow border border-accent/10 flex flex-col p-0">
@@ -90,7 +101,7 @@ export default function AiSuggestionDialog({ open, onOpenChange, fieldName, curr
                     </div>
                     <div>
                         <h1 className="text-2xl font-extrabold text-foreground tracking-tight">AI-Powered Enhancement</h1>
-                        <p className="text-foreground/70 mt-1">Your summary has been optimized for impact and clarity.</p>
+                        <p className="text-foreground/70 mt-1">Your content has been optimized for impact and clarity.</p>
                     </div>
                 </div>
                 <button onClick={() => onOpenChange(false)} className="text-foreground/60 hover:text-foreground transition-colors p-2 rounded-full hover:bg-white/10">
@@ -151,3 +162,5 @@ export default function AiSuggestionDialog({ open, onOpenChange, fieldName, curr
     </Dialog>
   );
 }
+
+    

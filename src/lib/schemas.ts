@@ -2,7 +2,7 @@
 import { z } from 'zod';
 
 // Helper to generate UUID on the client
-const generateId = () => (typeof window !== 'undefined' ? crypto.randomUUID() : Math.random().toString());
+const generateId = () => (typeof window !== 'undefined' ? crypto.randomUUID() : `server-${Math.random().toString(36).substring(2, 12)}`);
 
 export const personalDetailsSchema = z.object({
   name: z.string().max(50).default('Your Name'),
@@ -41,11 +41,11 @@ export const projectSchema = z.object({
 
 export const skillSchema = z.object({
     id: z.string().default(generateId),
-    name: z.string().max(50).default('A skill'),
+    name: z.string().max(50),
 });
 
 export const resumeDataSchema = z.object({
-  id: z.string().default(() => `studio-${Math.random().toString(36).substring(2, 12)}`),
+  id: z.string().default(generateId),
   name: z.string().max(50).default('Untitled Resume'),
   template: z.string().default('classic'),
   createdAt: z.string().datetime().default(() => new Date().toISOString()),
@@ -133,3 +133,16 @@ export const SuggestGeneralImprovementsInputSchema = z.object({
 export const SuggestGeneralImprovementsOutputSchema = z.object({
     enhancedDescription: z.string().describe("The rewritten, generally improved description."),
 });
+
+export const GenerateVideoPromptInputSchema = z.object({
+    role: z.string().describe("The job title or role."),
+    company: z.string().describe("The company name."),
+    description: z.string().describe("The description of the work experience or project."),
+});
+
+export const GenerateVideoPromptOutputSchema = z.object({
+    scene: z.string().describe("A descriptive, visual scene for a video based on the input. This should be a few sentences long and set a clear visual context."),
+    prompt: z.string().describe("A concise, action-oriented prompt suitable for a text-to-video AI model like Veo or Sora. This should be a single sentence, like 'Animate a character doing X' or 'Show a diagram of Y'."),
+});
+
+    
