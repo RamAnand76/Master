@@ -6,7 +6,7 @@ import { CheckCircle2 } from "lucide-react";
 
 type LoadingState = {
   text: string;
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
 };
 
 const LoaderCore = ({

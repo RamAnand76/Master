@@ -239,7 +239,7 @@ export default function WorkspacePage() {
 
   if (isLoading) {
     return (
-        <MultiStepLoader loadingStates={loadingStates} currentState={loadingStep} loading={isLoading} />
+        <MultiStepLoader loadingStates={loadingStates.map(s => ({...s, icon: <div className="w-2 h-2 rounded-full bg-current" /> }))} currentState={loadingStep} loading={isLoading} />
     );
   }
 
