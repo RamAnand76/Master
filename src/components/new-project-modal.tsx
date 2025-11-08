@@ -154,7 +154,7 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate,
         <FormProvider {...methods}>
           <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 flex-1 overflow-hidden px-6">
             
-            <div className="flex flex-col space-y-3 overflow-y-auto pr-4 -mr-4">
+            <div className="flex flex-col space-y-3 overflow-y-auto pr-4 -mr-4 pl-2">
                 <FormField
                   control={control}
                   name="title"
