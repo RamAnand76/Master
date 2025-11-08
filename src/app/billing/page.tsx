@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useState, useMemo, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
-import { LoaderCircle, CheckCircle2, CreditCard, ChevronRight, ChevronLeft } from 'lucide-react';
+import { LoaderCircle, CheckCircle2, CreditCard, ChevronRight, ChevronLeft, Phone } from 'lucide-react';
 import HomeHeader from '@/components/home/home-header';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
@@ -70,37 +70,34 @@ const AddCreditsStep = ({ onNext, onBack }: { onNext: (amount: number, price: nu
     );
 };
 
-const PaymentStep = ({ onNext, onBack }: { onNext: () => void; onBack: () => void; }) => {
+const PaymentStep = ({ onNext, onBack, onPhoneNumberChange, phoneNumber }: { onNext: () => void; onBack: () => void; onPhoneNumberChange: (phone: string) => void; phoneNumber: string; }) => {
     return (
         <Card className="w-full max-w-md">
             <CardHeader>
-                <CardTitle>Payment Details</CardTitle>
-                <CardDescription>Enter your credit card information.</CardDescription>
+                <CardTitle>Payment Gateway</CardTitle>
+                <CardDescription>Enter your phone number to proceed with the payment.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-                 <div className="space-y-2">
-                    <Label htmlFor="card-number">Card Number</Label>
+                <div className="space-y-2">
+                    <Label htmlFor="phone-number">Phone Number</Label>
                     <div className="relative">
-                        <CreditCard className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                        <Input id="card-number" placeholder="0000 0000 0000 0000" className="pl-9" />
-                    </div>
-                </div>
-                <div className="grid grid-cols-3 gap-4">
-                    <div className="space-y-2 col-span-2">
-                        <Label htmlFor="expiry">Expiry</Label>
-                        <Input id="expiry" placeholder="MM/YY" />
-                    </div>
-                    <div className="space-y-2">
-                        <Label htmlFor="cvc">CVC</Label>
-                        <Input id="cvc" placeholder="123" />
+                        <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Input 
+                            id="phone-number"
+                            type="tel"
+                            placeholder="Enter your 10-digit mobile number"
+                            className="pl-9"
+                            value={phoneNumber}
+                            onChange={(e) => onPhoneNumberChange(e.target.value)}
+                        />
                     </div>
                 </div>
                 <div className="flex flex-row gap-2 pt-4">
                     <Button onClick={onBack} variant="outline" className="flex-1">
                          <ChevronLeft className="mr-2 h-4 w-4" /> Go Back
                     </Button>
-                    <Button onClick={onNext} className="flex-1">
-                        Next Step <ChevronRight className="ml-2 h-4 w-4" />
+                    <Button onClick={onNext} className="flex-1" disabled={phoneNumber.length < 10}>
+                        Proceed to Payment <ChevronRight className="ml-2 h-4 w-4" />
                     </Button>
                 </div>
             </CardContent>
@@ -108,7 +105,7 @@ const PaymentStep = ({ onNext, onBack }: { onNext: () => void; onBack: () => voi
     );
 };
 
-const ReviewStep = ({ onConfirm, onBack, isProcessing, amount, price }: { onConfirm: () => void; onBack: () => void; isProcessing: boolean, amount: number, price: number }) => {
+const ReviewStep = ({ onConfirm, onBack, isProcessing, amount, price, phoneNumber }: { onConfirm: () => void; onBack: () => void; isProcessing: boolean, amount: number, price: number, phoneNumber: string }) => {
     const processingFee = (price * 0.05).toFixed(2);
     const total = (price + parseFloat(processingFee)).toFixed(2);
 
@@ -129,10 +126,10 @@ const ReviewStep = ({ onConfirm, onBack, isProcessing, amount, price }: { onConf
                         <span className="font-semibold">₹{price.toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between">
-                        <span className="text-muted-foreground">Payment Method:</span>
+                        <span className="text-muted-foreground">Payment Via:</span>
                         <div className="flex items-center gap-2">
-                            <CreditCard className="h-5 w-5 text-muted-foreground" />
-                            <span className="font-semibold">Visa **** 1234</span>
+                            <Phone className="h-5 w-5 text-muted-foreground" />
+                            <span className="font-semibold">{phoneNumber}</span>
                         </div>
                     </div>
                     <div className="flex justify-between">
@@ -201,6 +198,7 @@ function BillingFlow() {
     const [isNavigating, setIsNavigating] = useState(false);
     const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
     const [selectedPurchase, setSelectedPurchase] = useState<{amount: number, price: number} | null>(null);
+    const [phoneNumber, setPhoneNumber] = useState('');
     const { user, updateUser } = useUser();
 
     const currentStep = searchParams.get('step') || 'add';
@@ -247,7 +245,7 @@ function BillingFlow() {
 
         switch (currentStep) {
             case 'payment':
-                return <PaymentStep onNext={handlePayment} onBack={() => navigateToStep('add')} />;
+                return <PaymentStep onNext={handlePayment} onBack={() => navigateToStep('add')} phoneNumber={phoneNumber} onPhoneNumberChange={setPhoneNumber} />;
             case 'review':
                 if (!selectedPurchase) {
                      // This case happens if the user navigates directly to the review URL.
@@ -255,7 +253,7 @@ function BillingFlow() {
                     router.push('/billing?step=add');
                     return null;
                 }
-                return <ReviewStep onConfirm={handleConfirm} onBack={() => navigateToStep('payment')} isProcessing={isProcessing} {...selectedPurchase} />;
+                return <ReviewStep onConfirm={handleConfirm} onBack={() => navigateToStep('payment')} isProcessing={isProcessing} phoneNumber={phoneNumber} {...selectedPurchase} />;
             case 'add':
             default:
                 return <AddCreditsStep onNext={handleSelectCredits} onBack={() => router.push('/wallet')} />;
@@ -292,3 +290,5 @@ export default function BillingPage() {
         </div>
     )
 }
+
+    
