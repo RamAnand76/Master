@@ -154,7 +154,7 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate,
   };
 
   const detailsSection = (
-      <div className={cn("flex flex-col space-y-3 overflow-y-auto", isMobile ? "p-6" : "pr-4 pl-8")}>
+      <div className={cn("flex flex-col space-y-3 overflow-y-auto h-full", isMobile ? "p-6" : "pr-4 pl-8")}>
           <FormField
             control={control}
             name="title"
@@ -211,7 +211,7 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate,
   );
 
   const templateSection = (
-      <div className={cn("flex flex-col min-h-0", isMobile ? "p-6" : "pr-6")}>
+      <div className={cn("flex flex-col h-full min-h-0", isMobile ? "p-6" : "pr-6")}>
           <FormLabel>Select a Template</FormLabel>
           <Tabs value={activeCategory} onValueChange={setActiveCategory} className="mt-3">
               <TabsList>
@@ -280,18 +280,20 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate,
           </DialogDescription>
         </DialogHeader>
         <FormProvider {...methods}>
-          <form onSubmit={handleSubmit(onSubmit)} className="flex-1 overflow-hidden">
-            {isMobile ? (
-                <div className="h-full">
-                    {step === 'details' && detailsSection}
-                    {step === 'template' && templateSection}
-                </div>
-            ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 h-full">
-                    {detailsSection}
-                    {templateSection}
-                </div>
-            )}
+          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col flex-1 overflow-hidden">
+            <div className="flex-1 overflow-hidden">
+                {isMobile ? (
+                    <div className="h-full">
+                        {step === 'details' && detailsSection}
+                        {step === 'template' && templateSection}
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 h-full">
+                        {detailsSection}
+                        {templateSection}
+                    </div>
+                )}
+            </div>
             
             <DialogFooter className="md:col-span-2 p-4 border-t border-border">
                 <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>Cancel</Button>
@@ -323,5 +325,3 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate,
     </>
   );
 }
-
-    
