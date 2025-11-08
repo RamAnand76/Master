@@ -205,14 +205,22 @@ function BillingFlow() {
 
     const navigateToStep = (step: string) => {
         setIsNavigating(true);
-        setTimeout(() => {
-            router.push(`/billing?step=${step}`);
-        }, 500); // Simulate network latency
+        router.push(`/billing?step=${step}`, { scroll: false });
     };
-
+    
     useEffect(() => {
+        // This effect will run when the component mounts or `searchParams` changes.
+        // It sets `isNavigating` back to false after the navigation is complete.
         setIsNavigating(false);
     }, [searchParams]);
+
+    useEffect(() => {
+        // This handles the redirect logic safely after the component has rendered.
+        if (currentStep === 'review' && !selectedPurchase) {
+            router.replace('/billing?step=add');
+        }
+    }, [currentStep, selectedPurchase, router]);
+
 
     const handleSelectCredits = (amount: number, price: number) => {
         setSelectedPurchase({ amount, price });
@@ -247,11 +255,14 @@ function BillingFlow() {
             case 'payment':
                 return <PaymentStep onNext={handlePayment} onBack={() => navigateToStep('add')} phoneNumber={phoneNumber} onPhoneNumberChange={setPhoneNumber} />;
             case 'review':
+                // The useEffect handles redirection, so we can just return null or a loader if the purchase isn't selected yet.
                 if (!selectedPurchase) {
-                     // This case happens if the user navigates directly to the review URL.
-                     // We redirect them back to the start.
-                    router.push('/billing?step=add');
-                    return null;
+                    return (
+                        <div className="flex flex-col items-center justify-center gap-4 text-center">
+                            <LoaderCircle className="h-12 w-12 animate-spin text-primary" />
+                            <p className="text-muted-foreground">Loading...</p>
+                        </div>
+                    );
                 }
                 return <ReviewStep onConfirm={handleConfirm} onBack={() => navigateToStep('payment')} isProcessing={isProcessing} phoneNumber={phoneNumber} {...selectedPurchase} />;
             case 'add':
