@@ -37,9 +37,9 @@ function debounce<F extends (...args: any[]) => any>(func: F, waitFor: number) {
 }
 
 const loadingStates = [
-  { text: 'Loading your resume data...' },
-  { text: 'Preparing your workspace...' },
-  { text: 'Running initial analysis...' },
+  { text: 'Loading your resume data...', icon: <div className="w-2 h-2 rounded-full bg-current" /> },
+  { text: 'Preparing your workspace...', icon: <div className="w-2 h-2 rounded-full bg-current" /> },
+  { text: 'Running initial analysis...', icon: <div className="w-2 h-2 rounded-full bg-current" /> },
 ];
 
 const ShareIcon = () => (
@@ -239,7 +239,7 @@ export default function WorkspacePage() {
 
   if (isLoading) {
     return (
-        <MultiStepLoader loadingStates={loadingStates.map(s => ({...s, icon: <div className="w-2 h-2 rounded-full bg-current" /> }))} currentState={loadingStep} loading={isLoading} />
+        <MultiStepLoader loadingStates={loadingStates} currentState={loadingStep} loading={isLoading} />
     );
   }
 
@@ -355,5 +355,3 @@ export default function WorkspacePage() {
     </TooltipProvider>
   );
 }
-
-    
