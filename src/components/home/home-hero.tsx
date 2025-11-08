@@ -27,7 +27,7 @@ export default function HomeHero({ onNewResumeClick, hasReachedLimit }: HomeHero
                     colorTo={theme === 'dark' ? 'hsl(var(--primary))' : 'hsl(var(--accent-2))'}
                     className="text-4xl font-bold"
                 >
-                   Hello, {name} 👋
+                   Hello, {name}
                 </AnimatedGradientText>
                 <p className="text-2xl text-muted-foreground mt-1">Welcome back</p>
             </div>
