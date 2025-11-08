@@ -154,7 +154,7 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate,
   };
 
   const detailsSection = (
-      <div className={cn("flex flex-col space-y-3 overflow-y-auto h-full", isMobile ? "p-6" : "pr-4 pl-8")}>
+      <div className={cn("flex flex-col space-y-3 overflow-y-auto h-full p-6 md:p-0 md:pr-4 md:pl-8")}>
           <FormField
             control={control}
             name="title"
@@ -295,7 +295,7 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate,
                 )}
             </div>
             
-            <DialogFooter className="md:col-span-2 p-4 border-t border-border">
+            <DialogFooter className="p-4 border-t border-border flex flex-row justify-between w-full">
                 <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>Cancel</Button>
                 {isMobile ? (
                     step === 'details' ? (
