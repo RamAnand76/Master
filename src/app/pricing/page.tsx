@@ -1,7 +1,7 @@
 
 "use client";
 
-import { Check, X } from 'lucide-react';
+import { Check, X, ChevronLeft } from 'lucide-react';
 import HomeHeader from '@/components/home/home-header';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter, CardDescription } from '@/components/ui/card';
@@ -65,13 +65,23 @@ export default function PricingPage() {
                 <HomeHeader />
             </div>
             <main className="flex-1">
-                <div className="container mx-auto max-w-5xl px-4 py-12 text-center sm:py-20">
-                    <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl">
-                        Find the perfect plan
-                    </h1>
-                    <p className="mt-4 text-lg text-muted-foreground">
-                        Start for free and scale up as you grow. All plans include our AI-powered resume builder.
-                    </p>
+                <div className="container mx-auto max-w-5xl px-4 pt-8 text-center sm:pt-12">
+                     <div className="flex justify-start mb-4">
+                        <Button asChild variant="ghost">
+                            <Link href="/wallet">
+                                <ChevronLeft className="mr-2 h-4 w-4" />
+                                Back to Wallet
+                            </Link>
+                        </Button>
+                    </div>
+                    <div className="py-4 text-center sm:py-8">
+                        <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl">
+                            Find the perfect plan
+                        </h1>
+                        <p className="mt-4 text-lg text-muted-foreground">
+                            Start for free and scale up as you grow. All plans include our AI-powered resume builder.
+                        </p>
+                    </div>
                 </div>
 
                 <div className="container mx-auto grid max-w-6xl grid-cols-1 gap-8 px-4 md:grid-cols-2 lg:grid-cols-3">
