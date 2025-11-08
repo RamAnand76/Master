@@ -9,7 +9,6 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { User, Palette, Crown, Database, AlertTriangle } from 'lucide-react';
 import ProfileDialog from '@/components/home/profile-dialog';
-import HomeHeader from '@/components/home/home-header';
 import { useUser } from '@/hooks/use-user';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import Link from 'next/link';
@@ -139,7 +138,6 @@ export default function SettingsPage() {
   return (
     <>
       <div className="min-h-screen bg-background text-foreground pb-24">
-        <HomeHeader />
         <main className="pt-8">
             <motion.header 
                 initial={{ opacity: 0, y: -20 }}
@@ -184,5 +182,3 @@ export default function SettingsPage() {
     </>
   );
 }
-
-    

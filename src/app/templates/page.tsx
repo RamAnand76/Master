@@ -3,7 +3,6 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import HomeHeader from '@/components/home/home-header';
 import TemplateCard from '@/components/templates/template-card';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
@@ -78,7 +77,6 @@ export default function TemplatesPage() {
   return (
     <>
     <div className="min-h-screen bg-background text-foreground pb-24">
-      <HomeHeader />
       <main className="max-w-7xl mx-auto p-8 pt-12">
         <motion.header 
           initial={{ opacity: 0, y: -20 }}
@@ -169,5 +167,3 @@ export default function TemplatesPage() {
     </>
   );
 }
-
-    

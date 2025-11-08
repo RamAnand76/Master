@@ -7,7 +7,6 @@ import { useState, useMemo, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { LoaderCircle, CheckCircle2, CreditCard, ChevronRight, ChevronLeft, Phone } from 'lucide-react';
-import HomeHeader from '@/components/home/home-header';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from '@/components/ui/label';
@@ -299,19 +298,12 @@ function BillingFlow() {
 
 export default function BillingPage() {
     return (
-        <div className="relative flex min-h-screen flex-col overflow-x-hidden text-foreground">
-            <div className="sticky top-0 z-10 w-full border-b border-solid border-border/60 bg-background/80 backdrop-blur-sm">
-                <HomeHeader />
+        <Suspense fallback={
+            <div className="flex flex-1 items-center justify-center">
+                <LoaderCircle className="h-12 w-12 animate-spin text-primary" />
             </div>
-            <Suspense fallback={
-                <div className="flex flex-1 items-center justify-center">
-                    <LoaderCircle className="h-12 w-12 animate-spin text-primary" />
-                </div>
-            }>
-                <BillingFlow />
-            </Suspense>
-        </div>
+        }>
+            <BillingFlow />
+        </Suspense>
     )
 }
-
-    

@@ -5,7 +5,6 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import type { ResumeData } from '@/lib/types';
 import NewProjectModal from '@/components/new-project-modal';
-import HomeHeader from '@/components/home/home-header';
 import HomeHero from '@/components/home/home-hero';
 import ResumeList from '@/components/home/resume-list';
 import { useUser } from '@/hooks/use-user';
@@ -78,7 +77,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col">
+    <>
       <NewProjectModal
         isOpen={isModalOpen}
         onOpenChange={setIsModalOpen}
@@ -93,8 +92,6 @@ export default function Home() {
           router.push(`/workspace/${newProject.id}`);
         }}
       />
-      <HomeHeader />
-
       <main className="flex-1 overflow-y-auto pt-4">
         <motion.div 
             initial={{ opacity: 0, y: 20 }}
@@ -120,8 +117,6 @@ export default function Home() {
             </div>
         </motion.div>
       </main>
-    </div>
+    </>
   );
 }
-
-    
