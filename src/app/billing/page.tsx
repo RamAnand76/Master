@@ -71,6 +71,13 @@ const AddCreditsStep = ({ onNext, onBack }: { onNext: (amount: number, price: nu
 };
 
 const PaymentStep = ({ onNext, onBack, onPhoneNumberChange, phoneNumber }: { onNext: () => void; onBack: () => void; onPhoneNumberChange: (phone: string) => void; phoneNumber: string; }) => {
+    const [isValid, setIsValid] = useState(false);
+
+    useEffect(() => {
+        const phoneRegex = /^[6-9]\d{9}$/;
+        setIsValid(phoneRegex.test(phoneNumber));
+    }, [phoneNumber]);
+
     return (
         <Card className="w-full max-w-md">
             <CardHeader>
@@ -88,7 +95,13 @@ const PaymentStep = ({ onNext, onBack, onPhoneNumberChange, phoneNumber }: { onN
                             placeholder="Enter your 10-digit mobile number"
                             className="pl-9"
                             value={phoneNumber}
-                            onChange={(e) => onPhoneNumberChange(e.target.value)}
+                            onChange={(e) => {
+                                const value = e.target.value;
+                                // Allow only numbers and limit to 10 digits
+                                if (/^\d*$/.test(value) && value.length <= 10) {
+                                    onPhoneNumberChange(value);
+                                }
+                            }}
                         />
                     </div>
                 </div>
@@ -96,7 +109,7 @@ const PaymentStep = ({ onNext, onBack, onPhoneNumberChange, phoneNumber }: { onN
                     <Button onClick={onBack} variant="outline" className="flex-1">
                          <ChevronLeft className="mr-2 h-4 w-4" /> Go Back
                     </Button>
-                    <Button onClick={onNext} className="flex-1" disabled={phoneNumber.length < 10}>
+                    <Button onClick={onNext} className="flex-1" disabled={!isValid}>
                         Proceed to Payment <ChevronRight className="ml-2 h-4 w-4" />
                     </Button>
                 </div>
@@ -157,9 +170,8 @@ const ReviewStep = ({ onConfirm, onBack, isProcessing, amount, price, phoneNumbe
     );
 };
 
-const SuccessModal = ({ isOpen, onOpenChange, amount }: { isOpen: boolean, onOpenChange: () => void, amount: number }) => {
+const SuccessModal = ({ isOpen, onOpenChange, amount, newBalance }: { isOpen: boolean, onOpenChange: () => void, amount: number, newBalance: number }) => {
     const router = useRouter();
-    const { user } = useUser();
 
     return (
         <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -177,7 +189,7 @@ const SuccessModal = ({ isOpen, onOpenChange, amount }: { isOpen: boolean, onOpe
                     <div className="h-px bg-border" />
                     <div className="flex justify-between items-center">
                         <p className="text-sm text-muted-foreground">New Credit Balance</p>
-                        <p className="text-xl font-extrabold text-primary">{user.credits}</p>
+                        <p className="text-xl font-extrabold text-primary">{newBalance}</p>
                     </div>
                 </div>
                 <DialogFooter className="sm:justify-center">
@@ -200,6 +212,7 @@ function BillingFlow() {
     const [selectedPurchase, setSelectedPurchase] = useState<{amount: number, price: number} | null>(null);
     const [phoneNumber, setPhoneNumber] = useState('');
     const { user, updateUser } = useUser();
+    const [finalCreditBalance, setFinalCreditBalance] = useState(0);
 
     const currentStep = searchParams.get('step') || 'add';
 
@@ -209,13 +222,10 @@ function BillingFlow() {
     };
     
     useEffect(() => {
-        // This effect will run when the component mounts or `searchParams` changes.
-        // It sets `isNavigating` back to false after the navigation is complete.
         setIsNavigating(false);
     }, [searchParams]);
 
     useEffect(() => {
-        // This handles the redirect logic safely after the component has rendered.
         if (currentStep === 'review' && !selectedPurchase) {
             router.replace('/billing?step=add');
         }
@@ -235,7 +245,9 @@ function BillingFlow() {
         if (!selectedPurchase) return;
         setIsProcessing(true);
         setTimeout(() => {
-            updateUser({ credits: user.credits + selectedPurchase.amount });
+            const newBalance = user.credits + selectedPurchase.amount;
+            updateUser({ credits: newBalance });
+            setFinalCreditBalance(newBalance);
             setIsProcessing(false);
             setIsSuccessModalOpen(true);
         }, 2000); // Simulate network request
@@ -255,7 +267,6 @@ function BillingFlow() {
             case 'payment':
                 return <PaymentStep onNext={handlePayment} onBack={() => navigateToStep('add')} phoneNumber={phoneNumber} onPhoneNumberChange={setPhoneNumber} />;
             case 'review':
-                // The useEffect handles redirection, so we can just return null or a loader if the purchase isn't selected yet.
                 if (!selectedPurchase) {
                     return (
                         <div className="flex flex-col items-center justify-center gap-4 text-center">
@@ -280,6 +291,7 @@ function BillingFlow() {
                 isOpen={isSuccessModalOpen} 
                 onOpenChange={() => setIsSuccessModalOpen(false)} 
                 amount={selectedPurchase?.amount || 0}
+                newBalance={finalCreditBalance}
             />
         </>
     );
