@@ -11,7 +11,7 @@ import Link from 'next/link';
 const plans = [
     {
         name: 'Free',
-        price: '$0',
+        price: '₹0',
         description: 'For individuals starting out.',
         features: [
             { text: '5 Resume Projects', included: true },
@@ -26,7 +26,7 @@ const plans = [
     },
     {
         name: 'Pro',
-        price: '$15',
+        price: '₹1200',
         description: 'For professionals aiming high.',
         features: [
             { text: '50 Resume Projects', included: true },
@@ -42,7 +42,7 @@ const plans = [
     },
     {
         name: 'Premium',
-        price: '$25',
+        price: '₹2000',
         description: 'For power users and teams.',
         features: [
             { text: 'Unlimited Resume Projects', included: true },

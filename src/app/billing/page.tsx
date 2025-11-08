@@ -16,10 +16,10 @@ import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 
 const creditOptions = [
-    { amount: 10, price: 10, popular: false },
-    { amount: 25, price: 22, popular: true },
-    { amount: 50, price: 40, popular: false },
-    { amount: 100, price: 75, popular: false },
+    { amount: 10, price: 800, popular: false },
+    { amount: 25, price: 1800, popular: true },
+    { amount: 50, price: 3200, popular: false },
+    { amount: 100, price: 6000, popular: false },
 ];
 
 const AddCreditsStep = ({ onNext, onBack }: { onNext: (amount: number, price: number) => void; onBack: () => void; }) => {
@@ -49,7 +49,7 @@ const AddCreditsStep = ({ onNext, onBack }: { onNext: (amount: number, price: nu
                                 <RadioGroupItem value={amount.toString()} id={`amount-${amount}`} />
                                 <div>
                                     <span className="font-semibold text-foreground">{amount} Credits</span>
-                                    <p className="text-sm text-muted-foreground">${price}.00</p>
+                                    <p className="text-sm text-muted-foreground">₹{price}</p>
                                 </div>
                             </div>
                             {popular && <span className="text-xs bg-primary text-primary-foreground px-2 py-0.5 rounded-full">Popular</span>}
@@ -126,7 +126,7 @@ const ReviewStep = ({ onConfirm, onBack, isProcessing, amount, price }: { onConf
                     </div>
                      <div className="flex justify-between">
                         <span className="text-muted-foreground">Price:</span>
-                        <span className="font-semibold">${price.toFixed(2)}</span>
+                        <span className="font-semibold">₹{price.toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between">
                         <span className="text-muted-foreground">Payment Method:</span>
@@ -137,12 +137,12 @@ const ReviewStep = ({ onConfirm, onBack, isProcessing, amount, price }: { onConf
                     </div>
                     <div className="flex justify-between">
                         <span className="text-muted-foreground">Processing Fee:</span>
-                        <span className="font-semibold">${processingFee}</span>
+                        <span className="font-semibold">₹{processingFee}</span>
                     </div>
                     <div className="border-t pt-4">
                         <div className="flex justify-between text-lg">
                             <span className="font-bold">Total:</span>
-                            <span className="font-bold">${total}</span>
+                            <span className="font-bold">₹{total}</span>
                         </div>
                     </div>
                 </div>
