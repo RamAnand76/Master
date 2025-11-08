@@ -4,7 +4,7 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import type { Template } from "@/lib/types";
+import type { Template } from "@/lib/templates";
 import { dummyResumeData } from "@/lib/dummy-resume-data";
 import ResumePreview from "../resume-preview";
 import { Code } from "lucide-react";

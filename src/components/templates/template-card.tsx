@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardFooter, CardTitle } from '@/componen
 import { Badge } from '@/components/ui/badge';
 import { Eye, Code } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import type { Template } from '@/lib/types';
+import type { Template } from '@/lib/templates';
 
 type Tier = 'Free' | 'Pro' | 'Premium';
 

@@ -296,27 +296,27 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate,
             </div>
             
             <DialogFooter className="p-4 border-t border-border flex flex-row justify-between w-full">
-                <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>Cancel</Button>
-                {isMobile ? (
-                    step === 'details' ? (
-                        <Button type="button" onClick={handleNextStep}>
-                            Next <ChevronRight className="ml-2 h-4 w-4" />
-                        </Button>
-                    ) : (
-                        <div className="flex gap-2">
-                             <Button type="button" variant="outline" onClick={() => setStep('details')}>
-                                <ChevronLeft className="mr-2 h-4 w-4" /> Back
-                            </Button>
-                            <Button type="submit" disabled={isGenerating}>
-                                {jobDescription ? 'Create & Enhance' : 'Create Resume'}
-                            </Button>
-                        </div>
-                    )
+              <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>Cancel</Button>
+              {isMobile ? (
+                step === 'details' ? (
+                  <Button type="button" onClick={handleNextStep}>
+                    Next <ChevronRight className="ml-2 h-4 w-4" />
+                  </Button>
                 ) : (
-                    <Button type="submit" disabled={isGenerating}>
-                        {jobDescription ? 'Create & Enhance with AI' : 'Create Resume'}
+                  <div className="flex flex-row justify-end gap-2 w-full">
+                    <Button type="button" variant="outline" onClick={() => setStep('details')}>
+                      <ChevronLeft className="mr-2 h-4 w-4" /> Back
                     </Button>
-                )}
+                    <Button type="submit" disabled={isGenerating}>
+                      {jobDescription ? 'Create & Enhance' : 'Create Resume'}
+                    </Button>
+                  </div>
+                )
+              ) : (
+                <Button type="submit" disabled={isGenerating}>
+                  {jobDescription ? 'Create & Enhance with AI' : 'Create Resume'}
+                </Button>
+              )}
             </DialogFooter>
           </form>
         </FormProvider>
