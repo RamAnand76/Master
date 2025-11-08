@@ -77,6 +77,9 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+  button, a, [role="button"], [onClick] {
+    @apply cursor-pointer;
+  }
 }
 
 /* Custom Scrollbar */
@@ -127,5 +130,3 @@ body {
         box-shadow: inset 0 2px 4px 0 rgba(0, 255, 255, 0.06);
     }
 }
-
-
