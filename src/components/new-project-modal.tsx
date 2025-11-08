@@ -154,7 +154,7 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate,
         <FormProvider {...methods}>
           <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 flex-1 overflow-hidden">
             
-            <div className="flex flex-col space-y-3 overflow-y-auto pr-4 pl-6">
+            <div className="flex flex-col space-y-3 overflow-y-auto pr-4 pl-8">
                 <FormField
                   control={control}
                   name="title"
@@ -265,7 +265,7 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate,
                 </ScrollArea>
             </div>
             
-            <DialogFooter className="md:col-span-2 mt-auto p-6 border-t border-border">
+            <DialogFooter className="md:col-span-2 mt-auto p-4 border-t border-border">
                 <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>Cancel</Button>
                 <Button type="submit" disabled={isGenerating}>
                     {jobDescription ? 'Create & Enhance with AI' : 'Create Resume'}
