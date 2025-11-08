@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { type ResumeData } from "@/lib/types";
-import { resumeDataSchema, experienceSchema, educationSchema } from "@/lib/schemas";
+import { resumeDataSchema, educationSchema } from "@/lib/schemas";
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { MultiStepLoader } from "./ui/multi-step-loader";
@@ -20,7 +20,8 @@ import Image from "next/image";
 import { ScrollArea } from "./ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, ChevronLeft, ChevronRight } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const newProjectSchema = z.object({
   title: z.string().min(1, "Title is required."),
@@ -51,6 +52,9 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate,
     const { toast } = useToast();
     const [isGenerating, setIsGenerating] = useState(false);
     const [activeCategory, setActiveCategory] = useState('All');
+    const [step, setStep] = useState<'details' | 'template'>('details');
+    const isMobile = useIsMobile();
+
     const methods = useForm<NewProjectFormValues>({
         resolver: zodResolver(newProjectSchema),
         defaultValues: {
@@ -62,7 +66,7 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate,
         }
     });
 
-  const { handleSubmit, control, watch, setValue, reset } = methods;
+  const { handleSubmit, control, watch, setValue, reset, trigger } = methods;
   const jobDescription = watch('jobDescription');
   const selectedTemplate = watch('template');
 
@@ -78,12 +82,21 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate,
         };
         reset(defaultValues);
         setActiveCategory(defaultCategory);
+        setStep('details'); // Reset to first step when modal opens
     }
   }, [isOpen, initialTemplate, reset]);
 
   const filteredTemplates = templates.filter(template => 
       activeCategory === 'All' || template.category === activeCategory
   );
+  
+  const handleNextStep = async () => {
+    const isValid = await trigger(['title', 'jobPosition', 'company']);
+    if (isValid) {
+      setStep('template');
+    }
+  };
+
 
   const onSubmit = async (values: NewProjectFormValues) => {
     if (values.jobDescription) {
@@ -140,136 +153,168 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate,
     methods.reset();
   };
 
+  const detailsSection = (
+      <div className={cn("flex flex-col space-y-3 overflow-y-auto", isMobile ? "p-6" : "pr-4 pl-8")}>
+          <FormField
+            control={control}
+            name="title"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Resume Title</FormLabel>
+                <FormControl>
+                  <Input placeholder="e.g. Senior Product Manager Resume" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={control}
+            name="jobPosition"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Job Position</FormLabel>
+                <FormControl>
+                  <Input placeholder="e.g. Senior Product Manager" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={control}
+            name="company"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Company</FormLabel>
+                <FormControl>
+                  <Input placeholder="e.g. Google" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={control}
+            name="jobDescription"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Job Description (Optional)</FormLabel>
+                <FormControl>
+                  <Textarea placeholder="Paste the job description here to get tailored suggestions." {...field} rows={6} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+      </div>
+  );
+
+  const templateSection = (
+      <div className={cn("flex flex-col min-h-0", isMobile ? "p-6" : "pr-6")}>
+          <FormLabel>Select a Template</FormLabel>
+          <Tabs value={activeCategory} onValueChange={setActiveCategory} className="mt-3">
+              <TabsList>
+                  {categories.map(category => (
+                      <TabsTrigger key={category} value={category} className="capitalize text-xs h-8">
+                          {category}
+                      </TabsTrigger>
+                  ))}
+              </TabsList>
+          </Tabs>
+          <ScrollArea className="mt-3 flex-1 -mr-4 pr-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 gap-4">
+                  {filteredTemplates.map((template) => {
+                      const isSelected = selectedTemplate === template.id;
+                      return (
+                          <div
+                              key={template.id}
+                              className="cursor-pointer group relative"
+                              onClick={() => setValue('template', template.id, { shouldValidate: true })}
+                          >
+                              {isSelected && (
+                                  <div className="absolute top-2 right-2 z-10 bg-background rounded-full">
+                                      <CheckCircle2 className="h-6 w-6 text-primary" />
+                                  </div>
+                              )}
+                              <div
+                                  className={cn(
+                                      "rounded-lg border-2 transition-all duration-200 overflow-hidden",
+                                      isSelected
+                                          ? "border-primary/80 ring-2 ring-primary/50 bg-primary/10"
+                                          : "border-border group-hover:border-primary/50"
+                                  )}
+                              >
+                                  <Image
+                                      src={template.imageUrl}
+                                      alt={template.name}
+                                      width={200}
+                                      height={282}
+                                      className={cn("w-full h-auto object-cover transition-transform duration-300", isSelected ? "scale-95" : "group-hover:scale-105")}
+                                      data-ai-hint={template.dataAiHint}
+                                  />
+                              </div>
+                              <p className={cn(
+                              "text-sm text-center mt-2",
+                              isSelected ? "text-primary font-semibold" : "text-muted-foreground"
+                              )}>
+                              {template.name}
+                              </p>
+                          </div>
+                      );
+                  })}
+              </div>
+          </ScrollArea>
+      </div>
+  );
+
   return (
     <>
     <MultiStepLoader loadingStates={loadingStates} loading={isGenerating} duration={1500} />
     <Dialog open={isOpen && !isGenerating} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl h-[90vh] md:h-auto md:max-h-[80vh] flex flex-col p-0">
         <DialogHeader className="p-6 pb-4">
-          <DialogTitle>Create a New Resume</DialogTitle>
+          <DialogTitle className="text-2xl md:text-base">Create a New Resume</DialogTitle>
           <DialogDescription>
             Start by telling us about the job you're applying for and choose a template.
           </DialogDescription>
         </DialogHeader>
         <FormProvider {...methods}>
-          <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 flex-1 overflow-hidden">
+          <form onSubmit={handleSubmit(onSubmit)} className="flex-1 overflow-hidden">
+            {isMobile ? (
+                <div className="h-full">
+                    {step === 'details' && detailsSection}
+                    {step === 'template' && templateSection}
+                </div>
+            ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 h-full">
+                    {detailsSection}
+                    {templateSection}
+                </div>
+            )}
             
-            <div className="flex flex-col space-y-3 overflow-y-auto pr-4 pl-8">
-                <FormField
-                  control={control}
-                  name="title"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Resume Title</FormLabel>
-                      <FormControl>
-                        <Input placeholder="e.g. Senior Product Manager Resume" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={control}
-                  name="jobPosition"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Job Position</FormLabel>
-                      <FormControl>
-                        <Input placeholder="e.g. Senior Product Manager" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={control}
-                  name="company"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Company</FormLabel>
-                      <FormControl>
-                        <Input placeholder="e.g. Google" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={control}
-                  name="jobDescription"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Job Description (Optional)</FormLabel>
-                      <FormControl>
-                        <Textarea placeholder="Paste the job description here to get tailored suggestions." {...field} rows={6} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-            </div>
-
-            <div className="flex flex-col min-h-0 pr-6">
-                <FormLabel>Select a Template</FormLabel>
-                <Tabs value={activeCategory} onValueChange={setActiveCategory} className="mt-3">
-                    <TabsList>
-                        {categories.map(category => (
-                            <TabsTrigger key={category} value={category} className="capitalize text-xs h-8">
-                                {category}
-                            </TabsTrigger>
-                        ))}
-                    </TabsList>
-                </Tabs>
-                <ScrollArea className="mt-3 flex-1 -mr-4 pr-4">
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 gap-4">
-                        {filteredTemplates.map((template) => {
-                            const isSelected = selectedTemplate === template.id;
-                            return (
-                                <div
-                                    key={template.id}
-                                    className="cursor-pointer group relative"
-                                    onClick={() => setValue('template', template.id, { shouldValidate: true })}
-                                >
-                                    {isSelected && (
-                                        <div className="absolute top-2 right-2 z-10 bg-background rounded-full">
-                                            <CheckCircle2 className="h-6 w-6 text-primary" />
-                                        </div>
-                                    )}
-                                    <div
-                                        className={cn(
-                                            "rounded-lg border-2 transition-all duration-200 overflow-hidden",
-                                            isSelected
-                                                ? "border-primary/80 ring-2 ring-primary/50 bg-primary/10"
-                                                : "border-border group-hover:border-primary/50"
-                                        )}
-                                    >
-                                        <Image
-                                            src={template.imageUrl}
-                                            alt={template.name}
-                                            width={200}
-                                            height={282}
-                                            className={cn("w-full h-auto object-cover transition-transform duration-300", isSelected ? "scale-95" : "group-hover:scale-105")}
-                                            data-ai-hint={template.dataAiHint}
-                                        />
-                                    </div>
-                                    <p className={cn(
-                                    "text-sm text-center mt-2",
-                                    isSelected ? "text-primary font-semibold" : "text-muted-foreground"
-                                    )}>
-                                    {template.name}
-                                    </p>
-                                </div>
-                            );
-                        })}
-                    </div>
-                </ScrollArea>
-            </div>
-            
-            <DialogFooter className="md:col-span-2 mt-auto p-4 border-t border-border">
+            <DialogFooter className="md:col-span-2 p-4 border-t border-border">
                 <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>Cancel</Button>
-                <Button type="submit" disabled={isGenerating}>
-                    {jobDescription ? 'Create & Enhance with AI' : 'Create Resume'}
-                </Button>
+                {isMobile ? (
+                    step === 'details' ? (
+                        <Button type="button" onClick={handleNextStep}>
+                            Next <ChevronRight className="ml-2 h-4 w-4" />
+                        </Button>
+                    ) : (
+                        <div className="flex gap-2">
+                             <Button type="button" variant="outline" onClick={() => setStep('details')}>
+                                <ChevronLeft className="mr-2 h-4 w-4" /> Back
+                            </Button>
+                            <Button type="submit" disabled={isGenerating}>
+                                {jobDescription ? 'Create & Enhance' : 'Create Resume'}
+                            </Button>
+                        </div>
+                    )
+                ) : (
+                    <Button type="submit" disabled={isGenerating}>
+                        {jobDescription ? 'Create & Enhance with AI' : 'Create Resume'}
+                    </Button>
+                )}
             </DialogFooter>
           </form>
         </FormProvider>
@@ -278,3 +323,5 @@ export default function NewProjectModal({ isOpen, onOpenChange, onProjectCreate,
     </>
   );
 }
+
+    
